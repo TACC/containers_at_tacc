@@ -1,9 +1,9 @@
-Containers@TACC Workshop
-========================
+Containers @ TACC Workshop
+==========================
 
 |docs|
 
-Course material at `Read the Docs`
+Course material at `Read the Docs`_
 
 .. _Read the Docs: https://containers-at-tacc.readthedocs.io/
 
