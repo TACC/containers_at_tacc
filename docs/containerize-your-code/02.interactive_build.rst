@@ -1,0 +1,15 @@
+Interactive Build
+=================
+
+After choosing a base OS, it might be easiest to interactively install your program.
+
+.. code-block:: bash
+
+   $ docker build -t ubuntu:16.04 .
+
+.. code-block:: bash
+
+   $ docker run --rm -it ubuntu:16.04 /bin/bash
+
+....Record build steps
+
