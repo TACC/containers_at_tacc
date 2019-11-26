@@ -1,5 +1,0 @@
-======================
-Let's work with Docker
-======================
-
-In this section, we will learn how to create our own docker container using a Dockerfile. 

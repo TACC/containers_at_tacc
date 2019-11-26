@@ -1,0 +1,119 @@
+===================
+Working with Docker
+===================
+
+Overview
+--------
+
+In this section, we will learn how to create and use our own docker container.
+
+We could do this by using a *Dockerfile*
+
+  - Dockerfiles are a reproducible and well documented method of developing your own container.
+  - They store the whole procedure of how an image is built.
+
+
+**Dockerfile Format**
+
+A Dockerfile has two type of fields:
+
+  - Instructions followed by arguments and comments
+  - A basic Dockerfile looks like
+
+.. code-block:: bash
+
+   # Comment
+   INSTRUCTION arguments
+
+
+**General Steps**
+
+1. Choose a base operating system
+2. Install dependencies and other useful packages
+3. Install scientific application
+4. Set any environment variable that might be useful
+
+Install a tool in a Docker container
+------------------------------------
+Let us now write our own to illustrate how to install a simple tool in a Docker container.
+
+*To make it easier, follow along with the sample Dockerfile present in fastqc-dev directory*
+
+.. code-block:: bash
+
+   # Choose a base operating system
+   FROM ubuntu:18.04
+
+   # Update and install necessary packages
+   RUN apt-get update && apt-get upgrade -y |
+     && apt-get install -y default-jre perl wget zip
+
+   # Install the application
+   RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip \
+       && unzip fastqc_v0.11.7.zip \
+       && rm fastqc_v0.11.7.zip \
+       && chmod +x /FastQC/fastqc
+
+   # Use environment variable to add executable to PATH
+   ENV PATH "/FastQC:$PATH"
+
+**Build**
+
+.. code-block:: bash
+
+   $ docker build -t username/fastqc:0.11.7 .
+
+**Check images**
+
+.. code-block:: bash
+
+   $ docker images
+
+**Run**
+
+.. code-block:: bash
+
+   $ docker run --rm username/fastqc:0.11.7 which fastqc
+
+**Push Image to Docker hub**
+
+.. code-block:: bash
+
+   $ docker push username/fastqc:0.11.7
+
+
+Alternatively, you could also do this *interactively*
+
+**Open a base Docker Image**
+
+.. code-block:: bash
+
+   $ docker run -ti ubuntu
+
+**Install your tool in the image**
+
+.. code-block:: bash
+
+   $ cd bin/
+   $ apt-get update && apt-get upgrade -y
+   $ apt-get install -y default-jre perl wget zip
+   $ wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip
+   $ unzip fastqc_v0.11.7.zip \
+   $ rm fastqc_v0.11.7.zip \
+   $ chmod +x /FastQC/fastqc
+   $ exit
+
+**Commit your image**
+
+.. code-block:: bash
+
+   $ docker ps -a
+   # Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
+   $ docker commit CONTAINER ID username/fastqc:0.11.7
+   $ docker images
+
+**Push your image to Docker Hub**
+
+.. code-block:: bash
+
+   $ docker push username/fastqc:0.11.7

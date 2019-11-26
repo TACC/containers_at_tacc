@@ -1,0 +1,175 @@
+======
+Docker
+======
+
+In this section, we will learn more about docker.
+
+Terminlogies in the Docker world
+================================
+
+**Containers**
+
+A container is a standard unit of software that packages up code and all its
+dependencies so the application runs quickly and reliably from one computing environment to another. Containers includes everything from the
+operating system, user-added files, metadata.
+
+Containers are very useful as they are available for both Linux and Windows-based applications, containerized software
+will run the same, irrespective of the infrastructure. They isolate the software from the environment, facilitating users to overcome
+conflicts between local development environments and execution environment.
+
+Running an image creates a Docker Container.
+They feature a read-write layer on top, are interactive and can store state. This means that once you execute inside a Docker container,
+you can save a snapshot of the resulting state as another image.
+
+**Images**
+
+A Docker image is a read-only file used to produce Docker containers.
+It is comprised of layers of other images, any change made to an image is carried out by adding a new layer.
+
+Base Image is the layer that does not depend on any other layer. For example most of the time this layer defines the operating system
+for the docker container's environment.
+
+An image gets built by building a Dockerfile.
+
+... which brings us to
+
+**What is a Dockerfile?**
+
+Dockerfiles are text files you create with the commands you would like to execute on the command line inside a container to
+create a Docker image. Docker reads the commands from top to bottom and builds a Docker image from it.
+
+Dockerfiles are useful as they contain the history of the procedure used to create an image. They can be used to install required dependencies,
+tools, tool-related files into the docker container.
+
+Some best practices for writing Dockerfiles can be found at: `Best Practices <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_.
+
+With a Dockerfile in hand, we can build an image from it by
+
+.. code-block:: bash
+
+   $ docker build .
+
+**Image Registry**
+
+We can store the docker images we create in image registries. Registries are organized into collections of images called *repositories*.
+
+`Docker Hub <https://hub.docker.com/>`_ is a central, public repository of images.
+
+
+
+**Docker Worflow**
+
+.. figure:: images/docker_workflow.png
+   :height: 400
+   :width: 800
+   :align: center
+   :alt: Simple Docker Workflow
+
+
+
+
+Getting Started With Docker
+===========================
+
+Prerequisites:
+--------------
+
+- Install Docker on your laptop:
+
+  - `Mac <https://docs.docker.com/v17.09/docker-for-mac/install>`_
+  - `Windows 10 <https://docs.docker.com/v17.09/docker-for-windows/install/>`_
+  - `Ubuntu <https://docs.docker.com/v17.09/engine/installation/linux/ubuntu/>`_
+  - `CentOS <https://docs.docker.com/v17.09/engine/installation/linux/centos/>`_
+  - `Debian <https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/debian/>`_
+  - `Fedora <https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/fedora/>`_
+
+To check if the installation was successful, open up your favourite Terminal (Mac,Linux), or the Docker Terminal (Windows)
+and try running
+
+.. code-block:: bash
+
+   $ docker version
+   # show version information
+
+* Create a `Docker Hub account <https://hub.docker.com/signup/>`_
+
+Having a Docker Hub account makes it easier to share your containers with other researchers.
+
+Let's login into Docker Hub to be able to push images to your repository.
+
+.. code-block:: bash
+
+   $ docker login
+   # Enter username/password
+
+* Create a `TACC Account <https://portal.tacc.utexas.edu/account-request>`_
+
+
+Working with Docker Hub images
+==============================
+
+Say *hello* from Docker
+
+Let's run a simple hello-world container using the * docker run * command
+
+.. code-block:: bash
+
+   $ docker run hello-world
+   Hello from Docker!
+   This message shows that your installation appears to be working correctly.
+
+This simple command pulls the hello-world image from Docker Hub and prints the message.
+
+You could also try:
+
+.. code-block:: bash
+
+   $ docker inspect hello-world
+   # more information about container image
+
+.. code-block:: bash
+
+   $ docker --help
+   # show all docker options and summaries
+
+.. code-block:: bash
+
+   $ docker COMMAND --help
+   # show options and summaries for a particular command
+
+
+Docker Core Commands
+====================
+
++----------------+------------------------------------------------------+
+| Command        |          Usage                                       |
++================+======================================================+
+| docker login   |  Authenticate to Docker Hub or other Docker Registry |
+|                |  using username and password                         |
++----------------+------------------------------------------------------+
+| docker run     |  *Usage: docker run -it user/imagetag*               |
++----------------+------------------------------------------------------+
+| docker build   |  *Usage: docker build -t username/imagetag .*        |
+|                |  Builds a docker image from a Dockerfile in the      |
+|                |  current working directory. -t to tag the image      |
++----------------+------------------------------------------------------+
+| docker images  |  List all images on the local machine                |
++----------------+------------------------------------------------------+
+| docker tag     |  Add a new tag to an image                           |
++----------------+------------------------------------------------------+
+| docker pull    |  Downloads an image from Docker Hub                  |
++----------------+------------------------------------------------------+
+| docker push    |  *Usage: docker push username/imagetag*              |
+|                |  Uploads an image to Docker Hub                      |
++----------------+------------------------------------------------------+
+| docker inspect |  *Usage: docker inspect containerID*                 |
+|                |  Provides detailed information on constructs         |
+|                |  controlled by Docker                                |
++----------------+------------------------------------------------------+
+| docker ps -a   |  List all your running containers                    |
++----------------+------------------------------------------------------+
+| docker rmi     |  Delete an image                                     |
++----------------+------------------------------------------------------+
+| docker rm      |  *Usage*: docker rm -f [container name or ID]        |
+|                |  Delete a container                                  |
++----------------+------------------------------------------------------+

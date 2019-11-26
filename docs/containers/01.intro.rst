@@ -1,0 +1,74 @@
+==========================
+Introduction to Containers
+==========================
+
+What is a Container?
+--------------------
+
+- A container is a standard unit of software that packages up code and all its dependencies so the
+  application runs quickly and reliably from one computing environment to another.
+
+- Containers allow a developer to package up an application with all of the parts it needs,
+  such as libraries and other dependencies, and ship it all out as one package.
+
+- Multiple containers can run on the same machine and share the OS kernel with other containers,
+  each running as isolated processes in user space, hence are *lightweight* and have *low overhead*.
+
+- Containers ensure *portability* and *reproducibilty* by isolating the application from environment.
+
+
+**Container vs VM**
+
+
+.. figure:: images/vm_containers.png
+   :height: 300
+   :width: 500
+   :align: center
+
+
+
++------------------------------------+-------------------------------------------------+
+| Container                          |          VM                                     |
++====================================+=================================================+
+| OS process level isolation         |  OS level isolation with virtualized hardware   |
++------------------------------------+-------------------------------------------------+
+| Can run 1,000s on a single machine |  Can run “dozens” on a single machine.          |
++------------------------------------+-------------------------------------------------+
+| Leverages kernel features          | Leverages hypervisors (requirements on hardware)|
+| (requirements on kernel version)   |                                                 |
++------------------------------------+-------------------------------------------------+
+| Start up time ~100s of ms          |  Start up time ~minutes                         |
++------------------------------------+-------------------------------------------------+
+
+
+*Benefits of using containers include:*
+
+- Platform independence: Build it once, run it anywhere
+- Resource efficiency and density
+- Enables reproducible science
+- Effective isolation and resource sharing
+- Security
+
+
+Container Technologies
+======================
+
+*Docker*
+
+Docker is a set of platform as a service products that use OS-level virtualization to deliver
+software in packages called containers.
+
+
+*Singularity*
+
+Singularity is a container solution which provides the functionality of a virtual machine, without the heavyweight
+implementation and performance costs of emulation and redundancy.
+Software developers can now build their stack onto whatever operating system base fits their needs best, and
+create distributable runtime encapsulated environments and the users never have to worry about dependencies,
+requirements, or anything else from the user space.
+
+*We can find existing containers at:*
+
+1. `Docker Hub <https://hub.docker.com/>`_
+2. `Singularity Hub <https://singularity-hub.org/>`_
+3. `BioContainers <https://biocontainers.pro/#/>`_
