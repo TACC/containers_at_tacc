@@ -2,7 +2,7 @@
 FROM ubuntu:18.04
 
 # Update and install necessary packages
-RUN apt-get update && apt-get upgrade -y |
+RUN apt-get update && apt-get upgrade -y \
   && apt-get install -y default-jre perl wget zip
 
 # Install the application
