@@ -1,9 +1,9 @@
 Containerize Your Code
 ======================
 
-*Scenario:* You are a researcher who has developed a novel chunk of code. You 
+*Scenario:* You are a researcher who has developed a novel chunk of code. You
 now want to distribute this code for others to use in what you know to be a
-stable production environment (including OS and dependency verions). End users
+stable production environment (including OS and dependency versions). End users
 may want to use this code on their local workstations or on an HPC cluster.
 
 In this section, we will build a container from scratch with some sample python
@@ -14,10 +14,11 @@ programs or projects you are working on.
    :maxdepth: 1
    :caption: Sections:
 
-   01.dockerfile
-   02.interactive_build
-   03.docker_build
-   04.docker_push
-   05.other_considerations
+   getting_set_up
+   interactive_build
+   the_dockerfile
+   docker_build
+   docker_push
+   other_considerations
 
 

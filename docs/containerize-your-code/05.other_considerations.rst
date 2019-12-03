@@ -1,7 +1,0 @@
-Other Considerations
-====================
-
-- Tips for keeping images small
-- Don't use entrypoint or cmd
-- More
-
