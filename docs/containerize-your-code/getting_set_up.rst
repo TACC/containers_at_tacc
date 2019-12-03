@@ -26,7 +26,7 @@ Next, grab a copy of the source code we want to containerize:
 .. code-block:: python
    :linenos:
 
-   #!/usr/bin/env python
+   #!/usr/bin/env python3
    from random import random as r
    from math import pow as p
    from sys import argv

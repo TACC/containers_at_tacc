@@ -19,10 +19,20 @@ platform / lab computer is a Linux workstation with Ubuntu 16.04. We know our
 code works on that workstation, so that is how we will containerize it. Use
 `docker run` to interactively attach to a fresh Ubuntu 16.04 container:
 
-.. code-block:: shell
+.. code-block:: bash
 
    [local]$ docker run --rm -it -v $PWD:/code ubuntu:16.04 /bin/bash
 
+Here is an explanation of the options:
+
+.. code-block:: bash
+
+   docker run      # run a container
+   --rm            # remove the container when we exit
+   -it             # interactively attach terminal to inside of container
+   -v $PWD:/code   # mount the current directory to /code
+   unbuntu:16.04   # image and tag from Docker Hub
+   /bin/bash       # shell to start inside container
 
 If this is your first time calling an Ubuntu 16.04 container on your laptop,
 then docker will first download the image. The command prompt will change,
@@ -41,7 +51,7 @@ we have. We can do this with:
    root@56c60cac8833:/# apt-get upgrade
    ...
 
-Note: on the second command, you need to choose `Y` to install the upgrades.
+Note: on the second command, you need to choose 'Y' to install the upgrades.
 
 **Install New Packages**
 
@@ -55,24 +65,41 @@ For our python script to work, we need to install python3:
    Python 3.5.2
 
 An important question to ask is: Does this version match the version you are
-developing with on your local workstation?
+developing with on your local workstation? If not, make sure to install the
+correct version of python.
 
 
+**Install and Test Your Code**
 
-
-.. code-block:: bash
-
-   root@56c60cac8833:/# apt-get install -y wget
-   root@56c60cac8833:/# wget https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py
-
-After choosing a base OS, it might be easiest to interactively install your program.
+Since we are using a simple python script, there is no burdensome install
+process. However, we can make it executable, make sure it is in the user's PATH,
+and make sure it works as expected:
 
 .. code-block:: bash
 
-   $ docker build -t ubuntu:16.04 .
+   root@56c60cac8833:/# cd /code
+   root@56c60cac8833:/# chmod +x pi.py
+   root@56c60cac8833:/# export PATH=/code:$PATH
+
+Now test with the following:
 
 .. code-block:: bash
 
-   $ docker run --rm -it ubuntu:16.04 /bin/bash
+   root@56c60cac8833:/# cd /home
+   root@56c60cac8833:/# which pi.py
+   /code/pi.py
+   root@56c60cac8833:/# pi.py 1000000
+   Final pi estimate from 1000000 attempts = 3.142804
 
-....Record build steps
+.. note::
+
+   The command `which` probably did not work the first time you tried it. But,
+   it is installed on your local computer. Why didn't it work? Use `apt-get` to
+   install `which` if desired.
+
+
+**Wrapping Up**
+
+We have a functional installation of `pi.py`! Now might be a good time to type
+`history` to see a record of the build process. When you are ready to start
+working on a Dockerfile, type `exit` to exit the container.
