@@ -5,9 +5,8 @@ Before we begin, make a new directory somewhere on your local computer, and
 create an empty Dockerfile inside of it. It is important to carefully consider
 what files and folders are in the same `PATH` as a Dockerfile (known as the
 'build context'). The `docker build` process will index and send all files and
-folders in the same directory as the Dockerfile to the Docker daemon (which you
-don't want to do), so take care not to `docker build` at a root level. For
-example:
+folders in the same directory as the Dockerfile to the Docker daemon, so take
+care not to `docker build` at a root level. For example:
 
 .. code-block:: shell
 
