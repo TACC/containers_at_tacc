@@ -2,12 +2,10 @@
 Working with Docker
 ===================
 
-Overview
---------
+In this section, we will learn to create and use our own docker container.
 
-In this section, we will learn how to create and use our own docker container.
-
-We could do this by using a *Dockerfile*
+Building Images From a *Dockerfile*
+-----------------------------------
 
   - Dockerfiles are a reproducible and well documented method of developing your own container.
   - They store the whole procedure of how an image is built.
@@ -35,24 +33,27 @@ A Dockerfile has two type of fields:
 
 Install a tool in a Docker container
 ------------------------------------
-Let us now write our own to illustrate how to install a simple tool in a Docker container.
+Let’s build a container that will run `fastqc <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_ a popular bioinformatics
+tool for checking the quality of DNA sequencing reads.
 
 *To make it easier, follow along with the sample Dockerfile present in fastqc-dev directory*
 
 .. code-block:: bash
 
+   $ cat Dockerfile
+
    # Choose a base operating system
    FROM ubuntu:18.04
 
    # Update and install necessary packages
-   RUN apt-get update && apt-get upgrade -y |
-     && apt-get install -y default-jre perl wget zip
+   RUN apt-get update && apt-get upgrade -y \
+     && apt-get install -y wget unzip default-jdk libfindbin-libs-perl
 
    # Install the application
-   RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip \
+   RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip \
        && unzip fastqc_v0.11.7.zip \
        && rm fastqc_v0.11.7.zip \
-       && chmod +x /FastQC/fastqc
+       && chmod 755 /FastQC/fastqc
 
    # Use environment variable to add executable to PATH
    ENV PATH "/FastQC:$PATH"
@@ -62,18 +63,36 @@ Let us now write our own to illustrate how to install a simple tool in a Docker 
 .. code-block:: bash
 
    $ docker build -t username/fastqc:0.11.7 .
+   Sending build context to Docker daemon  251.4MB
+   Step 1/4 : FROM ubuntu:18.04
+   ---> 775349758637
+   . . .
+   Successfully built b5d705fbdfa1
+   Successfully tagged reshg/fastqc:0.11.8
 
 **Check images**
 
 .. code-block:: bash
 
    $ docker images
+   REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
+   reshg/fastqc                   0.11.8              b5d705fbdfa1        3 hours ago         708MB
 
 **Run**
+
+We use the **docker run** command to run containers from an image. We pass a command to run in the container.
+Similar to running other programs on Unix systems, we can run containers in the foreground (attached) or in the background.
 
 .. code-block:: bash
 
    $ docker run --rm username/fastqc:0.11.7 which fastqc
+
+*Unpacking the 'docker run' command*
+
+docker run                Run something
+--rm                      Remove the container when the process completes
+username/fastqc:0.11.7    The name of the container and version tag
+fastqc --help             The command to run
 
 **Push Image to Docker hub**
 
@@ -90,30 +109,77 @@ Alternatively, you could also do this *interactively*
 
    $ docker run -ti ubuntu
 
+
+*Unpacking the interactive 'docker run' command*
+
+docker run                 Run something
+--rm -it                   Remove the container when the process completes and connect your terminal to the container runtime
+ubuntu                     The name of the container
+/bin/bash                  The type of shell to start
+
 **Install your tool in the image**
 
 .. code-block:: bash
 
-   $ cd bin/
+   root@ded8d40f1a1e:/#
+   # install dependencies
    $ apt-get update && apt-get upgrade -y
-   $ apt-get install -y default-jre perl wget zip
-   $ wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.7.zip
-   $ unzip fastqc_v0.11.7.zip \
-   $ rm fastqc_v0.11.7.zip \
-   $ chmod +x /FastQC/fastqc
-   $ exit
+   $ apt-get install -y wget unzip default-jdk libfindbin-libs-perl
+
+   # install FastQC
+   $ wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
+   $ unzip fastqc_v0.11.8.zip
+   $ rm fastqc_v0.11.8.zip
+
+   # make fastqc executable
+   $ chmod 755 /FastQC/fastqc
+
+   # add fastqc to the system path by linking to /bin
+   $ ln -s /FastQC/fastqc /bin
 
 **Commit your image**
 
 .. code-block:: bash
 
-   $ docker ps -a
+   $ docker ps -
+
    # Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
-   $ docker commit CONTAINER ID username/fastqc:0.11.7
+   $ docker commit CONTAINER ID username/fastqc:0.11.8
+
    $ docker images
 
 **Push your image to Docker Hub**
 
 .. code-block:: bash
 
-   $ docker push username/fastqc:0.11.7
+   $ docker push username/fastqc:0.11.8
+
+**Running a Container in Daemon mode**
+
+We can also run a container in the background. We do so using the -d flag:
+
+.. code-block:: bash
+
+   $ docker run -d ubuntu sleep infinity
+   f406f6b0c34d4bba552a7106e951a5d667dcbfddcb429e2d42b0ac7a10a919fc
+
+   $ docker ps
+   CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+   f406f6b0c34d        ubuntu              "sleep infinity"    6 seconds ago       Up 5 seconds                            romantic_wilson
+
+   $ docker ps -a
+   CONTAINER ID        IMAGE                          COMMAND             CREATED             STATUS                    PORTS               NAMES
+   f406f6b0c34d        ubuntu                         "sleep infinity"    15 seconds ago      Up 14 seconds                                 romantic_wilson
+   b7c50065ea75        ubuntu                         "/bin/bash"         21 hours ago        Up 21 hours                                   charming_robinson
+   a197e85bee14        reshg/fastqc:latest            "/bin/bash"         21 hours ago        Exited (0) 21 hours ago                       reverent_williamson
+   4eb4cf433d32        reshg/fastqc:latest            "which fastqc"      21 hours ago        Exited (1) 21 hours ago                       stoic_dhawan
+   1eb1de6ac64c        reshg/fastqc                   "which fastqc"      21 hours ago        Exited (1) 21 hours ago                       upbeat_mcnulty
+
+*Note: The docker ps command only shows you running containers - it does not show you containers that have exited.*
+In order to see all containers on the system use docker ps -a.
+
+
+**Summary**
+
+A Dockerfile allows you to transparently document all the dependancies and steps needed to describe a software tool.
+You can then run this tool as a Docker container for full reproducibility.

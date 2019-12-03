@@ -41,7 +41,7 @@ What is a Container?
 +------------------------------------+-------------------------------------------------+
 
 
-*Benefits of using containers include:*
+**Benefits of using containers include:**
 
 - Platform independence: Build it once, run it anywhere
 - Resource efficiency and density
@@ -53,13 +53,12 @@ What is a Container?
 Container Technologies
 ======================
 
-*Docker*
+**Docker**
 
 Docker is a set of platform as a service products that use OS-level virtualization to deliver
 software in packages called containers.
 
-
-*Singularity*
+**Singularity**
 
 Singularity is a container solution which provides the functionality of a virtual machine, without the heavyweight
 implementation and performance costs of emulation and redundancy.
@@ -67,7 +66,9 @@ Software developers can now build their stack onto whatever operating system bas
 create distributable runtime encapsulated environments and the users never have to worry about dependencies,
 requirements, or anything else from the user space.
 
-*We can find existing containers at:*
+Docker helps to develop containers and run them on our laptops.  We use Singularity as a runtime on our HPC systems.
+
+**We can find existing containers at:**
 
 1. `Docker Hub <https://hub.docker.com/>`_
 2. `Singularity Hub <https://singularity-hub.org/>`_
