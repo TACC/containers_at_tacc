@@ -96,6 +96,7 @@ with an ENV instruction as follows:
 The contents of the final Dockerfile should look like:
 
 .. code-block:: bash
+   :linenos:
 
    FROM ubuntu:16.04
 
