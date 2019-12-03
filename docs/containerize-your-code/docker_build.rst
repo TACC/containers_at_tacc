@@ -2,7 +2,7 @@ Build the Container
 ===================
 
 Once the Dockerfile is written and we are satisfied that we have minimized the
-number of layers, the next step is to build an image. Building a docker image
+number of layers, the next step is to build an image. Building a Docker image
 generally takes the form:
 
 .. code-block:: bash
@@ -22,11 +22,11 @@ To build our image, use:
 
 .. code-block:: bash
 
-   $ docker build -t wallen/pi-estimator:0.1 .
+   $ docker build -t username/pi-estimator:0.1 .
 
 .. note::
 
-   Don't forget to replace 'wallen' with your Docker Hub username.
+   Don't forget to replace 'username' with your Docker Hub username.
 
 
 **Find the Image**
@@ -38,12 +38,12 @@ also use `docker inspect` to find out more information about the image.
 
    $ docker images
    REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
-   wallen/pi-estimator       0.1                 482bd4f0bc9b        14 minutes ago      200MB
+   username/pi-estimator       0.1                 482bd4f0bc9b        14 minutes ago      200MB
    ubuntu                    16.04               5e13f8dd4c1a        4 months ago        120MB
 
 .. code-block:: bash
 
-   $ docker inspect wallen/pi-estimator:0.1
+   $ docker inspect username/pi-estimator:0.1
    ...
 
 If you need to rename your image, you can either re-tag it with `docker tag`, or
@@ -54,14 +54,14 @@ an empty command line to find out usage information.
 **Test the Image**
 
 We can test a newly-built image two ways: interactively and non-interactively.
-In interactive testing, we will use docker run to start a shell inside the
+In interactive testing, we will use Docker run to start a shell inside the
 image, just like we did when we were building it. The difference this time is
 that we are NOT mounting the code inside with the `-v` flag, because the code is
 already in the container:
 
 .. code-block:: bash
 
-   [local]$ docker run --rm -it wallen/pi-estimator:0.1 /bin/bash
+   [local]$ docker run --rm -it username/pi-estimator:0.1 /bin/bash
    ...
    root@e01e374d7749:/# ls /code
    pi.py
@@ -75,7 +75,7 @@ the command line:
 
 .. code-block:: bash
 
-   $ docker run --rm wallen/pi-estimator:0.1 pi.py 1000000
+   $ docker run --rm username/pi-estimator:0.1 pi.py 1000000
    Final pi estimate from 1000000 attempts = 3.141208
 
 If there are no errors, the container is built and ready to share!
