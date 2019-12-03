@@ -38,7 +38,7 @@ also use `docker inspect` to find out more information about the image.
 
    $ docker images
    REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
-   username/pi-estimator       0.1                 482bd4f0bc9b        14 minutes ago      200MB
+   username/pi-estimator     0.1                 482bd4f0bc9b        14 minutes ago      200MB
    ubuntu                    16.04               5e13f8dd4c1a        4 months ago        120MB
 
 .. code-block:: bash
