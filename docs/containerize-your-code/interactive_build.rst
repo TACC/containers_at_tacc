@@ -35,7 +35,7 @@ Here is an explanation of the options:
    /bin/bash       # shell to start inside container
 
 If this is your first time calling an Ubuntu 16.04 container on your laptop,
-then docker will first download the image. The command prompt will change,
+then Docker will first download the image. The command prompt will change,
 signaling you are now 'inside' the container.
 
 **Update and Upgrade**

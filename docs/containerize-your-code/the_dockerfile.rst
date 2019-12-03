@@ -41,7 +41,7 @@ image may look like:
    RUN apt-get install -y python3
 
 Each RUN instruction creates an intermediate image (called a 'layer'). Too many
-layers makes the docker image less performant, and makes building less
+layers makes the Docker image less performant, and makes building less
 efficient. We can minimize the number of layers by combining the RUN
 instructions:
 
@@ -62,7 +62,7 @@ A similar RUN instruction for a RedHat / CentOS base image may look like:
 There are a couple different ways to get your source code inside the image. One
 way is to use a RUN instruction with `wget` to pull your code from the web. When
 you are developing, however, it is usually more practical to copy code in from
-the docker build context using the COPY instruction. For example, we can add our
+the Docker build context using the COPY instruction. For example, we can add our
 `pi.py` python script to a root-level `/code` directory with the following
 instruction:
 

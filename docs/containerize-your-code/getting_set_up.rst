@@ -16,7 +16,7 @@ example:
   $ cd python-container/
   $ touch Dockerfile
   $ pwd
-  /Users/wallen/python-container/
+  /Users/username/python-container/
   $ ls
   Dockerfile
 
@@ -62,6 +62,6 @@ Now, you should have two files and nothing else in this folder:
 .. code-block:: shell
 
    $ pwd
-   /Users/wallen/python-container/
+   /Users/username/python-container/
    $ ls
    Dockerfile     pi.py
