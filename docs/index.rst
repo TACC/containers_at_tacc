@@ -21,7 +21,7 @@ Topics will include:
    :caption: Contents:
    
    containers/00.overview
-   containerize-your-code/00.overview
+   containerize-your-code/overview
 
 
 Indices and tables
