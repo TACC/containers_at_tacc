@@ -1,0 +1,9 @@
+FROM tacc/tacc-ubuntu18-mvapich2.3-psm2:0.0.2
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y python3-pip
+RUN pip3 install mpi4py
+
+COPY pi-mpi.py /code/pi-mpi.py
+RUN chmod +x /code/pi-mpi.py
+
+ENV PATH "/code:$PATH"
