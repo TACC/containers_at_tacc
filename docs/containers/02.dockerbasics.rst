@@ -253,42 +253,42 @@ You could also try:
 Docker Core Commands
 ====================
 
-+----------------+------------------------------------------------------+
-| Command        |          Usage                                       |
-+================+======================================================+
-| docker login   |  Authenticate to Docker Hub or other Docker Registry |
-|                |  using username and password                         |
-+----------------+------------------------------------------------------+
-| docker run     |  *Usage: docker run -it user/imagetag*               |
-+----------------+------------------------------------------------------+
-| docker build   |  *Usage: docker build -t username/imagetag .*        |
-|                |  Build a docker image from a Dockerfile in the       |
-|                |  current working directory. -t to tag the image      |
-+----------------+------------------------------------------------------+
-| docker images  |  List all images on the local machine                |
-+----------------+------------------------------------------------------+
-| docker tag     |  Add a new tag to an image                           |
-+----------------+------------------------------------------------------+
-| docker pull    |  Download an image from Docker Hub                   |
-+----------------+------------------------------------------------------+
-| docker push    |  *Usage: docker push username/imagetag*              |
-|                |  Upload an image to Docker Hub                       |
-+----------------+------------------------------------------------------+
-| docker inspect |  *Usage: docker inspect containerID*                 |
-|                |  Provide detailed information on constructs          |
-|                |  controlled by Docker                                |
-+----------------+------------------------------------------------------+
-| docker ps -a   |  List all containers on your system                  |
-+----------------+------------------------------------------------------+
-| docker rmi     |  Delete an image                                     |
-+----------------+------------------------------------------------------+
-| docker rm      |  *Usage: docker rm -f [container name or ID]*        |
-|                |  Delete a container                                  |
-|                |  -f optional to remove running container             |
-+----------------+------------------------------------------------------+
-| docker stop    |  *Usage: docker stop [container name or ID]*         |
-|                |  Stop a container                                    |
-+----------------+------------------------------------------------------+
++----------------+------------------------------------------------+
+| Command        |          Usage                                 |
++================+================================================+
+| docker login   |  Authenticate to Docker Hub                    |
+|                |  using username and password                   |
++----------------+------------------------------------------------+
+| docker run     |  *Usage: docker run -it user/imagetag*         |
++----------------+------------------------------------------------+
+| docker build   |  *Usage: docker build -t username/imagetag .*  |
+|                |  Build a docker image from a Dockerfile in the |
+|                |  current working directory. -t to tag the image|
++----------------+------------------------------------------------+
+| docker images  |  List all images on the local machine          |
++----------------+------------------------------------------------+
+| docker tag     |  Add a new tag to an image                     |
++----------------+------------------------------------------------+
+| docker pull    |  Download an image from Docker Hub             |
++----------------+------------------------------------------------+
+| docker push    |  *Usage: docker push username/imagetag*        |
+|                |  Upload an image to Docker Hub                 |
++----------------+------------------------------------------------+
+| docker inspect |  *Usage: docker inspect containerID*           |
+|                |  Provide detailed information on constructs    |
+|                |  controlled by Docker                          |
++----------------+------------------------------------------------+
+| docker ps -a   |  List all containers on your system            |
++----------------+------------------------------------------------+
+| docker rmi     |  Delete an image                               |
++----------------+------------------------------------------------+
+| docker rm      |  *Usage: docker rm -f [container name or ID]*  |
+|                |  Delete a container                            |
+|                |  -f optional to remove running container       |
++----------------+------------------------------------------------+
+| docker stop    |  *Usage: docker stop [container name or ID]*   |
+|                |  Stop a container                              |
++----------------+------------------------------------------------+
 
 Getting more help with Docker
 =============================
