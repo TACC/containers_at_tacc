@@ -36,9 +36,10 @@ Install a tool in a Docker container
 Let’s build a container that will run `fastqc <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_ a popular bioinformatics
 tool for checking the quality of DNA sequencing reads.
 
-*To make it easier, follow along with the sample Dockerfile present in fastqc-dev directory*
+*To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
 
 .. code-block:: bash
+   :linenos:
 
    $ cat Dockerfile
 
@@ -57,6 +58,15 @@ tool for checking the quality of DNA sequencing reads.
 
    # Use environment variable to add executable to PATH
    ENV PATH "/FastQC:$PATH"
+
+From your current working directory, preferably a clean one copy the contents of this file into a new file called
+Dockerfile as shown below.
+
+.. code-block:: bash
+
+   $ vi Dockerfile
+
+Save the file.
 
 **Build**
 
@@ -85,14 +95,22 @@ Similar to running other programs on Unix systems, we can run containers in the 
 
 .. code-block:: bash
 
-   $ docker run --rm username/fastqc:0.11.7 which fastqc
+   $ docker run --rm username/fastqc:0.11.8 which fastqc
+   /FastQC/fastqc
 
 *Unpacking the 'docker run' command*
 
-docker run                Run something
---rm                      Remove the container when the process completes
-username/fastqc:0.11.7    The name of the container and version tag
-fastqc --help             The command to run
++-----------------------+----------------------------------------+
+| docker run            |  Run something                         |
++-----------------------+----------------------------------------+
+| --rm                  |  Remove the container when the process |
+|                       |  completes                             |
++------------+---------------------------------------------------+
+| username/fastqc:0.11.7|  The name of the container             |
++-----------------------+----------------------------------------+
+| fastqc --help         |  The command to run                    |
++-----------------------+----------------------------------------+
+
 
 **Push Image to Docker hub**
 
@@ -112,10 +130,17 @@ Alternatively, you could also do this *interactively*
 
 *Unpacking the interactive 'docker run' command*
 
-docker run                 Run something
---rm -it                   Remove the container when the process completes and connect your terminal to the container runtime
-ubuntu                     The name of the container
-/bin/bash                  The type of shell to start
++------------+----------------------------------------+
+| docker run |  Run something                         |
++------------+----------------------------------------+
+| --rm -it   |  Remove the container when the process |
+|            |  completes and connect your            |
+|            |  terminal to the container runtime     |
++------------+----------------------------------------+
+| ubuntu     |  The name of the container             |
++------------+----------------------------------------+
+| /bin/bash  |  The type of shell to start            |
++------------+----------------------------------------+
 
 **Install your tool in the image**
 
@@ -136,23 +161,31 @@ ubuntu                     The name of the container
 
    # add fastqc to the system path by linking to /bin
    $ ln -s /FastQC/fastqc /bin
+   $ exit
 
 **Commit your image**
 
 .. code-block:: bash
 
-   $ docker ps -
+   $ docker ps -a
+   CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                      PORTS                    NAMES
+   9f0d7afff313        ubuntu                         "/bin/bash"              9 minutes ago       Exited (0) 18 seconds ago                            affectionate_einstein
 
    # Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
    $ docker commit CONTAINER ID username/fastqc:0.11.8
+   sha256:738f35b39c5711f722cc6d9b550215454f2a7ea765c73667355d383a8a9285bf
 
    $ docker images
+   REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
+   reshg/fastqc                  0.11.8              738f35b39c57        12 seconds ago      718MB
 
 **Push your image to Docker Hub**
 
 .. code-block:: bash
 
    $ docker push username/fastqc:0.11.8
+   The push refers to repository [docker.io/reshg/fastqc]
+   6750c6c8d397: Pushing [=========>                                         ]  124.3MB/654.2MB
 
 **Running a Container in Daemon mode**
 
@@ -177,7 +210,6 @@ We can also run a container in the background. We do so using the -d flag:
 
 *Note: The docker ps command only shows you running containers - it does not show you containers that have exited.*
 In order to see all containers on the system use docker ps -a.
-
 
 **Summary**
 
