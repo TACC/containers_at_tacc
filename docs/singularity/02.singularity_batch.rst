@@ -1,0 +1,53 @@
+
+
+1. Using HPC Environments
+=========================
+
+Conducting analyses on high performance computing clusters happens through very different patterns of interaction than running analyses on a VM or on your own laptop.  When you login, you are on a node that is shared with lots of people.  Trying to run jobs on that node is not "high performance" at all.  Those login nodes are just intended to be used for moving files, editing files, and launching jobs.
+
+Most jobs on a HPC cluster are neither interactive, nor realtime.  When you submit a job to the scheduler, you must tell it what resources you need (e.g. how many nodes, what type of nodes) and what you want to run.  Then the scheduler finds resources matching your requirements, and runs the job for you when it can.
+
+For example, if you want to run the command:
+
+.. code-block:: bash
+
+  singularity exec docker://python:latest /usr/local/bin/python
+
+On a HPC system, your job submission script would look something like:
+
+.. code-block:: bash
+
+  #!/bin/bash
+  
+  #SBATCH -J myjob                      # Job name
+  #SBATCH -o output.%j                  # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p development                # Queue name
+  #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+  #SBATCH -n 1                         # Total number of mpi tasks requested
+  #SBATCH -t 02:00:00                   # Run time (hh:mm:ss) - 4 hours
+
+  module load tacc-singularity
+  singularity exec docker://python:latest /usr/local/bin/python
+
+This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines looks like a comment to the bash kernel, but the scheduler reads all those lines to know what resources to reserve for you.
+
+It is usually possible to get an interactive session as well.  At TACC, the command "idev" is used to get an interactive development session.  For example:
+
+.. code-block:: bash
+
+  idev -m 240 -p skx-normal
+
+Just running "idev" gives you one hour on a development node.  The example above will give you a 240 minute interactive session on the "skx-normal" partition of the system (which in this case have 48 Skylake CPU cores per node).
+
+.. Note::
+
+  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Stampede2 system, the user guide is at: `https://portal.tacc.utexas.edu/user-guides/stampede2 <https://portal.tacc.utexas.edu/user-guides/stampede2>`_
+
+How do HPC systems fit into the development workflow?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A few things to consider when using HPC systems:
+
+#. Using 'sudo' is not allowed on HPC systems, and building a Singularity container from scratch requires sudo.  That means you have to build your containers on a different development system.  You can pull a docker image on HPC systems
+#. If you need to edit text files, command line text editors don't support using a mouse, so working efficiently has a learning curve.  There are text editors that support editing files over SSH.  This lets you use a local text editor and just save the changes to the HPC system.
+#. Singularity is in the process of changing image formats.  Depending on the version of Singularity running on the HPC system, new squashFS or .simg formats may not work.

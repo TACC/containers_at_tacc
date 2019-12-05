@@ -1,0 +1,136 @@
+******************************
+1. Introduction to Singularity
+******************************
+
+At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singluarity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
+
+If you are familiar with Docker, Singularity will feel familiar.
+
+1.1 Start an Interactive Session
+================================
+
+The Singularity module is currently only available on compute nodes at TACC. To use Singularity interactively, start an interactive session on a compute node using the ``idev`` command.
+
+.. code-block:: bash
+
+	$ idev -m 90
+
+If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
+
+1.2 Load the Singularity Module
+===============================
+
+By default, the ``singularity`` command is not visible, but it can be added to the environment by loading the module.
+
+.. code-block:: bash
+
+	$ module list
+
+    $ module spider singularity
+
+    $ module load tacc-singularity
+
+    $ module list
+
+Now the singularity command is available.
+
+.. code-block:: bash
+
+	$ type singularity
+
+    $ singularity help
+
+
+1.3 Core Singularity Commands
+=============================
+
+
+Pull a Docker container
+-----------------------
+
+Containers in the Docker registry may be downloaded and used, assuming the underlying architecture (e.g. x86) is the same between the container and the host.
+
+.. code-block:: bash
+
+	$ singularity pull docker://godlovedc/lolcow
+
+    $ ls
+
+There may be some warning messages, but this command should download the latest version of the "lolcow" container and save it in your current working directory as ``lolcow_latest.sif``.
+
+
+Interactive shell
+-----------------
+
+The ``shell`` command allows you to spawn a new shell within your container and interact with it as though it were a small virtual machine.
+
+.. code-block:: bash
+
+	$ singularity shell lolcow_latest.sif 
+	  Singularity lolcow_latest.sif:~>
+
+The change in prompt indicates that you have entered the container (though you should not rely on that to determine whether you are in container or not).
+
+Once inside of a Singularity container, you are the same user as you are on the host system.
+
+.. code-block:: bash
+
+	Singularity lolcow_latest.sif:~> whoami
+
+	Singularity lolcow_latest.sif:~> id
+
+.. Note::
+
+	``shell`` also works with the library://, docker://, and shub:// URIs. This creates an ephemeral container that disappears when the shell is exited.
+
+
+Run a container's default command
+-------------------------------------
+
+Just like with Docker, Singularity can run the default "entrypoint" or default command of a container with the ``run`` subcommand.  These defaults are defined in the Dockerfile (or Singularityfile) that define the actions a container should perform when someone runs it.
+
+.. code-block:: bash
+
+	singularity run lolcow_latest.sif 
+	 _________________________________________
+	/  You will remember, Watson, how the     \
+	| dreadful business of the Abernetty      |
+	| family was first brought to my notice   |
+	| by the depth which the parsley had sunk |
+	| into the butter upon a hot day.         |
+	|                                         |
+	\ -- Sherlock Holmes                      /
+	 -----------------------------------------
+	        \   ^__^
+	         \  (oo)\_______
+	            (__)\       )\/\
+	                ||----w |
+	                ||     ||
+
+.. Note::
+
+    You may receive a warning about "Setting locale failed".  This is because, by default, Singularity sets all shell environment variables inside the container to match whatever is on the host.  To override this behavior, add the ``--cleanenv`` argument to your command.
+
+
+Executing arbitrary commands
+----------------------------
+
+The exec command allows you to execute a custom command within a container. For instance, to execute the ``cowsay`` program within the lolcow_latest.sif container:
+
+.. code-block:: bash
+
+	$ singularity exec --cleanenv lolcow_latest.sif cowsay Singularity runs Docker containers on HPC systems
+     _______________________________________
+    / Singularity runs Docker containers on \
+    \ HPC systems                           /
+     ---------------------------------------
+            \   ^__^
+             \  (oo)\_______
+                (__)\       )\/\
+                    ||----w |
+                    ||     ||
+
+.. Note::
+
+	``exec`` also works with the library://, docker://, and shub:// URIs. This creates an ephemeral container that executes a command and disappears.
+
