@@ -6,7 +6,7 @@ on one such container technology called "Docker".
 
 **Objectives for this session**
 
-  * To understand Containers
+  * To understand Containers 
   * To find and use existing containers
   * To develop, use your own containers
 

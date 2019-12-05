@@ -105,7 +105,7 @@ Similar to running other programs on Unix systems, we can run containers in the 
 +-----------------------+----------------------------------------+
 | --rm                  |  Remove the container when the process |
 |                       |  completes                             |
-+------------+---------------------------------------------------+
++-----------------------++---------------------------------------+
 | username/fastqc:0.11.7|  The name of the container             |
 +-----------------------+----------------------------------------+
 | fastqc --help         |  The command to run                    |
