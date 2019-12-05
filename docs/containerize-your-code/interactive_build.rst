@@ -71,14 +71,14 @@ correct version of python.
 
 **Install and Test Your Code**
 
-Since we are using a simple python script, there is no burdensome install
+Since we are using a simple python script, there is not a difficult install
 process. However, we can make it executable, make sure it is in the user's PATH,
 and make sure it works as expected:
 
 .. code-block:: bash
 
    root@56c60cac8833:/# cd /code
-   root@56c60cac8833:/# chmod +x pi.py
+   root@56c60cac8833:/# chmod +rx pi.py
    root@56c60cac8833:/# export PATH=/code:$PATH
 
 Now test with the following:

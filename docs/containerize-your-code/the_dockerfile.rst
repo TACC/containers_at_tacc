@@ -30,7 +30,7 @@ We can install updates, install new software, or download code to our image by
 running commands with the RUN instruction. In our case, our only dependency was
 Python3. So, we will use a RUN instruction and the Ubuntu package manager
 (`apt`) to install it. Keep in mind that the the `docker build` process cannot
-handle interactive prompts, so we use the `-y` flag in `apt`. We also need to be
+handle interactive prompts, so we use the `-y` flag with `apt`. We also need to be
 sure to update our apt packages. A typical RUN instruction for an Ubuntu base
 image may look like:
 
@@ -75,7 +75,7 @@ executable:
 
 .. code-block:: bash
 
-   RUN chmod +x /code/pi.py
+   RUN chmod +rx /code/pi.py
 
 
 
@@ -104,7 +104,7 @@ The contents of the final Dockerfile should look like:
 
    COPY pi.py /code/pi.py
 
-   RUN chmod +x /code/pi.py
+   RUN chmod +rx /code/pi.py
 
    ENV PATH "/code:$PATH"
 
