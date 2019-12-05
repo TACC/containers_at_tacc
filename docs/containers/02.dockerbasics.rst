@@ -306,3 +306,7 @@ Getting more help with Docker
    # shows options and summaries for a particular command
 
 - Learn `more about docker <https://docs.docker.com/get-started/>`_
+
+.. note::
+
+    If you do not have Docker installed on your laptop, you could also use https://training.play-with-docker.com/beginner-linux/

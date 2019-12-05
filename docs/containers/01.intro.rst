@@ -20,11 +20,10 @@ What is a Container?
 **Container vs VM**
 
 
-.. figure:: images/vm_containers.png
+.. figure:: images/docker_vm.png
    :height: 300
    :width: 500
    :align: center
-
 
 
 +------------------------------------+-------------------------------------------------+
@@ -47,7 +46,6 @@ What is a Container?
 - Resource efficiency and density
 - Enables reproducible science
 - Effective isolation and resource sharing
-- Security
 
 
 Container Technologies

@@ -10,8 +10,6 @@ on one such container technology called "Docker".
   * To find and use existing containers
   * To develop, use your own containers
 
-Please find the required materials for this course at  `TACC/containers_at_tacc <https://github.com/TACC/containers_at_tacc>`_
-
 .. toctree::
    :maxdepth: 1
    :caption: Sections:

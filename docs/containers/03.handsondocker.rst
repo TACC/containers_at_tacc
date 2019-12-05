@@ -52,27 +52,21 @@ tool for checking the quality of DNA sequencing reads.
 
    # Install the application
    RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip \
-       && unzip fastqc_v0.11.7.zip \
-       && rm fastqc_v0.11.7.zip \
+       && unzip fastqc_v0.11.8.zip \
+       && rm fastqc_v0.11.8.zip \
        && chmod 755 /FastQC/fastqc
 
    # Use environment variable to add executable to PATH
    ENV PATH "/FastQC:$PATH"
 
-From your current working directory, preferably a clean one copy the contents of this file into a new file called
-Dockerfile as shown below.
-
-.. code-block:: bash
-
-   $ vi Dockerfile
-
-Save the file.
+From your current working directory, preferably a clean one, copy the contents of this file into a new file called
+Dockerfile and save it.
 
 **Build**
 
 .. code-block:: bash
 
-   $ docker build -t username/fastqc:0.11.7 .
+   $ docker build -t username/fastqc:0.11.8 .
    Sending build context to Docker daemon  251.4MB
    Step 1/4 : FROM ubuntu:18.04
    ---> 775349758637
@@ -106,9 +100,9 @@ Similar to running other programs on Unix systems, we can run containers in the 
 | --rm                  |  Remove the container when the process |
 |                       |  completes                             |
 +-----------------------++---------------------------------------+
-| username/fastqc:0.11.7|  The name of the container             |
+| username/fastqc:0.11.8|  The name of the container             |
 +-----------------------+----------------------------------------+
-| fastqc --help         |  The command to run                    |
+| which fastqc          |  The command to run                    |
 +-----------------------+----------------------------------------+
 
 
@@ -116,16 +110,22 @@ Similar to running other programs on Unix systems, we can run containers in the 
 
 .. code-block:: bash
 
-   $ docker push username/fastqc:0.11.7
+   $ docker push username/fastqc:0.11.8
 
 
 Alternatively, you could also do this *interactively*
+-----------------------------------------------------
+
+.. note::
+  Preferred way to build a docker image is by using Dockerfile. For the purpose of testing,
+  working inside the container is sometimes helpful.
+
 
 **Open a base Docker Image**
 
 .. code-block:: bash
 
-   $ docker run -ti ubuntu
+   $ docker run --rm -it ubuntu /bin/bash
 
 
 *Unpacking the interactive 'docker run' command*
