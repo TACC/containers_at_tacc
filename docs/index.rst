@@ -22,6 +22,7 @@ Topics will include:
    
    containers/00.overview
    containerize-your-code/overview
+   singularity/00.overview
 
 
 Indices and tables

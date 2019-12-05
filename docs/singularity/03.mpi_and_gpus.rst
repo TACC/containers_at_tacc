@@ -1,0 +1,127 @@
+2. Singularity and MPI
+======================
+
+Singularity supports MPI fairly well.  Since (by default) the network is the same insde and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  If the host and container are running different MPI implementations, or even different versions of the same implementation, hilarity may ensue.
+
+The general rule is that you want the version of MPI inside the container to be the same version or newer than the host.  You may be thinking that this is not good for the portability of your container, and you are right.  Containerizing MPI applications is not terribly difficult with Singularity, but it comes at the cost of additional requirements for the host system.
+
+.. Note::
+
+  Many HPC Systems, like Stampede2, have highspeed, low latency networks that have special drivers.  Infiniband, Ares, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.
+
+Because you may have to build your own MPI enabled Singularity images (to get the versions to match), here is a 2.3 compatible example of what it may look like:
+
+.. code-block:: bash
+
+  # Copyright (c) 2015-2016, Gregory M. Kurtzer. All rights reserved.
+  # 
+  # "Singularity" Copyright (c) 2016, The Regents of the University of     California,
+  # through Lawrence Berkeley National Laboratory (subject to receipt of any
+  # required approvals from the U.S. Dept. of Energy).  All rights reserved.
+  
+  BootStrap: debootstrap
+  OSVersion: xenial
+  MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+  
+  
+  %runscript
+      echo "This is what happens when you run the container..."
+  
+  
+  %post
+      echo "Hello from inside the container"
+      sed -i 's/$/ universe/' /etc/apt/sources.list
+      apt update
+      apt -y --allow-unauthenticated install vim build-essential wget     gfortran bison libibverbs-dev libibmad-dev libibumad-dev librdmacm-dev     libmlx5-dev libmlx4-dev
+      wget http://mvapich.cse.ohio-state.edu/download/mvapich/mv2/    mvapich2-2.1.tar.gz
+      tar xvf mvapich2-2.1.tar.gz
+      cd mvapich2-2.1
+      ./configure --prefix=/usr/local
+      make -j4
+      make install
+      /usr/local/bin/mpicc examples/hellow.c -o /usr/bin/hellow
+
+You could also build in everything in a Dockerfile and convert the image to Singularity at the end.
+
+Once you have a working MPI container, invoking it would look something like:
+
+.. code-block:: bash
+
+  mpirun -np 4 singularity exec ./mycontainer.img /app.py arg1 arg2
+
+This will use the **host MPI** libraries to run in parallel, and assuming the image has what it needs, can work across many nodes.
+
+For a single node, you can also use the **container MPI** to run in parallel (usually you don't want this)
+
+.. code-block:: bash
+
+  singularity exec ./mycontainer.img mpirun -np 4 /app.py arg1 arg2
+
+
+3. Singularity and GPU Computing
+================================
+
+GPU support in Singularity is fantastic
+
+Since Singularity supported docker containers, it has been fairly simple to utilize GPUs for machine learning code like TensorFlow. From Maverick, which is TACC’s GPU system:
+
+.. code-block:: bash
+
+  # Work from a compute node
+  idev -m 60
+  # Load the singularity module
+  module load tacc-singularity
+  # Pull your image
+  singularity pull docker://nvidia/caffe:latest
+  
+  singularity exec --nv caffe-latest.img caffe device_query -gpu 0
+
+Please note that the --nv flag specifically passes the GPU drivers into the container. If you leave it out, the GPU will not be detected.
+
+.. code-block:: bash
+
+  singularity exec caffe-latest.img caffe device_query -gpu 0
+
+For TensorFlow, you can directly pull their latest GPU image and utilize it as follows.
+
+.. code-block:: bash
+
+  # Change to your $WORK directory
+  cd $WORK
+  #Get the software
+  git clone https://github.com/tensorflow/models.git ~/models
+  # Pull the image
+  singularity pull docker://tensorflow/tensorflow:latest-gpu
+  # Run the code
+  singularity exec --nv tensorflow-latest-gpu.img python $HOME/models/tutorials/image/mnist/convolutional.py
+
+.. Note::
+
+    You probably noticed that we check out the models repository into your $HOME directory. This is because your $HOME and $WORK directories are only available inside the container if the root folders /home and /work exist inside the container. In the case of tensorflow-latest-gpu.img, the /work directory does not exist, so any files there are inaccessible to the container.
+
+You may be thinking “what about overlayFS??”. Stampede2 supports it, but the Linux kernel on the other systems does not support overlayFS, so it had to be disabled in our Singularity install.  This may change as new Singularity versions are released.
+
+Hands-On Exercise
+~~~~~~~~~~~~~~~~~
+
+Build a Singularity container that implements a simple Tensorflow image classifier.
+
+The image classifier script is available "out of the box" here:
+`https://raw.githubusercontent.com/tensorflow/models/master/tutorials/image/imagenet/classify_image.py <https://raw.githubusercontent.com/tensorflow/models/master/tutorials/image/imagenet/classify_image.py>`_
+
+Tensorflow has working Docker containers on DockerHub that you can use to support all the dependencies.  For example, the first line of your Dockerfile might look like:
+
+.. code-block:: bash
+
+  FROM tensorflow/tensorflow:1.5.0-py3
+
+When running the image classifier, the non-containerized version would be invoked with something like:
+
+.. code-block:: bash
+
+  python /classify_image.py --model_dir /model --image_file cat.png
+
+You can use a Singularity file or a Dockerfile to help you.  For reference, you can lookback at the "Singularity Intro" section on building Singularity images, yesterday's material on building Dockerfiles, or the respective manual pages:
+
+- `http://singularity.lbl.gov/docs-build-container <http://singularity.lbl.gov/docs-build-container>`_
+- `https://docs.docker.com/engine/reference/builder/ <https://docs.docker.com/engine/reference/builder/>`_
