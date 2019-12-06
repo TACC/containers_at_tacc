@@ -72,16 +72,28 @@ Next, update the Dockerfile to include a new kind of instruction at the very end
 of the file - CMD:
 
 .. code-block:: bash
+   :linenos:
+   :emphasize-lines: 11
+
+   FROM ubuntu:18.04
+
+   RUN apt-get update && apt-get upgrade -y && apt-get install -y python3
+
+   COPY pi.py /code/pi.py
+
+   RUN chmod +x /code/pi.py
+
+   ENV PATH "/code:$PATH"
 
    CMD ["pi.py", "-h"]
 
 This command will be executed in the container if the user calls the container
 without any arguments.
 
-Finally, rebuild the container update the version tag to '0.2'. Test that the
-code in the new container has been updated, and that it is working as expected.
-If you are happy that it is working, push the updated container with the new tag
-to Docker Hub.
+Finally, rebuild the container and update the version tag to '0.2'. Test that
+the code in the new container has been updated, and that it is working as
+expected. If you are happy that it is working, push the updated container with
+the new tag to Docker Hub.
 
 
 .. toctree::
