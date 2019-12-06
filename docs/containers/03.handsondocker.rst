@@ -36,7 +36,7 @@ Install a tool in a Docker container
 Let’s build a container that will run `fastqc <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_ a popular bioinformatics
 tool for checking the quality of DNA sequencing reads.
 
-*To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
+To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
 
 .. code-block:: bash
    :linenos:
