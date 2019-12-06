@@ -15,13 +15,13 @@ starting a new Dockerfile include:
 
 Let's work through these questions by performing an **interactive installation**
 of our python script. In our hypothetical scenario, let's say our development
-platform / lab computer is a Linux workstation with Ubuntu 16.04. We know our
+platform / lab computer is a Linux workstation with Ubuntu 18.04. We know our
 code works on that workstation, so that is how we will containerize it. Use
-`docker run` to interactively attach to a fresh Ubuntu 16.04 container:
+`docker run` to interactively attach to a fresh Ubuntu 18.04 container:
 
 .. code-block:: bash
 
-   [local]$ docker run --rm -it -v $PWD:/code ubuntu:16.04 /bin/bash
+   $ docker run --rm -it -v $PWD:/code ubuntu:18.04 /bin/bash
 
 Here is an explanation of the options:
 
@@ -31,10 +31,10 @@ Here is an explanation of the options:
    --rm            # remove the container when we exit
    -it             # interactively attach terminal to inside of container
    -v $PWD:/code   # mount the current directory to /code
-   unbuntu:16.04   # image and tag from Docker Hub
+   unbuntu:18.04   # image and tag from Docker Hub
    /bin/bash       # shell to start inside container
 
-If this is your first time calling an Ubuntu 16.04 container on your laptop,
+If this is your first time calling an Ubuntu 18.04 container on your laptop,
 then Docker will first download the image. The command prompt will change,
 signaling you are now 'inside' the container.
 
@@ -51,7 +51,9 @@ we have. We can do this with:
    root@56c60cac8833:/# apt-get upgrade
    ...
 
-Note: on the second command, you need to choose 'Y' to install the upgrades.
+.. note::
+
+   On the second command, you need to choose 'Y' to install the upgrades.
 
 **Install New Packages**
 
@@ -62,7 +64,7 @@ For our python script to work, we need to install python3:
    root@56c60cac8833:/# apt-get install python3
    ...
    root@56c60cac8833:/# python3 --version
-   Python 3.5.2
+   Python 3.6.9
 
 An important question to ask is: Does this version match the version you are
 developing with on your local workstation? If not, make sure to install the
@@ -91,11 +93,6 @@ Now test with the following:
    root@56c60cac8833:/# pi.py 1000000
    Final pi estimate from 1000000 attempts = 3.142804
 
-.. note::
-
-   The command `which` probably did not work the first time you tried it. But,
-   it is installed on your local computer. Why didn't it work? Use `apt-get` to
-   install `which` if desired.
 
 
 **Wrapping Up**
@@ -103,3 +100,10 @@ Now test with the following:
 We have a functional installation of `pi.py`! Now might be a good time to type
 `history` to see a record of the build process. When you are ready to start
 working on a Dockerfile, type `exit` to exit the container.
+
+
+**Hands On Exercise**
+
+What (if any) Docker images do you currently have on your machine? What (if any)
+Docker processes are currently running? If you have an Ubuntu base image, try
+removing it.

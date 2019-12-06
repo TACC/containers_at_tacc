@@ -10,18 +10,21 @@ steps into a Dockerfile using the following directives:
 We can use the FROM instruction to start our new image from a known base image.
 This should be the first line of our Dockerfile. In our hypothetical scenario,
 we said our development platform / lab computer is a Linux workstation with
-Ubuntu 16.04. We know our code works on that workstation, so that is how we will
-containerize it. We will start our image from an official Ubuntu 16.04 image:
+Ubuntu 18.04. We know our code works on that workstation, so that is how we will
+containerize it. We will start our image from an official Ubuntu 18.04 image:
 
 .. code-block:: bash
 
-   FROM ubuntu:16.04
+   FROM ubuntu:18.04
 
+Base images typically take the form `os:version`. Avoid using the '`latest`'
+version; it is hard to track where it came from and the identity of '`latest`'
+can change.
 
 .. tip::
 
    Browse `Docker Hub <https://hub.docker.com/>`_ to discover other potentially
-   useful base images.
+   useful base images. Keep an eye out for the 'Official Image' badge.
 
 
 **The RUN Instruction**
@@ -98,7 +101,7 @@ The contents of the final Dockerfile should look like:
 .. code-block:: bash
    :linenos:
 
-   FROM ubuntu:16.04
+   FROM ubuntu:18.04
 
    RUN apt-get update && apt-get upgrade -y && apt-get install -y python3
 
