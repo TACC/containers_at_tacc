@@ -161,4 +161,3 @@ The exec command allows you to execute a custom command within a container. For 
 .. Note::
 
 	``exec`` also works with the library://, docker://, and shub:// URIs. This creates an ephemeral container that executes a command and disappears.
-
