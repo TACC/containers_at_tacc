@@ -44,11 +44,11 @@ also use `docker inspect` to find out more information about the image.
 .. code-block:: bash
 
    $ docker inspect username/pi-estimator:0.1
-   ...
+
 
 If you need to rename your image, you can either re-tag it with `docker tag`, or
-you can remove it with `docker rmi` and build it again. Issue each of the commands
-on an empty command line to find out usage information.
+you can remove it with `docker rmi` and build it again. Issue each of the
+commands on an empty command line to find out usage information.
 
 
 **Test the Image**
@@ -79,3 +79,9 @@ the command line:
    Final pi estimate from 1000000 attempts = 3.141208
 
 If there are no errors, the container is built and ready to share!
+
+**Hands On Exercise**
+
+Use `docker inspect` to look at the metadata for your `pi-estimator` image. Is
+the `/code` folder in the `$PATH`? Try to `echo` out the contents of `$PATH`
+from outside of the container to confirm.
