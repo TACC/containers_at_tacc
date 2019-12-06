@@ -1,7 +1,7 @@
 
-
-1. Using HPC Environments
-=========================
+*************************
+2. Using HPC Environments
+*************************
 
 Conducting analyses on high performance computing clusters happens through very different patterns of interaction than running analyses on a VM or on your own laptop.  When you login, you are on a node that is shared with lots of people.  Trying to run jobs on that node is not "high performance" at all.  Those login nodes are just intended to be used for moving files, editing files, and launching jobs.
 
@@ -21,9 +21,9 @@ On a HPC system, your job submission script would look something like:
   
   #SBATCH -J myjob                      # Job name
   #SBATCH -o output.%j                  # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p development                # Queue name
+  #SBATCH -p normal                     # Queue name
   #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
-  #SBATCH -n 1                         # Total number of mpi tasks requested
+  #SBATCH -n 1                          # Total number of mpi tasks requested
   #SBATCH -t 02:00:00                   # Run time (hh:mm:ss) - 4 hours
 
   module load tacc-singularity
@@ -31,23 +31,104 @@ On a HPC system, your job submission script would look something like:
 
 This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines looks like a comment to the bash kernel, but the scheduler reads all those lines to know what resources to reserve for you.
 
-It is usually possible to get an interactive session as well.  At TACC, the command "idev" is used to get an interactive development session.  For example:
-
-.. code-block:: bash
-
-  idev -m 240 -p skx-normal
-
-Just running "idev" gives you one hour on a development node.  The example above will give you a 240 minute interactive session on the "skx-normal" partition of the system (which in this case have 48 Skylake CPU cores per node).
-
 .. Note::
 
   Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Stampede2 system, the user guide is at: `https://portal.tacc.utexas.edu/user-guides/stampede2 <https://portal.tacc.utexas.edu/user-guides/stampede2>`_
 
+
 How do HPC systems fit into the development workflow?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=====================================================
 
-A few things to consider when using HPC systems:
+A couple of things to consider when using HPC systems:
 
-#. Using 'sudo' is not allowed on HPC systems, and building a Singularity container from scratch requires sudo.  That means you have to build your containers on a different development system.  You can pull a docker image on HPC systems
+#. Using 'sudo' is not allowed on HPC systems, and building a Singularity container from scratch requires sudo.  That means you have to build your containers on a different development system, which is why we started this course developing Docker on your own laptop).  You can pull a docker image on HPC systems.
 #. If you need to edit text files, command line text editors don't support using a mouse, so working efficiently has a learning curve.  There are text editors that support editing files over SSH.  This lets you use a local text editor and just save the changes to the HPC system.
-#. Singularity is in the process of changing image formats.  Depending on the version of Singularity running on the HPC system, new squashFS or .simg formats may not work.
+
+In general, most TACC staff that work with containers develop their code locally and then deploy their containers to HPC systems to do analyses at scale.  If the containers are written in a way that accommodates the small differences between the Docker and Singularity runtimes, the transition is fairly seamless.
+
+Differences between Docker and Singularity
+==========================================
+
+Host Directories
+^^^^^^^^^^^^^^^^
+
+**Docker:** None by default. Use ``-v <source>:<destination>`` to mount a source host directory to an arbitrary destination within the container.
+
+**Singularity:** Mounts your current working directory, $HOME directory, and some system directories by default. Other defaults may be set in a system-wide configuration. The ``--bind`` flag is supported but rarely used in practice.
+
+User ID
+^^^^^^^
+
+**Docker:** Defined in the Dockerfile, but containers run as root unless a different user is defined or specified on the command line.  This user ID only exists within the container, and care must be taken when working with files on the host filesystem to make sure permissions are set correctly.
+
+**Singularity:** Containers are run in "userspace", so you are the same user and user ID both inside and outside the container.
+
+Image Format
+^^^^^^^^^^^^
+
+**Docker:** Containers are stored in layers and managed in a repository by Docker.  The ``docker images`` command will show you what containers are on your local machine and images are always referenced by their repository and tag name.
+
+**Singularity:** Containers are files.  Singularity can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
+
+
+Running a Batch Job on Stampede2
+================================
+
+We will not be editing much text directly on Stampede2, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
+
+Create a file called "pi.slurm" on the work filesystem:
+
+.. code-block:: bash
+
+  cd $WORK
+  mkdir containers-at-tacc
+  cd containers-at-tacc
+  nano pi.slurm
+
+Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the following Slurm script.
+
+.. code-block:: bash
+
+  #!/bin/bash
+  
+  #SBATCH -J calculate-pi               # Job name
+  #SBATCH -o output.%j                  # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p normal                     # Queue name
+  #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+  #SBATCH -n 1                          # Total number of mpi tasks requested
+  #SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
+  #SBATCH --reservation containers      # a reservation only active during the training
+
+  module load tacc-singularity
+
+  echo "running the lolcow container:"
+  singularity run docker://godlovedc/lolcow:latest
+
+  echo "estimating the value of Pi:"
+  singularity exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
+
+* Don't forget to replace ``USERNAME`` with your DockerHub username! 
+
+* If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
+
+Once you are done, try submitting this file as a job to Slurm.
+
+.. code-block:: bash
+
+  sbatch pi.slurm
+
+You can check the status of your job with the command ``showq -u``.
+
+Once your job has finished, take a look at the output:
+
+.. code-block:: bash
+
+  cat output*
+
+
+If your containers ran successfully, then congratulations! While this was just a toy example, you have now gone through all the motions of a development lifecycle:
+
+* capturing your code and requirements as a Docker recipe
+* deploying your own code to run on your laptop and a HPC system
+* using someone else's container both on your laptop and a HPC system
+* publishing your code to DockerHub so that it can be shared with others

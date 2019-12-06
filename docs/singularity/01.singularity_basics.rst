@@ -6,7 +6,34 @@ At face value, Singularity is an alternative container implementation to Docker 
 
 If you are familiar with Docker, Singularity will feel familiar.
 
-1.1 Start an Interactive Session
+
+1.1 Login to Stampede2
+======================
+
+For today's training, we will use the Stampede2 supercomputer, the 18th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Stampede2 system.  Instructions depend on your laptop's operating system.
+
+Mac / Linux:
+
+  Open the application 'Terminal'
+  ssh username@stampede2.tacc.utexas.edu
+  (enter password)
+  (enter 6-digit token)
+
+
+Windows:
+
+  If using Windows Subsystem for Linux, use the Mac / Linux instructions.
+  If using an application like 'PuTTY'
+  enter Host Name: stampede2.tacc.utexas.edu
+  (click 'Open')
+  (enter username)
+  (enter password)
+  (enter 6-digit token)
+
+When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
+
+
+1.2 Start an Interactive Session
 ================================
 
 The Singularity module is currently only available on compute nodes at TACC. To use Singularity interactively, start an interactive session on a compute node using the ``idev`` command.
@@ -17,7 +44,8 @@ The Singularity module is currently only available on compute nodes at TACC. To 
 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
 
-1.2 Load the Singularity Module
+
+1.3 Load the Singularity Module
 ===============================
 
 By default, the ``singularity`` command is not visible, but it can be added to the environment by loading the module.
@@ -26,11 +54,11 @@ By default, the ``singularity`` command is not visible, but it can be added to t
 
 	$ module list
 
-    $ module spider singularity
+	$ module spider singularity
 
-    $ module load tacc-singularity
+	$ module load tacc-singularity
 
-    $ module list
+	$ module list
 
 Now the singularity command is available.
 
@@ -38,10 +66,10 @@ Now the singularity command is available.
 
 	$ type singularity
 
-    $ singularity help
+	$ singularity help
 
 
-1.3 Core Singularity Commands
+1.4 Core Singularity Commands
 =============================
 
 
@@ -54,7 +82,7 @@ Containers in the Docker registry may be downloaded and used, assuming the under
 
 	$ singularity pull docker://godlovedc/lolcow
 
-    $ ls
+	$ ls
 
 There may be some warning messages, but this command should download the latest version of the "lolcow" container and save it in your current working directory as ``lolcow_latest.sif``.
 
@@ -67,11 +95,12 @@ The ``shell`` command allows you to spawn a new shell within your container and 
 .. code-block:: bash
 
 	$ singularity shell lolcow_latest.sif 
-	  Singularity lolcow_latest.sif:~>
+
+	Singularity lolcow_latest.sif:~>
 
 The change in prompt indicates that you have entered the container (though you should not rely on that to determine whether you are in container or not).
 
-Once inside of a Singularity container, you are the same user as you are on the host system.
+Once inside of a Singularity container, you are the same user as you are on the host system.  Also, a number of host directories are mounted by default.
 
 .. code-block:: bash
 
@@ -79,9 +108,12 @@ Once inside of a Singularity container, you are the same user as you are on the 
 
 	Singularity lolcow_latest.sif:~> id
 
+	Singularity lolcow_latest.sif:~> pwd
+
+
 .. Note::
 
-	``shell`` also works with the library://, docker://, and shub:// URIs. This creates an ephemeral container that disappears when the shell is exited.
+	Docker and Singularity have very different conventions around how host directories are mounted within the container. In many ways, Singularity has a simpler process for working with data on the host, but it is also more prone to inadvertantly having host configurations "leak" into the container.
 
 
 Run a container's default command
@@ -92,20 +124,16 @@ Just like with Docker, Singularity can run the default "entrypoint" or default c
 .. code-block:: bash
 
 	singularity run lolcow_latest.sif 
-	 _________________________________________
-	/  You will remember, Watson, how the     \
-	| dreadful business of the Abernetty      |
-	| family was first brought to my notice   |
-	| by the depth which the parsley had sunk |
-	| into the butter upon a hot day.         |
-	|                                         |
-	\ -- Sherlock Holmes                      /
-	 -----------------------------------------
-	        \   ^__^
-	         \  (oo)\_______
-	            (__)\       )\/\
-	                ||----w |
-	                ||     ||
+	
+	 ________________________________________
+	< The time is right to make new friends. >
+	 ----------------------------------------
+    	    \   ^__^
+        	 \  (oo)\_______
+            	(__)\       )\/\
+                	||----w |
+                	||     ||
+
 
 .. Note::
 
