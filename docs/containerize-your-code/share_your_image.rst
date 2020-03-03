@@ -1,5 +1,10 @@
-Docker Push
-===========
+Share Your Docker Image
+=======================
+
+.. note::
+
+   Prerequisites: You should have access to a terminal with Docker installed
+   and a Docker Hub account. You should also have a copy of `pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
 
 Now that the container is built, tested, and tagged. It is time to push it to
 Docker hub so others can use it. Remember, the image must be name-spaced with
@@ -13,7 +18,7 @@ privileges in order to push it:
    $ docker push username/pi-estimator:0.1
 
 
-Others will be able to pull a copy of your container with:
+You and others will now be able to pull a copy of your container with:
 
 .. code-block:: bash
 
@@ -28,7 +33,8 @@ registry every time you commit new code.
 For example, see: `Set up automated builds <https://docs.docker.com/docker-hub/builds/>`_
 
 
-**Hands On Exercise**
+Hands On Exercise
+-----------------
 
 *Scenario:* You have the great idea to update your python code to use `argparse`
 to better handle the command line arguments. Outside of the container, modify
@@ -66,7 +72,11 @@ to better handle the command line arguments. Outside of the container, modify
    print("Final pi estimate from", attempts, "attempts =", ratio)
 
 (New and modified lines are highlighted). With this change, the user can execute
-'`pi.py -h`' to get usage information.
+'`pi.py -h`' to get usage information. You can also download this code from
+here:
+
+`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py>`_
+
 
 Next, update the Dockerfile to include a new kind of instruction at the very end
 of the file - CMD:
@@ -95,8 +105,29 @@ the code in the new container has been updated, and that it is working as
 expected. If you are happy that it is working, push the updated container with
 the new tag to Docker Hub.
 
-
 .. toctree::
    :maxdepth: 1
 
    solution
+
+
+Other Considerations
+--------------------
+
+The best way to learn to build docker images is to practice building lots of
+images for tools you use. The online
+`Docker documentation <https://docs.docker.com/>`_ contains a lot of good
+advice on building images.
+
+Some miscellaneous tips for building images include:
+
+* Save your Dockerfiles – GitHub is a good place for this
+* You probably don't want to use ENTRYPOINT - turns an container into a black box
+* If you use CMD, make it print the help text for the containerized code
+* Usually better to use COPY instead of ADD
+* Order of operations in the Dockerfile is important; combine steps where possible
+* Remove temporary and unnecessary files to keep images small
+* Avoid using `latest` tag; use explicit tag callouts
+* The command `docker system prune` will help free up space in your local environment
+* Use `docker-compose` for multi-container pipelines and microservices
+* A good rule of thumb is one tool or process per container
