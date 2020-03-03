@@ -6,10 +6,16 @@ Share Your Docker Image
    Prerequisites: You should have access to a terminal with Docker installed
    and a Docker Hub account. You should also have a copy of `pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
 
-Now that the container is built, tested, and tagged. It is time to push it to
-Docker hub so others can use it. Remember, the image must be name-spaced with
-either your Docker hub username or a Docker hub organization that you have write
-privileges in order to push it:
+Now that you have containerized, tested, and tagged your code in a Docker image,
+the next step is to disseminate it so others can use it.
+
+Interface with Docker Hub
+-------------------------
+
+
+Docker Hub is the de facto place to share an image you built. Remember, the
+image must be name-spaced with either your Docker Hub username or a Docker Hub
+organization where you have write privileges in order to push it:
 
 .. code-block:: bash
 
