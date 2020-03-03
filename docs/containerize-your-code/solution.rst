@@ -4,8 +4,9 @@ Solution
 .. code-block:: bash
    :linenos:
 
-   # edit pi.py to include new code
-   # edit Dockerfile to include CMD instruction
+   # 1: edit pi.py to include new code
+   # 2: edit Dockerfile to include CMD instruction
+   # 3: follow the steps below
 
    $ docker build -t username/pi-estimator:0.2 .
    $ docker run --rm username/pi-estimator:0.2

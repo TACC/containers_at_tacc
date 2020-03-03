@@ -15,9 +15,6 @@ programs or projects you are working on.
    :maxdepth: 1
    :caption: Sections:
 
-   getting_set_up
-   interactive_build
-   the_dockerfile
-   docker_build
-   docker_push
-   other_considerations
+   install_code_interactively
+   build_from_dockerfile
+   share_your_image
