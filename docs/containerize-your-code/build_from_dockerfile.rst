@@ -160,7 +160,7 @@ also use `docker inspect` to find out more information about the image.
    $ docker images
    REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
    username/pi-estimator     0.1                 482bd4f0bc9b        14 minutes ago      200MB
-   ubuntu                    16.04               5e13f8dd4c1a        4 months ago        120MB
+   ubuntu                    18.04               72300a873c2c        11 days ago         64.2MB
 
 .. code-block:: bash
 
@@ -189,6 +189,16 @@ because the code is already in the container:
    pi.py
    root@e01e374d7749:/# pi.py 1000000
    Final pi estimate from 1000000 attempts = 3.137868
+
+Here is an explanation of the options:
+
+.. code-block:: bash
+
+  docker run      # run a container
+  --rm            # remove the container when we exit
+  -it             # interactively attach terminal to inside of container
+  username/...    # image and tag on local machine
+  /bin/bash       # shell to start inside container
 
 Next, exit the container and test the code non-interactively. Notice we are calling
 the container again with `docker run`, but instead of specifying an interactive
