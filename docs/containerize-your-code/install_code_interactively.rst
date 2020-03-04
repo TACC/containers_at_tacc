@@ -51,9 +51,9 @@ Next, grab a copy of the source code we want to containerize:
 
    # Try the specified number of random points
    while (tries < attempts):
-      tries += 1
-      if (p(r(),2) + p(r(),2) < 1):
-          inside += 1
+       tries += 1
+       if (p(r(),2) + p(r(),2) < 1):
+           inside += 1
 
    # Compute and print a final ratio
    ratio=4.*(inside/(tries))
@@ -101,14 +101,13 @@ code works on that workstation, so that is how we will containerize it. Use
 
 .. code-block:: bash
 
-  $ docker run --rm -it -v $PWD:/code ubuntu:18.04 /bin/bash
+  $ docker run -it -v $PWD:/code ubuntu:18.04 /bin/bash
 
 Here is an explanation of the options:
 
 .. code-block:: bash
 
   docker run      # run a container
-  --rm            # remove the container when we exit
   -it             # interactively attach terminal to inside of container
   -v $PWD:/code   # mount the current directory to /code
   unbuntu:18.04   # image and tag from Docker Hub
@@ -134,7 +133,7 @@ we have. We can do this with:
 
 .. note::
 
-  On the second command, you need to choose 'Y' to install the upgrades.
+  On the second command, you may need to choose 'Y' to install the upgrades.
 
 
 Install Required Packages
