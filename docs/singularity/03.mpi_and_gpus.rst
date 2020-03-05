@@ -1,6 +1,9 @@
 **********************
-3. Singularity and MPI
+MPI and GPU Containers
 **********************
+
+Message Passing Interface (MPI) for running on multiple nodes
+=============================================================
 
 Singularity supports MPI fairly well.  Since (by default) the network is the same insde and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  There are also different hardware implementations (e.g. Infiniband, Intel Omnipath, Cary Aries) that need to match what is inside the container.  If the host and container are running different MPI implementations, or even different versions of the same implementation, MPI may not work.
 
@@ -11,7 +14,7 @@ The general rule is that you want the version of MPI inside the container to be 
   Many HPC Systems, like Stampede2, have highspeed, low latency networks that have special drivers.  Infiniband, Ares, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
 
 Base Docker images
-==================
+------------------
 
 When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of availabe images at `https://hub.docker.com/u/tacc <https://hub.docker.com/u/tacc>`_
 
@@ -19,7 +22,7 @@ Specifically, we will use the ``tacc/tacc-ubuntu18-mvapich2.3-psm2`` image to sa
 
 
 Building a MPI aware container
-==============================
+------------------------------
 
 On your local laptop, go back to the directory where you built the "pi" Docker image and download (or copy and paste) two additional files:
 
@@ -43,7 +46,7 @@ Don't forget to change USERNAME to your DockerHub username.
 Once you have successfully built an image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Stampede2.
 
 Running an MPI Container on Stampede2
-=====================================
+-------------------------------------
 
 To test, we can grab an interactive session that has two nodes.  That way we can see if we can make them work together:
 
@@ -72,9 +75,8 @@ As an aside, for a single node you can also use the **container MPI** to run in 
 
 
 
-********************************
-4. Singularity and GPU Computing
-********************************
+Singularity and GPU Computing
+=============================
 
 GPU support in Singularity is very good.
 

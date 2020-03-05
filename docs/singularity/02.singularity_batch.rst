@@ -1,7 +1,13 @@
 
 *************************
-2. Using HPC Environments
+Using HPC Environments
 *************************
+
+.. Note::
+
+    Prerequisites
+	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
+
 
 Conducting analyses on high performance computing clusters happens through very different patterns of interaction than running analyses on a VM or on your own laptop.  When you login, you are on a node that is shared with lots of people.  Trying to run jobs on that node is not "high performance" at all.  Those login nodes are just intended to be used for moving files, editing files, and launching jobs.
 

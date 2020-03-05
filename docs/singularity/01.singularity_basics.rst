@@ -1,13 +1,18 @@
 ******************************
-1. Introduction to Singularity
+Introduction to Singularity
 ******************************
+
+.. Note::
+
+    Prerequisites
+	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
 
 At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singluarity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
 
 If you are familiar with Docker, Singularity will feel familiar.
 
 
-1.1 Login to Stampede2
+Login to Stampede2
 ======================
 
 For today's training, we will use the Stampede2 supercomputer, the 18th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Stampede2 system.  Instructions depend on your laptop's operating system.
@@ -33,7 +38,7 @@ Windows:
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
 
-1.2 Start an Interactive Session
+Start an Interactive Session
 ================================
 
 The Singularity module is currently only available on compute nodes at TACC. To use Singularity interactively, start an interactive session on a compute node using the ``idev`` command.
@@ -45,7 +50,7 @@ The Singularity module is currently only available on compute nodes at TACC. To 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
 
 
-1.3 Load the Singularity Module
+Load the Singularity Module
 ===============================
 
 By default, the ``singularity`` command is not visible, but it can be added to the environment by loading the module.
@@ -69,7 +74,7 @@ Now the singularity command is available.
 	$ singularity help
 
 
-1.4 Core Singularity Commands
+Core Singularity Commands
 =============================
 
 
@@ -124,15 +129,15 @@ Just like with Docker, Singularity can run the default "entrypoint" or default c
 .. code-block:: bash
 
 	singularity run lolcow_latest.sif 
-	
-	 ________________________________________
-	< The time is right to make new friends. >
-	 ----------------------------------------
-    	    \   ^__^
-        	 \  (oo)\_______
-            	(__)\       )\/\
-                	||----w |
-                	||     ||
+    
+     ________________________________________
+    < The time is right to make new friends. >
+     ----------------------------------------
+            \   ^__^
+             \  (oo)\_______
+                (__)\       )\/\
+                    ||----w |
+                    ||     ||
 
 
 .. Note::
