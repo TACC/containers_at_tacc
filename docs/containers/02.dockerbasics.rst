@@ -14,12 +14,9 @@ Prerequisites
 
 * Install Docker on your laptop:
 
-  - `Mac <https://docs.docker.com/v17.09/docker-for-mac/install>`_
-  - `Windows 10 <https://docs.docker.com/v17.09/docker-for-windows/install/>`_
-  - `Ubuntu <https://docs.docker.com/v17.09/engine/installation/linux/ubuntu/>`_
-  - `CentOS <https://docs.docker.com/v17.09/engine/installation/linux/centos/>`_
-  - `Debian <https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/debian/>`_
-  - `Fedora <https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/fedora/>`_
+  - `Mac <https://docs.docker.com/docker-for-mac/>`_
+  - `Windows <https://docs.docker.com/docker-for-windows/>`_
+  - `Ubuntu <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_
 
 To check if the installation was successful, open up your favorite Terminal (Mac,Linux) or the Docker Terminal (Windows)
 and try running
