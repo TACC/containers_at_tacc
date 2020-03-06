@@ -116,7 +116,7 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   echo "estimating the value of Pi:"
   singularity exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
 
-* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "johnfonner" as the username to pull my container.
+* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wallen" as the username to pull Joe Allen's container.
 
 * If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
 
