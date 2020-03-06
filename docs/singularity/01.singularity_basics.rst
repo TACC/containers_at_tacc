@@ -19,21 +19,21 @@ For today's training, we will use the Stampede2 supercomputer, the 18th most pow
 
 Mac / Linux:
 
-| Open the application 'Terminal'
-| ssh username@stampede2.tacc.utexas.edu
-| (enter password)
-| (enter 6-digit token)
+|   Open the application 'Terminal'
+|   ssh username@stampede2.tacc.utexas.edu
+|   (enter password)
+|   (enter 6-digit token)
 
 
 Windows:
 
-| If using Windows Subsystem for Linux, use the Mac / Linux instructions.
-| If using an application like 'PuTTY'
-| enter Host Name: stampede2.tacc.utexas.edu
-| (click 'Open')
-| (enter username)
-| (enter password)
-| (enter 6-digit token)
+|   If using Windows Subsystem for Linux, use the Mac / Linux instructions.
+|   If using an application like 'PuTTY'
+|   enter Host Name: stampede2.tacc.utexas.edu
+|   (click 'Open')
+|   (enter username)
+|   (enter password)
+|   (enter 6-digit token)
 
 
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.

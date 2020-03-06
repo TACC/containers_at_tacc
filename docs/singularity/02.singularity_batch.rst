@@ -9,6 +9,7 @@ Using HPC Environments
 	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
 
 
+
 Conducting analyses on high performance computing clusters happens through very different patterns of interaction than running analyses on a VM or on your own laptop.  When you login, you are on a node that is shared with lots of people.  Trying to run jobs on that node is not "high performance" at all.  Those login nodes are just intended to be used for moving files, editing files, and launching jobs.
 
 Most jobs on a HPC cluster are neither interactive, nor realtime.  When you submit a job to the scheduler, you must tell it what resources you need (e.g. how many nodes, what type of nodes) and what you want to run.  Then the scheduler finds resources matching your requirements, and runs the job for you when it can.
@@ -80,6 +81,8 @@ Image Format
 Running a Batch Job on Stampede2
 ================================
 
+If you are not already, please login to the Stampede2 system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
+
 We will not be editing much text directly on Stampede2, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
 
 Create a file called "pi.slurm" on the work filesystem:
@@ -103,7 +106,7 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
   #SBATCH -n 1                          # Total number of mpi tasks requested
   #SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
-  #SBATCH --reservation containers      # a reservation only active during the training
+  #SBATCH --reservation Containers      # a reservation only active during the training
 
   module load tacc-singularity
 
@@ -113,7 +116,7 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   echo "estimating the value of Pi:"
   singularity exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
 
-* Don't forget to replace ``USERNAME`` with your DockerHub username! 
+* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "johnfonner" as the username to pull my container.
 
 * If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
 

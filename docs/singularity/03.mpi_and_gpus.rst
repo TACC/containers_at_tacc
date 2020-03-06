@@ -73,6 +73,8 @@ This will use the **host MPI** libraries to run in parallel, and assuming the im
 
 As an aside, for a single node you can also use the **container MPI** to run in parallel (but usually you don't want this).
 
+When you are don with your interactive session, don't forget to ``exit`` to end the session and go back to the login node.
+
 
 
 Singularity and GPU Computing
