@@ -4,7 +4,8 @@ Working with Docker
 
 In this section, we will learn to create and use our own docker container.
 
-.. note:: 
+.. note::
+  Prerequisites:
   1. Have Docker installed on your laptop
   2. Create a Docker Hub Account
 
@@ -43,9 +44,12 @@ tool for checking the quality of DNA sequencing reads.
 To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
 
 .. code-block:: bash
-   :linenos:
 
    $ cat Dockerfile
+
+
+.. code-block:: bash
+   :linenos:
 
    # Choose a base operating system
    FROM ubuntu:18.04
@@ -93,7 +97,7 @@ Similar to running other programs on Unix systems, we can run containers in the 
 
 .. code-block:: bash
 
-   $ docker run --rm username/fastqc:0.11.8 which fastqc
+   $ docker run username/fastqc:0.11.8 which fastqc
    /FastQC/fastqc
 
 *Unpacking the 'docker run' command*
