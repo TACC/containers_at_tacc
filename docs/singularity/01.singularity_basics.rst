@@ -20,20 +20,30 @@ For today's training, we will use the Stampede2 supercomputer, the 18th most pow
 Mac / Linux:
 
   Open the application 'Terminal'
+
   ssh username@stampede2.tacc.utexas.edu
+  
   (enter password)
+  
   (enter 6-digit token)
 
 
 Windows:
 
   If using Windows Subsystem for Linux, use the Mac / Linux instructions.
+  
   If using an application like 'PuTTY'
+  
   enter Host Name: stampede2.tacc.utexas.edu
+
   (click 'Open')
+
   (enter username)
+
   (enter password)
+
   (enter 6-digit token)
+
 
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
@@ -45,7 +55,7 @@ The Singularity module is currently only available on compute nodes at TACC. To 
 
 .. code-block:: bash
 
-	$ idev -m 90
+	$ idev -m 40
 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
 
@@ -115,6 +125,8 @@ Once inside of a Singularity container, you are the same user as you are on the 
 
 	Singularity lolcow_latest.sif:~> pwd
 
+	Singularity lolcow_latest.sif:~> exit
+
 
 .. Note::
 
@@ -166,3 +178,9 @@ The exec command allows you to execute a custom command within a container. For 
 .. Note::
 
 	``exec`` also works with the library://, docker://, and shub:// URIs. This creates an ephemeral container that executes a command and disappears.
+
+Once you are finished with your interactive session, you can end it and return to the login node with the exit command:
+
+.. code-block:: bash
+
+	$ exit
