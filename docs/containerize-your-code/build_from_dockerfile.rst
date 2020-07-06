@@ -213,6 +213,33 @@ the command line:
 If there are no errors, the container is built and ready to share!
 
 
+Commit to GitHub
+----------------
+
+In the spirit of promoting Reproducible Science, it is now a good idea to create
+a new GitHub repository for this project and commit our files. The steps are:
+
+1. Log in to `GitHub <https://github.com/>`_ and create a new repository called *pi-estimator*
+2. Do not at a README or license file at this time
+3. Then in your working folder, issue the following:
+
+.. code-block:: bash
+
+   $ pwd
+   /Users/username/python-container/
+   $ ls
+   Dockerfile     pi.py
+   $ git init
+   $ git add *
+   $ git commit -m "first commit"
+   $ git remote add origin https://github.com/username/pi-estimator.git
+   $ git push -u origin master
+
+Make sure to use the github URL which matches your username and repo name.
+Finally, navigate back to your GitHub repo in a web browser and make sure your
+files were uploaded.
+
+
 Hands On Exercise
 -----------------
 
