@@ -3,8 +3,9 @@ Share Your Docker Image
 
 .. note::
 
-   Prerequisites: You should have access to a terminal with Docker installed
-   and a Docker Hub account. You should also have a copy of `pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
+   Prerequisites: You should have access to a terminal with Docker installed,
+   a Docker Hub account, and a GitHub account. You should also have a copy of
+   `pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
 
 Now that you have containerized, tested, and tagged your code in a Docker image,
 the next step is to disseminate it so others can use it.
@@ -65,10 +66,8 @@ You and others will now be able to pull a copy of your container with:
    $ docker pull username/pi-estimator:0.1
 
 
-It is also a good idea to save your Dockerfile and accompanying code somewhere
-safe and somewhere others may find it. GitHub is a good place for that. GitHub
-also has integrations to automatically update your image in the public container
-registry every time you commit new code.
+GitHub also has integrations to automatically update your image in the public
+container registry every time you commit new code.
 
 For example, see: `Set up automated builds <https://docs.docker.com/docker-hub/builds/>`_
 
@@ -146,8 +145,7 @@ without any arguments.
 
 Finally, rebuild the container and update the version tag to '0.2'. Test that
 the code in the new container has been updated, and that it is working as
-expected. If you are happy that it is working, push the updated container with
-the new tag to Docker Hub.
+expected. 
 
 .. toctree::
    :maxdepth: 1
@@ -157,8 +155,13 @@ the new tag to Docker Hub.
 Set up a GitHub-Docker Hub Integration
 --------------------------------------
 
-Navigate to your new Docker image in a web browser, which should be at an
-address similar to:
+Rather than commit to GitHub AND push to Docker Hub each time you want to 
+release a new version, you can set up an integration between the two services
+that automates it. The key benefit is you only have to commit to one place 
+(GitHub), and you know the image available on Docker Hub is always in sync.
+
+To set up the integration, navigate to your new Docker repository in a web
+browser, which should be at an address similar to:
 
 https://hub.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
 
@@ -172,19 +175,20 @@ username and repository named pi-estimator.
 
 Leaving all the defaults selected will cause this Docker image to rebuild
 every time you push code to the master branch of your GitHub repo. For this
-example, set the build to trigger whenever a new release is tagged:
+example, set the build to tlso rigger whenever a new release is tagged:
 
 .. image:: ./docker-git-integration.png
    :width: 800
 
-Click ‘Save and Build’ and check the time stamps on Docker Hub to see if it
-worked as expected.
+Click ‘Save and Build’ and check the 'Timeline' tab on Docker Hub to see if it
+is working as expected.
 
 
 Commit to GitHub (Again)
 ------------------------
 
-Finally, push your modified code to GitHub and tag the relase as 0.2:
+Finally, push your modified code to GitHub and tag the relase as 0.2 to trigger
+another automated build:
 
 .. code-block:: bash
 
