@@ -145,7 +145,7 @@ without any arguments.
 
 Finally, rebuild the container and update the version tag to '0.2'. Test that
 the code in the new container has been updated, and that it is working as
-expected. 
+expected.
 
 .. toctree::
    :maxdepth: 1
@@ -155,9 +155,9 @@ expected.
 Set up a GitHub-Docker Hub Integration
 --------------------------------------
 
-Rather than commit to GitHub AND push to Docker Hub each time you want to 
+Rather than commit to GitHub AND push to Docker Hub each time you want to
 release a new version, you can set up an integration between the two services
-that automates it. The key benefit is you only have to commit to one place 
+that automates it. The key benefit is you only have to commit to one place
 (GitHub), and you know the image available on Docker Hub is always in sync.
 
 To set up the integration, navigate to your new Docker repository in a web
@@ -175,7 +175,7 @@ username and repository named pi-estimator.
 
 Leaving all the defaults selected will cause this Docker image to rebuild
 every time you push code to the master branch of your GitHub repo. For this
-example, set the build to tlso rigger whenever a new release is tagged:
+example, set the build to to trigger whenever a new release is tagged:
 
 .. image:: ./docker-git-integration.png
    :width: 800
@@ -187,7 +187,7 @@ is working as expected.
 Commit to GitHub (Again)
 ------------------------
 
-Finally, push your modified code to GitHub and tag the relase as 0.2 to trigger
+Finally, push your modified code to GitHub and tag the release as 0.2 to trigger
 another automated build:
 
 .. code-block:: bash
@@ -225,4 +225,3 @@ Some miscellaneous tips for building images include:
 * The command `docker system prune` will help free up space in your local environment
 * Use `docker-compose` for multi-container pipelines and microservices
 * A good rule of thumb is one tool or process per container
-
