@@ -160,7 +160,8 @@ Finally, push your modified code to GitHub and tag the relase as 0.2:
 By default, the git push command does not transfer tags, so we are explicitly
 telling git to push the tag we created (0.2) to the remote (origin).
 
-Now, check Docker Hub to be sure your new tagged release is building.
+Now, check the online GitHub repo to make sure your change / tag is there, and
+check the Docker Hub repo to see if your image is automatically rebuilding.
 
 
 Other Considerations
