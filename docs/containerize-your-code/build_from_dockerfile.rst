@@ -235,9 +235,16 @@ a new GitHub repository for this project and commit our files. The steps are:
    $ git remote add origin https://github.com/username/pi-estimator.git
    $ git push -u origin master
 
-Make sure to use the github URL which matches your username and repo name.
+Make sure to use the GitHub URL which matches your username and repo name.
+Let's also tag the repo as '0.1' to match our Docker image tag:
+
+.. code-block:: bash
+
+   $ git tag -a 0.1 -m "first release"
+   $ git push origin 0.1
+
 Finally, navigate back to your GitHub repo in a web browser and make sure your
-files were uploaded.
+files were uploaded and the tag exists.
 
 
 Hands On Exercise
