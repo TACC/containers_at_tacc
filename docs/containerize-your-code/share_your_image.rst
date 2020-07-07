@@ -122,7 +122,7 @@ Set up a GitHub-Docker Hub Integration
 Navigate to your new Docker image in a web browser, which should be at an
 address similar to:
 
-https://cloud.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
+https://hub.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
 
 Click on Builds => Link to Github. (If this is your first time connecting a
 Docker repo to a Github repo, you will need to set it up. Press the ‘Connect’
