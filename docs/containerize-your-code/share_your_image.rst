@@ -116,6 +116,52 @@ the new tag to Docker Hub.
 
    solution
 
+Set up a GitHub-Docker Hub Integration
+--------------------------------------
+
+Navigate to your new Docker image in a web browser, which should be at an
+address similar to:
+
+https://cloud.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
+
+Click on Builds => Link to Github. (If this is your first time connecting a
+Docker repo to a Github repo, you will need to set it up. Press the ‘Connect’
+link to the right of ‘GitHub’. If you are already signed in to both Docker
+and GitHub in the same browser, it takes about 15 seconds to set up).
+
+Once you reach the Build Configurations screen, you will select your GitHub
+username and repository named pi-estimator.
+
+Leaving all the defaults selected will cause this Docker image to rebuild
+every time you push code to the master branch of your GitHub repo. For this
+example, set the build to trigger whenever a new release is tagged:
+
+.. image:: ./docker-git-integration.png
+   :width: 800
+
+Click ‘Save and Build’ and check the time stamps on Docker Hub to see if it
+worked as expected.
+
+
+Commit to GitHub (Again)
+------------------------
+
+Finally, push your modified code to GitHub and tag the relase as 0.2:
+
+
+.. code-block:: bash
+
+   $ git add *
+   $ git commit -m "using argparse to parse args"
+   $ git push
+   $ git tag -a 0.2 -m "release version 0.2"
+   $ git push origin 0.2
+
+By default, the git push command does not transfer tags, so we are explicitly
+telling git to push the tag we created (0.2) to the remote (origin).
+
+Now, check Docker Hub to be sure your new tagged release is building.
+
 
 Other Considerations
 --------------------
