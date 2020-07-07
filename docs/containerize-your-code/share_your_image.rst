@@ -9,9 +9,43 @@ Share Your Docker Image
 Now that you have containerized, tested, and tagged your code in a Docker image,
 the next step is to disseminate it so others can use it.
 
-Interface with Docker Hub
--------------------------
 
+Commit to GitHub
+----------------
+
+In the spirit of promoting Reproducible Science, it is now a good idea to create
+a new GitHub repository for this project and commit our files. The steps are:
+
+1. Log in to `GitHub <https://github.com/>`_ and create a new repository called *pi-estimator*
+2. Do not add a README or license file at this time
+3. Then in your working folder, issue the following:
+
+.. code-block:: bash
+
+   $ pwd
+   /Users/username/python-container/
+   $ ls
+   Dockerfile     pi.py
+   $ git init
+   $ git add *
+   $ git commit -m "first commit"
+   $ git remote add origin https://github.com/username/pi-estimator.git
+   $ git push -u origin master
+
+Make sure to use the GitHub URL which matches your username and repo name.
+Let's also tag the repo as '0.1' to match our Docker image tag:
+
+.. code-block:: bash
+
+   $ git tag -a 0.1 -m "first release"
+   $ git push origin 0.1
+
+Finally, navigate back to your GitHub repo in a web browser and make sure your
+files were uploaded and the tag exists.
+
+
+Push to Docker Hub
+-------------------------
 
 Docker Hub is the de facto place to share an image you built. Remember, the
 image must be name-spaced with either your Docker Hub username or a Docker Hub
@@ -32,14 +66,18 @@ You and others will now be able to pull a copy of your container with:
 
 
 It is also a good idea to save your Dockerfile and accompanying code somewhere
-safe and somewhere others may find it. Github is a good place for that. Github
+safe and somewhere others may find it. GitHub is a good place for that. GitHub
 also has integrations to automatically update your image in the public container
 registry every time you commit new code.
 
 For example, see: `Set up automated builds <https://docs.docker.com/docker-hub/builds/>`_
 
+.. note::
 
-Hands On Exercise
+   After the next hands-on exercise, we will set up the GitHub-Docker integration
+
+
+Hands-On Exercise
 -----------------
 
 *Scenario:* You have the great idea to update your python code to use `argparse`
@@ -124,8 +162,8 @@ address similar to:
 
 https://hub.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
 
-Click on Builds => Link to Github. (If this is your first time connecting a
-Docker repo to a Github repo, you will need to set it up. Press the ‘Connect’
+Click on Builds => Link to GitHub. (If this is your first time connecting a
+Docker repo to a GitHub repo, you will need to set it up. Press the ‘Connect’
 link to the right of ‘GitHub’. If you are already signed in to both Docker
 and GitHub in the same browser, it takes about 15 seconds to set up).
 
@@ -147,7 +185,6 @@ Commit to GitHub (Again)
 ------------------------
 
 Finally, push your modified code to GitHub and tag the relase as 0.2:
-
 
 .. code-block:: bash
 
@@ -184,3 +221,4 @@ Some miscellaneous tips for building images include:
 * The command `docker system prune` will help free up space in your local environment
 * Use `docker-compose` for multi-container pipelines and microservices
 * A good rule of thumb is one tool or process per container
+
