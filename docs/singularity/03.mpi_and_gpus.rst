@@ -93,7 +93,7 @@ Since Singularity supported docker containers, it has been fairly simple to util
   # Pull your image
   singularity pull docker://nvidia/caffe:latest
   
-  singularity exec --nv caffe-latest.img caffe device_query -gpu 0
+  singularity exec --nv caffe_latest.sif caffe device_query -gpu 0
 
 Please note that the --nv flag specifically passes the GPU drivers into the container. If you leave it out, the GPU will not be detected.
 
@@ -110,5 +110,5 @@ For TensorFlow, you can directly pull their latest GPU image and utilize it as f
   # Pull the image
   singularity pull docker://tensorflow/tensorflow:latest-gpu
   # Run the code
-  singularity exec --nv tensorflow-latest-gpu.img python $WORK/models/tutorials/image/mnist/convolutional.py
+  singularity exec --nv tensorflow_latest-gpu.sif python $WORK/models/tutorials/image/mnist/convolutional.py
 
