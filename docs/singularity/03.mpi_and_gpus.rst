@@ -28,7 +28,7 @@ On your local laptop, go back to the directory where you built the "pi" Docker i
 
 `https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi>`_
 
-`https://github.com/TACC/containers_at_tacc/blob/master/docs/scripts/pi-mpi.py <https://github.com/TACC/containers_at_tacc/blob/master/docs/scripts/pi-mpi.py>`_
+`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py>`_
 
 Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses MPI for parallelization.  ``Dockerfile.mpi`` is an updated Dockerfile that uses the TACC base image to satisfy all the MPI requirements on Stampede2.
 
