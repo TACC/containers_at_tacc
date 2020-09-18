@@ -5,30 +5,54 @@ MPI and GPU Containers
 Message Passing Interface (MPI) for running on multiple nodes
 =============================================================
 
-Singularity supports MPI fairly well.  Since (by default) the network is the same insde and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  There are also different hardware implementations (e.g. Infiniband, Intel Omnipath, Cary Aries) that need to match what is inside the container.  If the host and container are running different MPI implementations, or even different versions of the same implementation, MPI may not work.
+Singularity supports MPI fairly well.  Since (by default) the network is the same inside and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  There are also different hardware implementations (e.g. Infiniband, Intel Omnipath, Cary Aries) that need to match what is inside the container.  If the host and container are running different MPI implementations, or even different versions of the same implementation, MPI may not work.
 
 The general rule is that you want the version of MPI inside the container to be the same version or newer than the host.  You may be thinking that this is not good for the portability of your container, and you are right.  Containerizing MPI applications is not terribly difficult with Singularity, but it comes at the cost of additional requirements for the host system.
 
 .. Note::
 
-  Many HPC Systems, like Stampede2, have highspeed, low latency networks that have special drivers.  Infiniband, Ares, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
+  Many HPC Systems, like Stampede2, have high-speed, low latency networks that have special drivers.  Infiniband, Aries, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
 
 Base Docker images
 ------------------
 
-When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of availabe images at `https://hub.docker.com/u/tacc <https://hub.docker.com/u/tacc>`_
+When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_
 
-Specifically, we will use the ``tacc/tacc-ubuntu18-mvapich2.3-psm2`` image to satisfy the MPI architecture and version requirements for running on Stampede2.
++--------------------------------------+----------+-----------+-----------+-----------+
+| Image                                | Frontera | Stampede2 | Maverick2 | Local Dev |
++======================================+==========+===========+===========+===========+
+| tacc/tacc-centos7                    | X        | X         | X         | X         |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-centos7-mvapich2.3-ib      | X        |           | X         | X         |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-centos7-mvapich2.3-psm2    |          | X         |           |           |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-centos7-impi19.0.7-common  | X        | X         |           | X\*       |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18                   | X        | X         | X         | X         |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-ib     | X        |           | X         | X         |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-psm2   |          | X         |           |           |
++--------------------------------------+----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-impi19.0.7-common | X        | X         |           | X\*       |
++--------------------------------------+----------+-----------+-----------+-----------+
 
+.. Note::
+
+   \*May need ``export I_MPI_FABRICS=shm`` to run locally.
+
+   LS5 is missing because it uses a proprietary fabric library which cannot be built into a container.
+
+Specifically, we will use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architectures on both Stampede2 and Frontera, while also allowing intra-node testing on your local development system.
 
 Building a MPI aware container
 ------------------------------
 
 On your local laptop, go back to the directory where you built the "pi" Docker image and download (or copy and paste) two additional files:
 
-`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi>`_
-
-`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py>`_
+* `Dockerfile.mpi <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi>`_
+* `pi-mpi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py>`_
 
 Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses MPI for parallelization.  ``Dockerfile.mpi`` is an updated Dockerfile that uses the TACC base image to satisfy all the MPI requirements on Stampede2.
 
@@ -38,12 +62,16 @@ Next, try building the new container.
 
 	$ docker build -t USERNAME/pi-estimator:0.1-mpi -f Dockerfile.mpi .
 
-Don't forget to change USERNAME to your DockerHub username.  
+Don't forget to change USERNAME to your DockerHub username.
 
 .. Note::
     Here we changed the "tag" name from ``0.1`` to ``0.1-mpi``.  We also could have just changed the "repository," such as ``USERNAME/pi-estimator-mpi:0.1``.  You will see both conventions used on DockerHub.  For different versions of the same codebase, it is okay to differentiate them by tag.  Independent codes should obviously use different repository names.
 
 Once you have successfully built an image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Stampede2.
+
+.. code-block:: bash
+
+   $ docker push USERNAME/pi-estimator:0.1-mpi
 
 Running an MPI Container on Stampede2
 -------------------------------------
@@ -53,7 +81,6 @@ To test, we can grab an interactive session that has two nodes.  That way we can
 .. code-block:: bash
 
     $ idev -m 60 -p normal -N 2 -n 128
-
 
 Once you have a working MPI container, invoking it would look something like:
 
@@ -65,16 +92,14 @@ Once you have a working MPI container, invoking it would look something like:
   time singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
   time ibrun singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
-
 .. Note::
-  TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``
+  TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network, and binds processes to specific cores.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``.
 
 This will use the **host MPI** libraries to run in parallel, and assuming the image has what it needs, can work across many nodes.
 
 As an aside, for a single node you can also use the **container MPI** to run in parallel (but usually you don't want this).
 
-When you are don with your interactive session, don't forget to ``exit`` to end the session and go back to the login node.
-
+When you are done with your interactive session, don't forget to ``exit`` to end compute job and go back to the login node.
 
 
 Singularity and GPU Computing
@@ -82,7 +107,7 @@ Singularity and GPU Computing
 
 GPU support in Singularity is very good.
 
-Since Singularity supported docker containers, it has been fairly simple to utilize GPUs for machine learning code like TensorFlow. We will not do this as a hands-on exercise, but in general the procedule is as follows.
+Since Singularity supported docker containers, it has been fairly simple to utilize GPUs for machine learning code like TensorFlow. We will not do this as a hands-on exercise, but in general the procedure is as follows.
 
 .. code-block:: bash
 
@@ -92,10 +117,10 @@ Since Singularity supported docker containers, it has been fairly simple to util
   module load tacc-singularity
   # Pull your image
   singularity pull docker://nvidia/caffe:latest
-  
+
   singularity exec --nv caffe_latest.sif caffe device_query -gpu 0
 
-Please note that the --nv flag specifically passes the GPU drivers into the container. If you leave it out, the GPU will not be detected.
+Please note that the ``--nv`` flag specifically passes the GPU drivers into the container. If you leave it out, the GPU will not be detected.
 
 The main requirement for this to work is that the version of the host drivers matches the major version of the library inside the container.  So, for example, if CUDA 10 is on the host, the container needs to use CUDA 10 internally.
 
@@ -105,10 +130,11 @@ For TensorFlow, you can directly pull their latest GPU image and utilize it as f
 
   # Change to your $WORK directory
   cd $WORK
-  #Get the software
-  git clone https://github.com/tensorflow/models.git models
+  # Download the benchmarking code
+  git clone --branch cnn_tf_v2.1_compatible https://github.com/tensorflow/benchmarks.git
   # Pull the image
   singularity pull docker://tensorflow/tensorflow:latest-gpu
   # Run the code
-  singularity exec --nv tensorflow_latest-gpu.sif python $WORK/models/tutorials/image/mnist/convolutional.py
-
+  singularity exec --nv tensorflow_latest-gpu.sif python \
+    benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
+    --num_gpus=4 --model resnet50 --batch_size 32 --num_batches 100
