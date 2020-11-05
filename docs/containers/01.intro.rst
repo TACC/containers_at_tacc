@@ -20,7 +20,7 @@ What is a Container?
 **Container vs VM**
 
 
-.. figure:: images/vm_cont.png
+.. figure:: images/cont_vm.png
    :height: 500
    :width: 700
    :align: center
