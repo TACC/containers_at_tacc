@@ -227,7 +227,7 @@ For instance, the latest version of caffe can be used on TACC systems as follows
 
 .. Note::
 
-	If this resulted in an error and the GPU was not detected, you probably forgot to include the ``--nv`` flag.
+	If this resulted in an error and the GPU was not detected, and you are on a GPU-enabled compute node, you may have excluded the ``--nv`` flag.
 
 As previously mentioned, the main requirement for GPU-enabled containers to work is that the version of the host drivers matches the major version of the library inside the container.  So, for example, if CUDA 10 is on the host, the container needs to use CUDA 10 internally.
 
