@@ -6,6 +6,10 @@ from socket import gethostname
 from random import random as r
 from math import pow as p
 from sys import argv
+from time import time
+
+# Baseline for PI
+PI25DT = 3.141592653589793238462643
 
 # Initialize MPI stuff
 comm = MPI.COMM_WORLD
@@ -15,33 +19,30 @@ rank = comm.Get_rank()
 # Make sure number of attempts (per rank) is given on command line
 assert len(argv) == 2
 attempts = int(argv[1])
+local_attempts = int(attempts/size)
+if rank == 0:
+	print("\nComputing %i samples on each of the %i ranks\n"%(local_attempts, size), flush=True)
+comm.Barrier()
 inside=0.
 tries=0
 final=0.
 
+start_time = time()
 # Each rank tries the same number of times
-while (tries < attempts):
-        tries += 1
-        if (p(r(),2) + p(r(),2) < 1):
-                inside += 1
+while (tries < local_attempts):
+	tries += 1
+	if (p(r(),2) + p(r(),2) < 1):
+		inside += 1
 
 # Each rank computes a final ratio (float)
-ratio=4.*(inside/(tries))
-print("[rank %02d of %d on host %s]: %.12f" % (rank, size, gethostname(), ratio))
+ratio=4.*(inside/float(local_attempts))
+print("[%s-%02d] Local Estimate: %.16f   Error: %.16f" % (gethostname(), rank, ratio, abs(ratio-PI25DT)), flush=True)
 
-# The 0 rank collects from all others and computes an average
-if rank == 0:
-        total = ratio
-        for i in range(1, size):
-                other = comm.recv(source=i)
-                total += other
-        final = total/size
-
-# All other ranks just send the ratio to rank 0
-else:
-        comm.send(ratio, dest=0)
+final_pi = comm.reduce(ratio, op=MPI.SUM, root=0)
+total_time = time()-start_time
 
 # Print the final average from rank 0
 if rank == 0:
-        print("")
-        print("Final pi estimate from", size*attempts, "attempts =", final)
+	final_pi = final_pi/float(size)
+	print("\nFinished computing %i samples in %.3f secnods"%(size*local_attempts, total_time))
+	print("\nFinal Estimate: %.16f   Error: %.16f"%(final_pi, abs(final_pi-PI25DT)))

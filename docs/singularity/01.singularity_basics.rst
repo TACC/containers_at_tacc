@@ -7,7 +7,7 @@ Introduction to Singularity
     Prerequisites
 	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
 
-At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singluarity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
+At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singularity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
 
 If you are familiar with Docker, Singularity will feel familiar.
 

@@ -5,11 +5,13 @@ MPI and GPU Containers
 Message Passing Interface (MPI) for running on multiple nodes
 =============================================================
 
-Singularity supports MPI fairly well.  Since (by default) the network is the same inside and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  There are also different hardware implementations (e.g. Infiniband, Intel Omnipath, Cary Aries) that need to match what is inside the container.  If the host and container are running different MPI implementations, or even different versions of the same implementation, MPI may not work.
+Distributed MPI execution of containers is supported by Singularity.
+
+Since (by default) the network is the same inside and outside the container, the communication between containers usually just works.  The more complicated bit is making sure that the container has the right set of MPI libraries to interact with high-speed fabrics.  MPI is an open specification, but there are several implementations (OpenMPI, MVAPICH2, and Intel MPI to name three) with some non-overlapping feature sets.  There are also different hardware implementations (e.g. Infiniband, Intel Omnipath, Cray Aries) that need to match what is inside the container.  If the host and container are running different MPI implementations, or even different versions of the same implementation, MPI may not work.
 
 The general rule is that you want the version of MPI inside the container to be the same version or newer than the host.  You may be thinking that this is not good for the portability of your container, and you are right.  Containerizing MPI applications is not terribly difficult with Singularity, but it comes at the cost of additional requirements for the host system.
 
-.. Note::
+.. Warning::
 
   Many HPC Systems, like Stampede2, have high-speed, low latency networks that have special drivers.  Infiniband, Aries, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
 
@@ -21,30 +23,26 @@ When running at TACC, we have a set of curated Docker images for use in the FROM
 +--------------------------------------+----------+-----------+-----------+-----------+
 | Image                                | Frontera | Stampede2 | Maverick2 | Local Dev |
 +======================================+==========+===========+===========+===========+
-| tacc/tacc-centos7                    | X        | X         | X         | X         |
-+--------------------------------------+----------+-----------+-----------+-----------+
 | tacc/tacc-centos7-mvapich2.3-ib      | X        |           | X         | X         |
 +--------------------------------------+----------+-----------+-----------+-----------+
 | tacc/tacc-centos7-mvapich2.3-psm2    |          | X         |           |           |
 +--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-impi19.0.7-common  | X        | X         |           | X\*       |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18                   | X        | X         | X         | X         |
+| tacc/tacc-centos7-impi19.0.7-common  | X\*      | X\*       | X\*       | X         |
 +--------------------------------------+----------+-----------+-----------+-----------+
 | tacc/tacc-ubuntu18-mvapich2.3-ib     | X        |           | X         | X         |
 +--------------------------------------+----------+-----------+-----------+-----------+
 | tacc/tacc-ubuntu18-mvapich2.3-psm2   |          | X         |           |           |
 +--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-impi19.0.7-common | X        | X         |           | X\*       |
+| tacc/tacc-ubuntu18-impi19.0.7-common | X\*      | X\*       | X\*       | X         |
 +--------------------------------------+----------+-----------+-----------+-----------+
 
 .. Note::
 
-   \*May need ``export I_MPI_FABRICS=shm`` to run locally.
+   \*Must be invoked with ``singularity run`` on HPC.
 
-   LS5 is missing because it uses a proprietary fabric library which cannot be built into a container.
+   LS5 is not present because it uses a proprietary fabric library which cannot be built into a container.
 
-Specifically, we will use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architectures on both Stampede2 and Frontera, while also allowing intra-node testing on your local development system.
+In this tutorial, we will be using use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architectures on both Stampede2 and Frontera, while also allowing intra-node (single-node, multiple-core) testing on your local development system.
 
 Building a MPI aware container
 ------------------------------
@@ -56,85 +54,203 @@ On your local laptop, go back to the directory where you built the "pi" Docker i
 
 Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses MPI for parallelization.  ``Dockerfile.mpi`` is an updated Dockerfile that uses the TACC base image to satisfy all the MPI requirements on Stampede2.
 
-Next, try building the new container.
+.. note::
+
+	A full MPI stack with ``mpicc`` is available in these containers, so you can compile code too.
+
+With these files downloaded, we can build a new MPI-capable container for faster execution.
 
 .. code-block:: bash
 
 	$ docker build -t USERNAME/pi-estimator:0.1-mpi -f Dockerfile.mpi .
 
-Don't forget to change USERNAME to your DockerHub username.
-
 .. Note::
-    Here we changed the "tag" name from ``0.1`` to ``0.1-mpi``.  We also could have just changed the "repository," such as ``USERNAME/pi-estimator-mpi:0.1``.  You will see both conventions used on DockerHub.  For different versions of the same codebase, it is okay to differentiate them by tag.  Independent codes should obviously use different repository names.
 
-Once you have successfully built an image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Stampede2.
+	Don't forget to change USERNAME to your DockerHub username!
+
+To prevent this build from overwriting our previous container (``USERNAME/pi-estimator:0.1``), the "tag" was changed from ``0.1`` to ``0.1-mpi``.  We also could have just renamed the "repository" to something like ``USERNAME/pi-estimator-mpi:0.1``.  You will see both conventions used on DockerHub.  For different versions, or maybe architectures, of the same codebase, it is okay to differentiate them by tag.  Independent codes should use different repository names.
+
+Once you have successfully built the image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Stampede2.
 
 .. code-block:: bash
 
    $ docker push USERNAME/pi-estimator:0.1-mpi
 
+Running an MPI Container Locally
+--------------------------------
+
+Before using allocation hours at TACC, it's always a good idea to test your code locally. Since your local workstation may not have as many resources as a TACC compute node, testing is often done with a *toy* sized problem to check for correctness.
+
+Our ``pi-estimator:0.1-mpi`` container started FROM ``tacc/tacc-ubuntu18-impi19.0.7-common``, which is capable of locally testing the MPI capabilities using shared memory. Launch the ``pi-mpi.py`` script with ``mpirun`` from inside the container. By default, ``mpirun`` will launch as many processes as cores, but this can be controlled with the ``-n`` argument.
+
+Lets try computing Pi with 10,000,000 samples using 1 and 2 processors.
+
+.. code-block:: bash
+
+	# Run using 1 processor
+	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
+		mpirun -n 1 pi-mpi.py 10000000
+
+	# Run using 2 processors
+	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
+		mpirun -n 2 pi-mpi.py 10000000
+
+You should notice that while the estimate stayed roughly the same, the execution time halved as the program scaled from one to two processors.
+
+.. Note::
+
+	If the computation time did not decrease, your Docker Desktop may not be `configured <https://docs.docker.com/docker-for-mac/>`_ to use multiple cores.
+
+Now that we validated the container locally, we can take it to a TACC node and scale it up further.
+
 Running an MPI Container on Stampede2
 -------------------------------------
 
-To test, we can grab an interactive session that has two nodes.  That way we can see if we can make them work together:
+
+
+To start, lets allocate a single `KNL node <https://portal.tacc.utexas.edu/user-guides/stampede2#knl-compute-nodes>`_, which has 68 physical cores per node, but lets only use 8 cores to make the log messages a little more legible.
+
+Running interactively
++++++++++++++++++++++
+
+Please use ``idev`` to allocate this 8-task compute node.
 
 .. code-block:: bash
 
-    $ idev -m 60 -p normal -N 2 -n 128
+	$ idev -m 60 -p normal -N 1 -n 8
 
-Once you have a working MPI container, invoking it would look something like:
+Once you have your node, pull the container and run it as follows:
 
 .. code-block:: bash
 
-  module load tacc-singularity
-  cd $WORK/containers-at-tacc
-  singularity pull docker://USERNAME/pi-estimator:0.1-mpi
-  time singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
-  time ibrun singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+	# Load singularity module
+	$ module load tacc-singularity
+
+	# Change to $SCRATCH directory so containers don't go over your $HOME quota
+	$ cd $SCRATCH
+
+	# Pull container
+	$ singularity pull docker://USERNAME/pi-estimator:0.1-mpi
+
+	# Run container sequentially
+	$ singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+	$ ibrun -n 1 singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+
+	# Run container distributed
+	$ ibrun singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+
+	# Run container with fewer tasks
+	$ ibrun -n 4 singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+
+In our local tests, the **container** ``mpirun`` program was used to launch multiple processes, but this does not scale to multiple nodes. When using multiple nodes at TACC, you should always use ``ibrun`` to call singularity to launch a container per process across each **host**.
 
 .. Note::
-  TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network, and binds processes to specific cores.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``.
 
-This will use the **host MPI** libraries to run in parallel, and assuming the image has what it needs, can work across many nodes.
+	The ``*impi*`` containers **must** be launched with ``singularity run`` on HPC systems.
 
-As an aside, for a single node you can also use the **container MPI** to run in parallel (but usually you don't want this).
+	TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network, and binds processes to specific cores.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``.
 
-When you are done with your interactive session, don't forget to ``exit`` to end compute job and go back to the login node.
+Take some time and try running the program with more samples. Just remember that each extra digit will increase the runtime by about 10-times the previous, so hit ``Ctrl-C`` to terminate something that's taking too long.
 
+Running via batch submission
+++++++++++++++++++++++++++++
+
+To run a container via non-interactive batch job, the container should first be downloaded to a performant filesystem like ``$SCRATCH`` or ``$HOME``.
+
+.. code-block:: bash
+
+	$ idev -m 60 -p normal -N 1
+	$ cd $SCRATCH
+	$ module load tacc-singularity
+	$ singularity pull docker://USERNAME/pi-estimator:0.1-mpi
+	$ ls *sif
+	$ exit
+
+After pulling the container, the image file can be referred to in an sbatch script. Please create ``pi-mpi.sbatch`` with the following text:
+
+.. code-block:: bash
+
+	#!/bin/bash
+
+	#SBATCH -J calculate-pi-mpi           # Job name
+	#SBATCH -o calculate-pi-mpi.%j        # Name of stdout output file (%j expands to jobId)
+	#SBATCH -p normal                     # Queue name
+	#SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+	#SBATCH -n 8                          # Total number of mpi tasks requested
+	#SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
+	#SBATCH --reservation Containers      # a reservation only active during the training
+
+	module load tacc-singularity
+	cd $SCRATCH
+	ibrun singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+
+Then, you can submit the job with ``sbatch``
+
+.. code-block:: bash
+
+	$ sbatch pi-mpi.sbatch
+
+Check the status of your job with ``squeue``
+
+.. code-block:: bash
+
+	$ squeue -u USERNAME
+
+When your job is done, the output will be in ``calculate-pi-mpi.[job number]``, and can be viewed with ``cat``, ``less``, or your favorite text editor.
+
+Once done, try scaling up the program to two nodes (``-N 2``) and 16 tasks (``-n 16``) by changing your batch script or idev session. After that, try increasing the number of samples to see how accurate your estimate can get.
+
+.. Note::
+
+	If your batch job is running too long, you can finding the job number with `squeue -u [username]` and then terminate it with ``scancel [job number]``
 
 Singularity and GPU Computing
 =============================
 
-GPU support in Singularity is very good.
+Singularity **fully** supports GPU utilization by exposing devices at runtime with the ``--nv`` flag. This is similar to ``nvidia-docker``, so all docker containers with libraries that are compatible with the drivers on our systems can work as expected.
 
-Since Singularity supported docker containers, it has been fairly simple to utilize GPUs for machine learning code like TensorFlow. We will not do this as a hands-on exercise, but in general the procedure is as follows.
+For instance, the latest version of caffe can be used on TACC systems as follows:
 
 .. code-block:: bash
 
   # Work from a compute node
-  idev -m 60
+  $ idev -m 60 -p rtx
+
   # Load the singularity module
-  module load tacc-singularity
+  $ module load tacc-singularity
+
   # Pull your image
-  singularity pull docker://nvidia/caffe:latest
+  $ singularity pull docker://nvidia/caffe:latest
 
-  singularity exec --nv caffe_latest.sif caffe device_query -gpu 0
+  # Test the GPU
+  $ singularity exec --nv caffe_latest.sif caffe device_query -gpu 0
 
-Please note that the ``--nv`` flag specifically passes the GPU drivers into the container. If you leave it out, the GPU will not be detected.
+.. Note::
 
-The main requirement for this to work is that the version of the host drivers matches the major version of the library inside the container.  So, for example, if CUDA 10 is on the host, the container needs to use CUDA 10 internally.
+	If this resulted in an error and the GPU was not detected, you probably forgot to include the ``--nv`` flag.
 
-For TensorFlow, you can directly pull their latest GPU image and utilize it as follows.
+As previously mentioned, the main requirement for GPU-enabled containers to work is that the version of the host drivers matches the major version of the library inside the container.  So, for example, if CUDA 10 is on the host, the container needs to use CUDA 10 internally.
+
+For a more exciting test, the latest version of Tensorflow can be benchmarked as follows:
 
 .. code-block:: bash
 
-  # Change to your $WORK directory
-  cd $WORK
+  # Change to your $SCRATCH directory
+  $ cd $SCRATCH
+
   # Download the benchmarking code
-  git clone --branch cnn_tf_v2.1_compatible https://github.com/tensorflow/benchmarks.git
+  $ git clone --branch cnn_tf_v2.1_compatible https://github.com/tensorflow/benchmarks.git
+
   # Pull the image
-  singularity pull docker://tensorflow/tensorflow:latest-gpu
+  $ singularity pull docker://tensorflow/tensorflow:latest-gpu
+
   # Run the code
-  singularity exec --nv tensorflow_latest-gpu.sif python \
-    benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
-    --num_gpus=4 --model resnet50 --batch_size 32 --num_batches 100
+  $ singularity exec --nv tensorflow_latest-gpu.sif python \
+      benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
+      --num_gpus=4 --model resnet50 --batch_size 32 --num_batches 100
+
+Try different numbers of gpus, batch sizes, and total batches to see how the parameters affect the benchmark.
+
+.. Note::
+
+	If the benchmark crashes you the batch may be too large for GPU memory, or you requested more GPUs than exist on the system.
