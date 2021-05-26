@@ -26,18 +26,18 @@ What is a Container?
    :align: center
 
 
-+------------------------------------+-------------------------------------------------+
-| Container                          |          VM                                     |
-+====================================+=================================================+
-| OS process level isolation         |  OS level isolation with virtualized hardware   |
-+------------------------------------+-------------------------------------------------+
-| Can run 1,000s on a single machine |  Can run “dozens” on a single machine.          |
-+------------------------------------+-------------------------------------------------+
-| Leverages kernel features          | Leverages hypervisors (requirements on hardware)|
-| (requirements on kernel version)   |                                                 |
-+------------------------------------+-------------------------------------------------+
-| Start up time ~100s of ms          |  Start up time ~minutes                         |
-+------------------------------------+-------------------------------------------------+
++-------------------------------------------------+------------------------------------+
+|          VM                                     | Container                          |
++=================================================+====================================+
+|  OS level isolation with virtualized hardware   | OS process level isolation         |
++-------------------------------------------------+------------------------------------+
+|  Can run “dozens” on a single machine.          | Can run 1,000s on a single machine |
++-------------------------------------------------+------------------------------------+
+| Leverages hypervisors (requirements on hardware)| Leverages kernel features          |
+|                                                 | (requirements on kernel version)   |
++-------------------------------------------------+------------------------------------+
+|  Start up time ~minutes                         | Start up time ~100s of ms          |
++-------------------------------------------------+------------------------------------+
 
 
 **Benefits of using containers include:**
