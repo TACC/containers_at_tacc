@@ -18,7 +18,7 @@ The general rule is that you want the version of MPI inside the container to be 
 Base Docker images
 ------------------
 
-When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_
+When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_.
 
 +--------------------------------------+----------+-----------+-----------+-----------+
 | Image                                | Frontera | Stampede2 | Maverick2 | Local Dev |
@@ -209,6 +209,35 @@ Singularity and GPU Computing
 
 Singularity **fully** supports GPU utilization by exposing devices at runtime with the ``--nv`` flag. This is similar to ``nvidia-docker``, so all docker containers with libraries that are compatible with the drivers on our systems can work as expected.
 
+Base Docker images
+------------------
+
+When running at TACC, we have a set of curated Docker images that include `TensorFlow <https://www.tensorflow.org/>`_ and `PyTorch <https://pytorch.org/>`_ for use in the FROM line of your own containers.  You can see a list of available images at `Docker Hub <https://hub.docker.com/r/tacc/tacc-ml>`_ and the source at `https://github.com/TACC/tacc-ml <https://github.com/TACC/tacc-ml>`_.
+
++------------------------------------------------------+--------------+-----------+----------+
+| Image                                                | Frontera/rtx | Maverick2 | Longhorn |
++======================================================+==============+===========+==========+
+| tacc/tacc-ml:centos7-cuda9-tf1.14-pt1.3              |              | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:centos7-cuda10-tf1.15-pt1.3             | X            | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7              | X            | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ppc64le-centos7-cuda10-tf1.15-pt1.2     |              |           | X        |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ppc64le-centos7-cuda10-tf2.1-pt1.3      |              |           | X        |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ubuntu16.04-cuda9-tf1.14-pt1.3          |              | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ubuntu16.04-cuda10-tf1.15-pt1.3         | X            | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ubuntu16.04-cuda10-tf2.4-pt1.7          | X            | X         |          |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ppc64le-ubuntu16.04-cuda10-tf1.15-pt1.2 |              |           | X        |
++------------------------------------------------------+--------------+-----------+----------+
+| tacc/tacc-ml:ppc64le-ubuntu16.04-cuda10-tf2.1-pt1.3  |              |           | X        |
++------------------------------------------------------+--------------+-----------+----------+
+
 For instance, the latest version of caffe can be used on TACC systems as follows:
 
 .. code-block:: bash
@@ -239,7 +268,7 @@ For a more exciting test, the latest version of Tensorflow can be benchmarked as
   $ cd $SCRATCH
 
   # Download the benchmarking code
-  $ git clone --branch cnn_tf_v2.1_compatible https://github.com/tensorflow/benchmarks.git
+  $ git clone https://github.com/tensorflow/benchmarks.git
 
   # Pull the image
   $ singularity pull docker://tensorflow/tensorflow:latest-gpu
@@ -253,4 +282,97 @@ Try different numbers of gpus, batch sizes, and total batches to see how the par
 
 .. Note::
 
-	If the benchmark crashes you the batch may be too large for GPU memory, or you requested more GPUs than exist on the system.
+	If the benchmark crashes the batch may be too large for GPU memory, or you requested more GPUs than exist on the system.
+
+Building a GPU aware container
+------------------------------
+
+In the previous two examples, we have used pre-built containers to test GPU capability. Here we are going to build a GPU aware container
+to do some NLP/Text classification with the `BERT <https://arxiv.org/abs/1810.04805>`_ transformer model using PyTorch. We are going to
+use one of the TACC base images (tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7) as a starting point.
+
+On your local laptop, create a directory to build the "bert-classifier" Docker image and download (or copy and paste) the following files:
+
+* `Dockerfile <https://raw.githubusercontent.com/eriksf/bert-classifier/main/Dockerfile>`_
+* `bert_classifier.py <https://raw.githubusercontent.com/eriksf/bert-classifier/main/bert_classifier.py>`_
+* `train.csv <https://github.com/eriksf/bert-classifier/raw/main/train.csv>`_
+* `test.csv <https://github.com/eriksf/bert-classifier/raw/main/test.csv>`_
+* `valid.csv <https://raw.githubusercontent.com/eriksf/bert-classifier/main/valid.csv>`_
+
+.. Note::
+
+    For speed, you can also clone the repository from `https://github.com/eriksf/bert-classifier.git <https://github.com/eriksf/bert-classifier.git>`_.
+
+Take a look at the files. ``bert_classifier.py`` is a Python script that uses PyTorch to do the text classification. The ``Dockerfile`` is
+based on the **tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7** base image and installs a couple of needed python libraries in addition to moving the
+datasets into the image. ``train.csv``, ``test.csv``, and ``valid.csv`` are pre-processed CSV files containing the training, test, and
+validation datasets.
+
+With these files downloaded, we can now build the image.
+
+.. code-block:: bash
+
+	$ docker build -t USERNAME/bert-classifier:0.0.1 .
+
+.. Note::
+
+	Don't forget to change USERNAME to your DockerHub username!
+
+Once you have successfully built the image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Frontera.
+
+.. code-block:: bash
+
+   $ docker push USERNAME/bert-classifier:0.0.1
+
+Testing the Container Locally with CPU
+--------------------------------------
+
+As was mentioned above, before using TACC allocation hours, it's a good idea to test locally. In this case, we can at least
+test that the program help works.
+
+.. code-block:: bash
+
+   $ docker run --rm -it eriksf/bert-classifier:0.0.1 bert_classifier.py -h
+   usage: bert_classifier.py [-h] [-d DEVICE] [-o OUTPUT] [-s SOURCE]
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -d DEVICE, --device DEVICE
+                           The device to run on: cpu or cuda (DEFAULT: cuda)
+     -o OUTPUT, --output OUTPUT
+                           The output folder (DEFAULT: current directory)
+     -s SOURCE, --source SOURCE
+                           The location of the data files (DEFAULT: /code in
+                           container)
+
+We could even test the classification (very slowly) using the CPU.
+
+.. code-block:: bash
+
+   $ docker run --rm -it eriksf/bert-classifier:0.0.1 bert_classifier.py -d cpu
+
+Running the Container on Frontera
+---------------------------------
+
+To start, lets allocate a single `RTX node <https://frontera-portal.tacc.utexas.edu/user-guide/system/#gpu-nodes>`_, which has 4 NVIDIA Quadro RTX 5000 GPUs with 16 GB of Memory each.
+
+.. code-block:: bash
+
+	$ idev -m 60 -p rtx
+
+Once you have your node, pull the container and run it as follows:
+
+.. code-block:: bash
+
+	# Load singularity module
+	$ module load tacc-singularity
+
+	# Change to $SCRATCH directory
+	$ cd $SCRATCH
+
+	# Pull container
+	$ singularity pull docker://USERNAME/bert-classifier:0.0.1
+
+	# Run container
+	$ singularity exec --nv bert-classifier_0.0.1.sif bert_classifier.py
+
