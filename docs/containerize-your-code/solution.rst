@@ -1,7 +1,7 @@
 Solution
 ========
 
-.. code-block:: bash
+.. code-block:: console
    :linenos:
 
    # 1: edit pi.py to include new code

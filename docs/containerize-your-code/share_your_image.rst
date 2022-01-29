@@ -21,7 +21,7 @@ a new GitHub repository for this project and commit our files. The steps are:
 2. Do not add a README or license file at this time
 3. Then in your working folder, issue the following:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ pwd
    /Users/username/python-container/
@@ -30,13 +30,20 @@ a new GitHub repository for this project and commit our files. The steps are:
    $ git init
    $ git add *
    $ git commit -m "first commit"
-   $ git remote add origin https://github.com/username/pi-estimator.git
-   $ git push -u origin master
+   $ git remote add origin git@github.com:username/pi-estimator.git
+   $ git branch -M main
+   $ git push -u origin main
 
-Make sure to use the GitHub URL which matches your username and repo name.
+.. note::
+
+   This assumes you have previously added an
+   `SSH key to your GitHub account <https://docs.github.com/en/enterprise-server@3.0/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account>`_
+   for the machine you are working on.
+
+Make sure to use the GitHub URI which matches your username and repo name.
 Let's also tag the repo as '0.1' to match our Docker image tag:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ git tag -a 0.1 -m "first release"
    $ git push origin 0.1
@@ -46,13 +53,13 @@ files were uploaded and the tag exists.
 
 
 Push to Docker Hub
--------------------------
+------------------
 
-Docker Hub is the de facto place to share an image you built. Remember, the
+Docker Hub is the *de facto* place to share an image you built. Remember, the
 image must be name-spaced with either your Docker Hub username or a Docker Hub
 organization where you have write privileges in order to push it:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker login
    ...
@@ -61,27 +68,25 @@ organization where you have write privileges in order to push it:
 
 You and others will now be able to pull a copy of your container with:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker pull username/pi-estimator:0.1
 
 
-GitHub also has integrations to automatically update your image in the public
-container registry every time you commit new code.
+DockerHub also has integrations to automatically update your image in the public
+container registry every time you commit new code, but they are no longer available
+unless you have a paid account.
 
 For example, see: `Set up automated builds <https://docs.docker.com/docker-hub/builds/>`_
 
-.. note::
-
-   After the next hands-on exercise, we will set up the GitHub-Docker integration
 
 
 Hands-On Exercise
 -----------------
 
-*Scenario:* You have the great idea to update your python code to use `argparse`
+*Scenario:* You have the great idea to update your python code to use ``argparse``
 to better handle the command line arguments. Outside of the container, modify
-`pi.py` to look like:
+``pi.py`` to look like:
 
 .. code-block:: python
    :linenos:
@@ -100,9 +105,8 @@ to better handle the command line arguments. Outside of the container, modify
 
    # Grab number of attempts from command line
    attempts = args.number
-   inside=0
-   tries=0
-   ratio=0.
+   inside = 0
+   tries = 0
 
    # Try the specified number of random points
    while (tries < attempts):
@@ -111,11 +115,10 @@ to better handle the command line arguments. Outside of the container, modify
            inside += 1
 
    # Compute and print a final ratio
-   ratio=4.*(inside/(tries))
-   print("Final pi estimate from", attempts, "attempts =", ratio)
+   print( f'Final pi estimate from {attempts} attempts = {4*(inside/tries)}' )
 
 (New and modified lines are highlighted). With this change, the user can execute
-'`pi.py -h`' to get usage information. You can also download this code from
+'``pi.py -h``' to get usage information. You can also download this code from
 here:
 
 `https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py>`_
@@ -124,7 +127,7 @@ here:
 Next, update the Dockerfile to include a new kind of instruction at the very end
 of the file - CMD:
 
-.. code-block:: bash
+.. code-block:: dockerfile
    :linenos:
    :emphasize-lines: 11
 
@@ -152,43 +155,11 @@ expected.
 
    solution
 
-Set up a GitHub-Docker Hub Integration
---------------------------------------
-
-Rather than commit to GitHub AND push to Docker Hub each time you want to
-release a new version, you can set up an integration between the two services
-that automates it. The key benefit is you only have to commit to one place
-(GitHub), and you know the image available on Docker Hub is always in sync.
-
-To set up the integration, navigate to your new Docker repository in a web
-browser, which should be at an address similar to:
-
-https://hub.docker.com/repository/docker/YOUR-DOCKER-USERNAME/pi-estimator
-
-Click on Builds => Link to GitHub. (If this is your first time connecting a
-Docker repo to a GitHub repo, you will need to set it up. Press the ‘Connect’
-link to the right of ‘GitHub’. If you are already signed in to both Docker
-and GitHub in the same browser, it takes about 15 seconds to set up).
-
-Once you reach the Build Configurations screen, you will select your GitHub
-username and repository named pi-estimator.
-
-Leaving all the defaults selected will cause this Docker image to rebuild
-every time you push code to the master branch of your GitHub repo. For this
-example, set the build to to trigger whenever a new release is tagged:
-
-.. image:: ./docker-git-integration.png
-   :width: 800
-
-Click ‘Save and Build’ and check the 'Timeline' tab on Docker Hub to see if it
-is working as expected.
-
 
 Commit to GitHub (Again)
 ------------------------
 
-Finally, push your modified code to GitHub and tag the release as 0.2 to trigger
-another automated build:
+Finally, push your modified code to GitHub and tag the release as 0.2:
 
 .. code-block:: bash
 
@@ -201,8 +172,7 @@ another automated build:
 By default, the git push command does not transfer tags, so we are explicitly
 telling git to push the tag we created (0.2) to the remote (origin).
 
-Now, check the online GitHub repo to make sure your change / tag is there, and
-check the Docker Hub repo to see if your image is automatically rebuilding.
+Now, check the online GitHub repo to make sure your change / tag is there.
 
 
 Other Considerations
@@ -221,7 +191,7 @@ Some miscellaneous tips for building images include:
 * Usually better to use COPY instead of ADD
 * Order of operations in the Dockerfile is important; combine steps where possible
 * Remove temporary and unnecessary files to keep images small
-* Avoid using `latest` tag; use explicit tag callouts
-* The command `docker system prune` will help free up space in your local environment
-* Use `docker-compose` for multi-container pipelines and microservices
+* Avoid using 'latest' tag; use explicit tag callouts
+* The command 'docker system prune' will help free up space in your local environment
+* Use 'docker-compose' for multi-container pipelines and microservices
 * A good rule of thumb is one tool or process per container

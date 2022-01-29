@@ -2,7 +2,7 @@ Install Code Interactively
 ==========================
 
 In this section, we will explore the first half of a typical development
-workflow: installing an application interactively within a running docker
+workflow: installing an application interactively within a running Docker
 container.
 
 .. note::
@@ -15,12 +15,12 @@ Set Up
 
 Before we begin, make a new directory somewhere on your local computer, and
 create an empty Dockerfile inside of it. It is important to carefully consider
-what files and folders are in the same `PATH` as a Dockerfile (known as the
-'build context'). The `docker build` process will index and send all files and
+what files and folders are in the same ``PATH`` as a Dockerfile (known as the
+'build context'). The ``docker build`` process will index and send all files and
 folders in the same directory as the Dockerfile to the Docker daemon, so take
-care not to `docker build` at a root level. For example:
+care not to ``docker build`` at a root level. For example:
 
-.. code-block:: shell
+.. code-block:: console
 
   $ cd ~/
   $ mkdir python-container/
@@ -45,9 +45,8 @@ Next, grab a copy of the source code we want to containerize:
    # Make sure number of attempts is given on command line
    assert len(argv) == 2
    attempts = int(argv[1])
-   inside=0
-   tries=0
-   ratio=0.
+   inside = 0
+   tries = 0
 
    # Try the specified number of random points
    while (tries < attempts):
@@ -56,19 +55,18 @@ Next, grab a copy of the source code we want to containerize:
            inside += 1
 
    # Compute and print a final ratio
-   ratio=4.*(inside/(tries))
-   print("Final pi estimate from", attempts, "attempts =", ratio)
+   print( f'Final pi estimate from {attempts} attempts = {4.*(inside/tries)}' )
 
 
 You can cut and paste the code block above into a new file called, e.g.,
-`pi.py`, or download it from the following link:
+``pi.py``, or download it from the following link:
 
 `https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
 
 
 Now, you should have two files and nothing else in this folder:
 
-.. code-block:: shell
+.. code-block:: console
 
    $ pwd
    /Users/username/python-container/
@@ -97,15 +95,15 @@ Let's work through these questions by performing an **interactive installation**
 of our python script. In our hypothetical scenario, let's say our development
 platform / lab computer is a Linux workstation with Ubuntu 18.04. We know our
 code works on that workstation, so that is how we will containerize it. Use
-`docker run` to interactively attach to a fresh Ubuntu 18.04 container:
+``docker run`` to interactively attach to a fresh Ubuntu 18.04 container:
 
-.. code-block:: bash
+.. code-block:: console
 
   $ docker run -it -v $PWD:/code ubuntu:18.04 /bin/bash
 
 Here is an explanation of the options:
 
-.. code-block:: bash
+.. code-block:: text
 
   docker run      # run a container
   -it             # interactively attach terminal to inside of container
@@ -120,11 +118,11 @@ signaling you are now 'inside' the container.
 Update and Upgrade
 ------------------
 
-The first thing we will typically do is use the Ubuntu package manager `apt` to
+The first thing we will typically do is use the Ubuntu package manager ``apt`` to
 update the list of available packages and install newer versions of the packages
 we have. We can do this with:
 
-.. code-block:: bash
+.. code-block:: console
 
   root@56c60cac8833:/# apt-get update
   ...
@@ -141,7 +139,7 @@ Install Required Packages
 
 For our python script to work, we need to install python3:
 
-.. code-block:: bash
+.. code-block:: console
 
   root@56c60cac8833:/# apt-get install python3
   ...
@@ -160,7 +158,7 @@ Since we are using a simple python script, there is not a difficult install
 process. However, we can make it executable, make sure it is in the user's PATH,
 and make sure it works as expected:
 
-.. code-block:: bash
+.. code-block:: console
 
   root@56c60cac8833:/# cd /code
   root@56c60cac8833:/# chmod +rx pi.py
@@ -168,7 +166,7 @@ and make sure it works as expected:
 
 Now test with the following:
 
-.. code-block:: bash
+.. code-block:: console
 
   root@56c60cac8833:/# cd /home
   root@56c60cac8833:/# which pi.py
@@ -180,9 +178,9 @@ Now test with the following:
 Wrapping Up
 -----------
 
-We have a functional installation of `pi.py`! Now might be a good time to type
-`history` to see a record of the build process. When you are ready to start
-working on a Dockerfile, type `exit` to exit the container.
+We have a functional installation of ``pi.py``! Now might be a good time to type
+``history`` to see a record of the build process. When you are ready to start
+working on a Dockerfile, type ``exit`` to exit the container.
 
 
 Hands On Exercise
