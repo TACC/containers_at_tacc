@@ -6,9 +6,8 @@ from sys import argv
 # Make sure number of attempts is given on command line
 assert len(argv) == 2
 attempts = int(argv[1])
-inside=0
-tries=0
-ratio=0.
+inside = 0
+tries = 0
 
 # Try the specified number of random points
 while (tries < attempts):
@@ -17,5 +16,4 @@ while (tries < attempts):
         inside += 1
 
 # Compute and print a final ratio
-ratio=4.*(inside/(tries))
-print("Final pi estimate from", attempts, "attempts =", ratio)
+print( f'Final pi estimate from {attempts} attempts = {4*(inside/tries)}' )
