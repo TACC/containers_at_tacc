@@ -21,7 +21,7 @@ Prerequisites
 To check if the installation was successful, open up your favorite Terminal (Mac,Linux) or the Docker Terminal (Windows)
 and try running
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker version
    Client: Docker Engine - Community
@@ -60,10 +60,10 @@ Having a Docker Hub account makes it easier to share your containers with other 
 
 Let's login into Docker Hub to be able to push images to your repository.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker login
-   # Enter username/password
+   Enter username/password
 
 * Create a `TACC Account <https://portal.tacc.utexas.edu/account-request>`_
 
@@ -78,7 +78,7 @@ Working with Docker Hub images
 
 Let's run a simple hello-world container using the * docker run * command
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run hello-world
    Unable to find image 'hello-world:latest' locally
@@ -105,7 +105,7 @@ This simple command pulls the hello-world image from Docker Hub and prints the m
 
 Let's make this easier by first pulling the image from Docker Hub
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker pull hello-world:latest
    latest: Pulling from library/hello-world
@@ -116,7 +116,7 @@ Let's make this easier by first pulling the image from Docker Hub
 
 * To verify the images are now available on your local machine, try:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker images
    REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
@@ -124,7 +124,7 @@ Let's make this easier by first pulling the image from Docker Hub
 
 * Now run the container:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run hello-world:latest
    Hello from Docker!
@@ -134,10 +134,10 @@ Note: As indicated in the output, if no tag is specified the “latest” tag is
 
 You could also try:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker inspect hello-world
-   # shows more information about container image
+   shows more information about container image
 
 Docker Core Commands
 ====================
@@ -184,14 +184,14 @@ Getting more help with Docker
 
 - The command line tools are very well documented:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker --help
-   # shows all docker options and summaries
+   shows all docker options and summaries
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker COMMAND --help
-   # shows options and summaries for a particular command
+   shows options and summaries for a particular command
 
 - Learn `more about docker <https://docs.docker.com/get-started/>`_

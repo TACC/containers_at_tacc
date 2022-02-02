@@ -6,7 +6,7 @@ Using HPC Environments
 .. Note::
 
     Prerequisites
-	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
+	This section uses the Frontera compute cluster to run Singularity. An active allocation on Frontera is required, though most content will apply to any system that supports Singularity.
 
 
 
@@ -16,7 +16,7 @@ Most jobs on a HPC cluster are neither interactive, nor realtime.  When you subm
 
 For example, if you want to run the command:
 
-.. code-block:: bash
+.. code-block:: text
 
   singularity exec docker://python:latest /usr/local/bin/python
 
@@ -25,11 +25,11 @@ On a HPC system, your job submission script would look something like:
 .. code-block:: bash
 
   #!/bin/bash
-  
+
   #SBATCH -J myjob                      # Job name
   #SBATCH -o output.%j                  # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p normal                     # Queue name
-  #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+  #SBATCH -p small                      # Queue name
+  #SBATCH -N 1                          # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                          # Total number of mpi tasks requested
   #SBATCH -t 02:00:00                   # Run time (hh:mm:ss) - 4 hours
 
@@ -40,7 +40,7 @@ This example is for the Slurm scheduler, a popular one used by all TACC systems.
 
 .. Note::
 
-  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Stampede2 system, the user guide is at: `https://portal.tacc.utexas.edu/user-guides/stampede2 <https://portal.tacc.utexas.edu/user-guides/stampede2>`_
+  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Frontera system, the user guide is at: `https://frontera-portal.tacc.utexas.edu/user-guide/ <https://frontera-portal.tacc.utexas.edu/user-guide/>`_
 
 
 How do HPC systems fit into the development workflow?
@@ -78,32 +78,32 @@ Image Format
 **Singularity:** Containers are files.  Singularity can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
 
 
-Running a Batch Job on Stampede2
-================================
+Running a Batch Job on Frontera
+===============================
 
-If you are not already, please login to the Stampede2 system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
+If you are not already, please login to the Frontera system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
 
-We will not be editing much text directly on Stampede2, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
+We will not be editing much text directly on Frontera, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
 
 Create a file called "pi.slurm" on the work filesystem:
 
-.. code-block:: bash
+.. code-block:: console
 
-  cd $WORK
-  mkdir containers-at-tacc
-  cd containers-at-tacc
-  nano pi.slurm
+  $ cd $WORK
+  $ mkdir containers-at-tacc
+  $ cd containers-at-tacc
+  $ nano pi.slurm
 
 Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the following Slurm script.
 
 .. code-block:: bash
 
   #!/bin/bash
-  
+
   #SBATCH -J calculate-pi               # Job name
   #SBATCH -o output.%j                  # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p normal                     # Queue name
-  #SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+  #SBATCH -p small                      # Queue name
+  #SBATCH -N 1                          # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                          # Total number of mpi tasks requested
   #SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
   #SBATCH --reservation Containers      # a reservation only active during the training
@@ -122,17 +122,17 @@ Those commands should open a new file in the nano editor.  Either type in (or co
 
 Once you are done, try submitting this file as a job to Slurm.
 
-.. code-block:: bash
+.. code-block:: console
 
-  sbatch pi.slurm
+  $ sbatch pi.slurm
 
 You can check the status of your job with the command ``showq -u``.
 
 Once your job has finished, take a look at the output:
 
-.. code-block:: bash
+.. code-block:: console
 
-  cat output*
+  $ cat output*
 
 
 If your containers ran successfully, then congratulations! While this was just a toy example, you have now gone through all the motions of a development lifecycle:

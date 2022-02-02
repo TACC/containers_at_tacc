@@ -23,7 +23,7 @@ A Dockerfile has two type of fields:
   - Instructions followed by arguments and comments
   - A basic Dockerfile looks like
 
-.. code-block:: bash
+.. code-block:: dockerfile
 
    # Comment
    INSTRUCTION arguments
@@ -43,12 +43,12 @@ tool for checking the quality of DNA sequencing reads.
 
 To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ cat Dockerfile
 
 
-.. code-block:: bash
+.. code-block:: dockerfile
    :linenos:
 
    # Choose a base operating system
@@ -72,7 +72,7 @@ Dockerfile and save it.
 
 **Build**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker build -t username/fastqc:0.11.8 .
    Sending build context to Docker daemon  251.4MB
@@ -84,7 +84,7 @@ Dockerfile and save it.
 
 **Check images**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker images
    REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
@@ -95,7 +95,7 @@ Dockerfile and save it.
 We use the **docker run** command to run containers from an image. We pass a command to run in the container.
 Similar to running other programs on Unix systems, we can run containers in the foreground (attached) or in the background.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run username/fastqc:0.11.8 which fastqc
    /FastQC/fastqc
@@ -116,7 +116,7 @@ Similar to running other programs on Unix systems, we can run containers in the 
 
 **Push Image to Docker hub**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker push username/fastqc:0.11.8
 
@@ -130,7 +130,7 @@ Alternatively, you could also do this *interactively*
 
 **Open a base Docker Image**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run --rm -it ubuntu /bin/bash
 
@@ -151,34 +151,34 @@ Alternatively, you could also do this *interactively*
 
 **Install your tool in the image**
 
-.. code-block:: bash
+.. code-block:: console
 
    root@ded8d40f1a1e:/#
-   # install dependencies
+   install dependencies
    $ apt-get update && apt-get upgrade -y
    $ apt-get install -y wget unzip default-jdk libfindbin-libs-perl
 
-   # install FastQC
+   install FastQC
    $ wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
    $ unzip fastqc_v0.11.8.zip
    $ rm fastqc_v0.11.8.zip
 
-   # make fastqc executable
+   make fastqc executable
    $ chmod 755 /FastQC/fastqc
 
-   # add fastqc to the system path by linking to /bin
+   add fastqc to the system path by linking to /bin
    $ ln -s /FastQC/fastqc /bin
    $ exit
 
 **Commit your image**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker ps -a
    CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                      PORTS                    NAMES
    9f0d7afff313        ubuntu                         "/bin/bash"              9 minutes ago       Exited (0) 18 seconds ago                            affectionate_einstein
 
-   # Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
+   Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
    $ docker commit CONTAINER ID username/fastqc:0.11.8
    sha256:738f35b39c5711f722cc6d9b550215454f2a7ea765c73667355d383a8a9285bf
 
@@ -188,7 +188,7 @@ Alternatively, you could also do this *interactively*
 
 **Push your image to Docker Hub**
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker push username/fastqc:0.11.8
    The push refers to repository [docker.io/reshg/fastqc]
@@ -198,7 +198,7 @@ Alternatively, you could also do this *interactively*
 
 We can also run a container in the background. We do so using the -d flag:
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run -d ubuntu sleep infinity
    f406f6b0c34d4bba552a7106e951a5d667dcbfddcb429e2d42b0ac7a10a919fc

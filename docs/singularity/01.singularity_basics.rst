@@ -5,22 +5,22 @@ Introduction to Singularity
 .. Note::
 
     Prerequisites
-	This section uses the Stampede2 compute cluster to run Singularity. An active allocation on Stampede2 is required, though most content will apply to any system that supports Singularity.
+	This section uses the Frontera compute cluster to run Singularity. An active allocation on Frontera is required, though most content will apply to any system that supports Singularity.
 
 At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singularity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
 
 If you are familiar with Docker, Singularity will feel familiar.
 
 
-Login to Stampede2
-======================
+Login to Frontera
+=================
 
-For today's training, we will use the Stampede2 supercomputer, the 18th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Stampede2 system.  Instructions depend on your laptop's operating system.
+For today's training, we will use the Frontera supercomputer, the 13th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
 
 Mac / Linux:
 
 |   Open the application 'Terminal'
-|   ssh username@stampede2.tacc.utexas.edu
+|   ssh username@frontera.tacc.utexas.edu
 |   (enter password)
 |   (enter 6-digit token)
 
@@ -29,7 +29,7 @@ Windows:
 
 |   If using Windows Subsystem for Linux, use the Mac / Linux instructions.
 |   If using an application like 'PuTTY'
-|   enter Host Name: stampede2.tacc.utexas.edu
+|   enter Host Name: frontera.tacc.utexas.edu
 |   (click 'Open')
 |   (enter username)
 |   (enter password)
@@ -44,7 +44,7 @@ Start an Interactive Session
 
 The Singularity module is currently only available on compute nodes at TACC. To use Singularity interactively, start an interactive session on a compute node using the ``idev`` command.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ idev -m 40
 
@@ -56,7 +56,7 @@ Load the Singularity Module
 
 By default, the ``singularity`` command is not visible, but it can be added to the environment by loading the module.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ module list
 
@@ -68,7 +68,7 @@ By default, the ``singularity`` command is not visible, but it can be added to t
 
 Now the singularity command is available.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ type singularity
 
@@ -84,7 +84,7 @@ Pull a Docker container
 
 Containers in the Docker registry may be downloaded and used, assuming the underlying architecture (e.g. x86) is the same between the container and the host.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ singularity pull docker://godlovedc/lolcow
 
@@ -98,9 +98,9 @@ Interactive shell
 
 The ``shell`` command allows you to spawn a new shell within your container and interact with it as though it were a small virtual machine.
 
-.. code-block:: bash
+.. code-block:: console
 
-	$ singularity shell lolcow_latest.sif 
+	$ singularity shell lolcow_latest.sif
 
 	Singularity lolcow_latest.sif:~>
 
@@ -129,10 +129,10 @@ Run a container's default command
 
 Just like with Docker, Singularity can run the default "entrypoint" or default command of a container with the ``run`` subcommand.  These defaults are defined in the Dockerfile (or Singularityfile) that define the actions a container should perform when someone runs it.
 
-.. code-block:: bash
+.. code-block:: console
 
-	singularity run lolcow_latest.sif 
-    
+	$ singularity run lolcow_latest.sif
+
      ________________________________________
     < The time is right to make new friends. >
      ----------------------------------------
@@ -153,7 +153,7 @@ Executing arbitrary commands
 
 The exec command allows you to execute a custom command within a container. For instance, to execute the ``cowsay`` program within the lolcow_latest.sif container:
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ singularity exec --cleanenv lolcow_latest.sif cowsay Singularity runs Docker containers on HPC systems
      _______________________________________
@@ -172,6 +172,6 @@ The exec command allows you to execute a custom command within a container. For 
 
 Once you are finished with your interactive session, you can end it and return to the login node with the exit command:
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ exit
