@@ -185,7 +185,7 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 	module load tacc-singularity
 	cd $SCRATCH
-	ibrun singularity exec pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+	ibrun singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
 Then, you can submit the job with ``sbatch``
 
