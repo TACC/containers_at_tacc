@@ -134,7 +134,7 @@ The PATH is a directory on your local filesystem. The URL is a Git repository lo
 
 With a Dockerfile in the current directory, we can build an image from it by
 
-.. code-block:: bash
+.. code-block:: console
 
   $ docker build .
   Sending build context to Docker daemon  6.51 MB
@@ -156,9 +156,9 @@ The full name of an image on the Docker Hub is comprised of components separated
 The components include a “repository” (which could be owned by an individual or organization),
 the “name”, and the “tag”. For example, an image with the full name
 
-.. code-block:: bash
+.. code-block:: text
 
-   $ tacc/gateways19:0.1
+   tacc/gateways19:0.1
 
 would refer to the gateways19 image within the “tacc” repository and have a
 tag of “0.1”.

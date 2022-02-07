@@ -13,36 +13,40 @@ The general rule is that you want the version of MPI inside the container to be 
 
 .. Warning::
 
-  Many HPC Systems, like Stampede2, have high-speed, low latency networks that have special drivers.  Infiniband, Aries, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
+  Many HPC Systems, like Frontera, have high-speed, low latency networks that have special drivers.  Infiniband, Aries, and OmniPath are three different specs for these types of networks.  When running MPI jobs, if the container doesn't have the right libraries, it won't be able to use those special interconnects to communicate between nodes.  This means that MPI containers don't provide as much portability between systems.
 
 Base Docker images
 ------------------
 
 When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_.
 
-+--------------------------------------+----------+-----------+-----------+-----------+
-| Image                                | Frontera | Stampede2 | Maverick2 | Local Dev |
-+======================================+==========+===========+===========+===========+
-| tacc/tacc-centos7-mvapich2.3-ib      | X        |           | X         | X         |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-mvapich2.3-psm2    |          | X         |           |           |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-impi19.0.7-common  | X\*      | X\*       | X\*       | X         |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-mvapich2.3-ib     | X        |           | X         | X         |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-mvapich2.3-psm2   |          | X         |           |           |
-+--------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-impi19.0.7-common | X\*      | X\*       | X\*       | X         |
-+--------------------------------------+----------+-----------+-----------+-----------+
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| Image                                 | Frontera | Stampede2 | Maverick2 | Longhorn | Local Dev |
++=======================================+==========+===========+===========+==========+===========+
+| tacc/tacc-centos7-mvapich2.3-ib       | X        |           | X         |          | X         |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-centos7-ppc64le-mvapich2-ib |          |           |           | X\*      | X         |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-centos7-mvapich2.3-psm2     |          | X         |           |          |           |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-centos7-impi19.0.7-common   | X        | X         |           |          | X         |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-ib      | X        |           | X         |          | X         |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-psm2    |          | X         |           |          |           |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
+| tacc/tacc-ubuntu18-impi19.0.7-common  | X        | X         |           |          |  X        |
++---------------------------------------+----------+-----------+-----------+----------+-----------+
 
 .. Note::
 
-   \*Must be invoked with ``singularity run`` on HPC.
+   The singularity version of these containers should be invoked with ``singularity run`` on HPC.
+
+   \* Must be used with the ``mvapich2-gdr`` module.
 
    LS5 is not present because it uses a proprietary fabric library which cannot be built into a container.
 
-In this tutorial, we will be using use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architectures on both Stampede2 and Frontera, while also allowing intra-node (single-node, multiple-core) testing on your local development system.
+In this tutorial, we will be using use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architecture on Frontera, while also allowing intra-node (single-node, multiple-core) testing on your local development system.
 
 Building a MPI aware container
 ------------------------------
@@ -52,7 +56,7 @@ On your local laptop, go back to the directory where you built the "pi" Docker i
 * `Dockerfile.mpi <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/Dockerfile.mpi>`_
 * `pi-mpi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-mpi.py>`_
 
-Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses MPI for parallelization.  ``Dockerfile.mpi`` is an updated Dockerfile that uses the TACC base image to satisfy all the MPI requirements on Stampede2.
+Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses MPI for parallelization.  ``Dockerfile.mpi`` is an updated Dockerfile that uses the TACC base image to satisfy all the MPI requirements on Frontera.
 
 .. note::
 
@@ -60,7 +64,7 @@ Take a look at both files.  ``pi-mpi.py`` is an updated Python script that uses 
 
 With these files downloaded, we can build a new MPI-capable container for faster execution.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ docker build -t USERNAME/pi-estimator:0.1-mpi -f Dockerfile.mpi .
 
@@ -70,9 +74,9 @@ With these files downloaded, we can build a new MPI-capable container for faster
 
 To prevent this build from overwriting our previous container (``USERNAME/pi-estimator:0.1``), the "tag" was changed from ``0.1`` to ``0.1-mpi``.  We also could have just renamed the "repository" to something like ``USERNAME/pi-estimator-mpi:0.1``.  You will see both conventions used on DockerHub.  For different versions, or maybe architectures, of the same codebase, it is okay to differentiate them by tag.  Independent codes should use different repository names.
 
-Once you have successfully built the image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Stampede2.
+Once you have successfully built the image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Frontera.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker push USERNAME/pi-estimator:0.1-mpi
 
@@ -85,13 +89,13 @@ Our ``pi-estimator:0.1-mpi`` container started FROM ``tacc/tacc-ubuntu18-impi19.
 
 Lets try computing Pi with 10,000,000 samples using 1 and 2 processors.
 
-.. code-block:: bash
+.. code-block:: console
 
-	# Run using 1 processor
+	Run using 1 processor
 	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
 		mpirun -n 1 pi-mpi.py 10000000
 
-	# Run using 2 processors
+	Run using 2 processors
 	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
 		mpirun -n 2 pi-mpi.py 10000000
 
@@ -103,43 +107,43 @@ You should notice that while the estimate stayed roughly the same, the execution
 
 Now that we validated the container locally, we can take it to a TACC node and scale it up further.
 
-Running an MPI Container on Stampede2
--------------------------------------
+Running an MPI Container on Frontera
+------------------------------------
 
 
 
-To start, lets allocate a single `KNL node <https://portal.tacc.utexas.edu/user-guides/stampede2#knl-compute-nodes>`_, which has 68 physical cores per node, but lets only use 8 cores to make the log messages a little more legible.
+To start, lets allocate a single `CLX (Cascade Lake) node <https://frontera-portal.tacc.utexas.edu/user-guide/system/#cascade-lake-clx-compute-nodes>`_, which has 56 physical cores per node, but lets only use 8 cores to make the log messages a little more legible.
 
 Running interactively
 +++++++++++++++++++++
 
 Please use ``idev`` to allocate this 8-task compute node.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ idev -m 60 -p normal -N 1 -n 8
 
 Once you have your node, pull the container and run it as follows:
 
-.. code-block:: bash
+.. code-block:: console
 
-	# Load singularity module
+	Load singularity module
 	$ module load tacc-singularity
 
-	# Change to $SCRATCH directory so containers don't go over your $HOME quota
+	Change to $SCRATCH directory so containers do not go over your $HOME quota
 	$ cd $SCRATCH
 
-	# Pull container
+	Pull container
 	$ singularity pull docker://USERNAME/pi-estimator:0.1-mpi
 
-	# Run container sequentially
+	Run container sequentially
 	$ singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 	$ ibrun -n 1 singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
-	# Run container distributed
+	Run container distributed
 	$ ibrun singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
-	# Run container with fewer tasks
+	Run container with fewer tasks
 	$ ibrun -n 4 singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
 In our local tests, the **container** ``mpirun`` program was used to launch multiple processes, but this does not scale to multiple nodes. When using multiple nodes at TACC, you should always use ``ibrun`` to call singularity to launch a container per process across each **host**.
@@ -157,7 +161,7 @@ Running via batch submission
 
 To run a container via non-interactive batch job, the container should first be downloaded to a performant filesystem like ``$SCRATCH`` or ``$HOME``.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ idev -m 60 -p normal -N 1
 	$ cd $SCRATCH
@@ -186,13 +190,13 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 Then, you can submit the job with ``sbatch``
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ sbatch pi-mpi.sbatch
 
 Check the status of your job with ``squeue``
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ squeue -u USERNAME
 
@@ -240,18 +244,18 @@ When running at TACC, we have a set of curated Docker images that include `Tenso
 
 For instance, the latest version of caffe can be used on TACC systems as follows:
 
-.. code-block:: bash
+.. code-block:: console
 
-  # Work from a compute node
+  Work from a compute node
   $ idev -m 60 -p rtx
 
-  # Load the singularity module
+  Load the singularity module
   $ module load tacc-singularity
 
-  # Pull your image
+  Pull your image
   $ singularity pull docker://nvidia/caffe:latest
 
-  # Test the GPU
+  Test the GPU
   $ singularity exec --nv caffe_latest.sif caffe device_query -gpu 0
 
 .. Note::
@@ -262,18 +266,18 @@ As previously mentioned, the main requirement for GPU-enabled containers to work
 
 For a more exciting test, the latest version of Tensorflow can be benchmarked as follows:
 
-.. code-block:: bash
+.. code-block:: console
 
-  # Change to your $SCRATCH directory
+  Change to your $SCRATCH directory
   $ cd $SCRATCH
 
-  # Download the benchmarking code
+  Download the benchmarking code
   $ git clone https://github.com/tensorflow/benchmarks.git
 
-  # Pull the image
+  Pull the image
   $ singularity pull docker://tensorflow/tensorflow:latest-gpu
 
-  # Run the code
+  Run the code
   $ singularity exec --nv tensorflow_latest-gpu.sif python \
       benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
       --num_gpus=4 --model resnet50 --batch_size 32 --num_batches 100
@@ -310,7 +314,7 @@ validation datasets.
 
 With these files downloaded, we can now build the image.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ docker build -t USERNAME/bert-classifier:0.0.1 .
 
@@ -320,7 +324,7 @@ With these files downloaded, we can now build the image.
 
 Once you have successfully built the image, push it up to DockerHub with the ``docker push`` command so that we can pull it back down on Frontera.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker push USERNAME/bert-classifier:0.0.1
 
@@ -330,7 +334,7 @@ Testing the Container Locally with CPU
 As was mentioned above, before using TACC allocation hours, it's a good idea to test locally. In this case, we can at least
 test that the program help works.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run --rm -it eriksf/bert-classifier:0.0.1 bert_classifier.py -h
    usage: bert_classifier.py [-h] [-d DEVICE] [-o OUTPUT] [-s SOURCE]
@@ -347,7 +351,7 @@ test that the program help works.
 
 We could even test the classification (very slowly) using the CPU.
 
-.. code-block:: bash
+.. code-block:: console
 
    $ docker run --rm -it eriksf/bert-classifier:0.0.1 bert_classifier.py -d cpu
 
@@ -356,23 +360,23 @@ Running the Container on Frontera
 
 To start, lets allocate a single `RTX node <https://frontera-portal.tacc.utexas.edu/user-guide/system/#gpu-nodes>`_, which has 4 NVIDIA Quadro RTX 5000 GPUs with 16 GB of Memory each.
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ idev -m 60 -p rtx
 
 Once you have your node, pull the container and run it as follows:
 
-.. code-block:: bash
+.. code-block:: console
 
-	# Load singularity module
+	Load singularity module
 	$ module load tacc-singularity
 
-	# Change to $SCRATCH directory
+	Change to $SCRATCH directory
 	$ cd $SCRATCH
 
-	# Pull container
+	Pull container
 	$ singularity pull docker://USERNAME/bert-classifier:0.0.1
 
-	# Run container
+	Run container
 	$ singularity exec --nv bert-classifier_0.0.1.sif bert_classifier.py
 
