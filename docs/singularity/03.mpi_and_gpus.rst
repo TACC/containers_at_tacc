@@ -137,7 +137,6 @@ Once you have your node, pull the container and run it as follows:
 	$ singularity pull docker://USERNAME/pi-estimator:0.1-mpi
 
 	Run container sequentially
-	$ singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 	$ ibrun -n 1 singularity run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
 	Run container distributed
@@ -178,11 +177,11 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 	#SBATCH -J calculate-pi-mpi           # Job name
 	#SBATCH -o calculate-pi-mpi.%j        # Name of stdout output file (%j expands to jobId)
-	#SBATCH -p normal                     # Queue name
+	#SBATCH -p development                # Queue name
 	#SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
 	#SBATCH -n 8                          # Total number of mpi tasks requested
 	#SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
-	#SBATCH --reservation Containers      # a reservation only active during the training
+	#SBATCH --reservation Containers_dev  # a reservation only active during the training
 
 	module load tacc-singularity
 	cd $SCRATCH
