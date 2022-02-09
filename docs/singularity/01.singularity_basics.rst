@@ -1,5 +1,5 @@
 ******************************
-Introduction to Singularity
+Introduction to Singularity/Apptainer
 ******************************
 
 .. Note::
@@ -11,6 +11,9 @@ At face value, Singularity is an alternative container implementation to Docker 
 
 If you are familiar with Docker, Singularity will feel familiar.
 
+.. Note::
+
+    Singularity has rebranded itself as Apptainer, and they are the same software.  At some point, the name of the executable will change as well, but this has not happened yet at TACC. For now, we will stick to calling it Singularity to avoid confusion. More info is here:  `https://apptainer.org/ <https://apptainer.org/>`_
 
 Login to Frontera
 =================
