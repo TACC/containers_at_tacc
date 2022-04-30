@@ -26,7 +26,6 @@ What is a Container?
 
 
 
-
 How is a Container Different from a VM?
 ---------------------------------------
 
@@ -87,13 +86,11 @@ containerization platforms you'll find in HPC environments).
 Singularity (now Apptainer)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Singularity (recently renamed as Apptainer) is a container solution which provides
-the functionality of a virtual machine, without the heavyweight implementation and
-performance costs of emulation and redundancy. Software developers can now build
-their stack onto whatever operating system base fits their needs best, and create
-distributable runtime encapsulated environments and the users never have to worry
-about dependencies, requirements, or anything else from the user space.
-
+Singularity (recently renamed as Apptainer) is a container solution designed to 
+execute applications at bare-metal performance while being secure, portable, and 
+100% reproducible. Singularity's permissions model makes it a popular choice for
+shared HPC environments where Docker cannot be supported. It has its own syntax
+for building containers but also support pulling and running Docker containers.
 
 In general we use **Docker** to develop new containers and run them on our laptops.
 We use **Singularity (Apptainer)** as a runtime on our HPC systems.
@@ -109,67 +106,65 @@ We can find existing containers that are compatible with both Docker and Singula
 Some Quick Definitions
 ----------------------
 
-Container
-~~~~~~~~~
+Dockerfile
+~~~~~~~~~~
 
-A container is a standard unit of software that packages up code and all its
-dependencies so the application runs quickly and reliably from one computing
-environment to another. Containers includes everything from the operating
-system, user-added files, metadata.
+A Dockerfile is a recipe for creating a Docker image. It is a human-readable, 
+plain text file that contains a sequential set of commands (*a recipe*) for 
+installing and configuring an application and all of its dependencies. The Docker 
+command line interface is used to interpret a Dockerfile and "build" an  image 
+based on those instructions. Other container build environments, such as Apptainer, 
+have different syntax for container recipes, but the function is the same.
 
 Image
 ~~~~~
 
-A Docker images is a read-only file used to produce Docker containers. It is
-comprised of layers of other images, and any changes made to an image can only
-be saved and propagated on by adding new layers. The "base image" is the
-bottom-most layer that does not depend on any other layer and typically defines,
-e.g., the operating system for the container. Running a Docker image creates an
-instance of a Docker container.
+An image is a read-only template that contains all the code, dependencies,
+libraries, and supporting files that are required to launch a container. Docker
+stores images as layers, and any changes made to an image are captured by adding 
+new layers. The "base image" is the bottom-most layer that does not depend on 
+any other layer and typically defines the operating system for the container.
 
-Dockerfile
-~~~~~~~~~~
+Container
+~~~~~~~~~
 
-The Dockerfile is a recipe for creating a Docker image. They are simple, usually
-short plain text files that contain a sequential set of commands (*a recipe*)
-for installing and configuring your application and all of its dependencies. The
-Docker command line interface is used to "build" an image from a Dockerfile.
+A container is an instance of an image that can execute a software enviornment. 
+Running a container requires a container runtime environment (e.g. Docker, 
+Apptainer) and an instruction set architecture (e.g. x86) compatible with the 
+image from which the container is instantiated.
 
 Image Registry
 ~~~~~~~~~~~~~~
 
-The Docker images you build can be stored in online image registries, such as
-`Docker Hub <https://hub.docker.com/>`_. (It is similar to the way we store
-Git repositories on GitHub.) Image registries support the notion of tags on
-images to identify specific versions of images. It is mostly public, and many
-"official" images can be found.
-
+Docker images can be stored in online image registries, such as `Docker Hub 
+<https://hub.docker.com/>`_. (It is analogous to the way Git repositories are 
+stored on GitHub.) Image registries are an excellent way to publish research 
+software and to discover tools built by others. Image registries support the 
+notion of tags to identify specific versions of images. 
 
 Image Tags
 ~~~~~~~~~~
 
-Docker supports the notion of image tags, similar to tags in a git repository.
-Tags identify a specific version of an image. The full name of an image on
-Docker Hub is comprised of components separated by slashes. The components include
-a “repository” (which could be owned by an individual or organization), the “name”,
-and the “tag”. For example, an image with the full name
+Docker supports image tags, similar to tags in a git repository. Tags identify 
+a specific version of an image. The full name of an image on Docker Hub is 
+comprised of components separated by slashes. The components include an 
+"owner" (which could be an individual or organization), the "name",
+and the "tag". For example, an image with the full name
 
 .. code-block:: text
 
    tacc/gateways19:0.1
 
-would refer to the gateways19 image within the “tacc” registry and have a
-tag of “0.1”.
+would reference the "gateways19" image owned by the "tacc" organization with a
+tag of "0.1".
 
 Summing Up
 ----------
 
 If you are developing an app or web service, you will almost certainly want to
 work with containers. First you must either **build** an image from a
-Dockerfile, or **pull** an image from a public registry. Then, you **run** (or
-deploy) an instance of your image into a container. The container represents
-your app or web service, running in the wild, isolated from other apps and
-services.
+Dockerfile, or **pull** an image from a public registry. Then, you can **run** 
+(or deploy) an instance of your image as a container.
 
 .. figure:: images/docker_workflow.png
    :width: 600
