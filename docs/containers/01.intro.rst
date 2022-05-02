@@ -180,7 +180,3 @@ services.
 
 
 
-Additional Resources
---------------------
-
-* `Best Practices <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_.
