@@ -1,14 +1,16 @@
 Welcome to Containers @ TACC!
 =============================
 
-In this section, we will learn about containers, their uses, different existing container technologies. Our focus would be
-on one such container technology called "Docker".
+In this section, we will be introduced to containers, their uses, and different
+existing container technologies. Our focus would be on one such container technology
+called "Docker".
 
-**Objectives for this session**
+**Objectives for this session:**
 
-  * To understand Containers 
-  * To find and use existing containers
-  * To develop, use your own containers
+  * Describe the essentials of containers
+  * Gain experience with the Docker command line interface
+  * Find and pull existing containers from Docker Hub
+  * Run containers interactively and non-interactively
 
 .. toctree::
    :maxdepth: 1

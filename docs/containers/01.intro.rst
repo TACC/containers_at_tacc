@@ -2,75 +2,72 @@
 Introduction to Containers
 ==========================
 
+Containers are an important common currency for app development, web services,
+scientific computing, and more. Containers allow you to package an application
+along with all of its dependencies, isolate it from other applications and
+services, and deploy it consistently and reproducibly and *platform-agnostically*.
+In this introductory module, we will learn about containers and their uses, in
+particular the containerization platform **Docker**.
+
 What is a Container?
 --------------------
 
-- A container is a standard unit of software that packages up code and all its dependencies so the
-  application runs quickly and reliably from one computing environment to another.
-
-- Containers allow a developer to package up an application with all of the parts it needs,
-  such as libraries and other dependencies, and ship it all out as one package.
-
-- Multiple containers can run on the same machine and share the OS kernel with other containers,
-  each running as isolated processes in user space, hence are *lightweight* and have *low overhead*.
-
-- Containers ensure *portability* and *reproducibilty* by isolating the application from environment.
-
-
-**Container vs VM**
+* A container is a standard unit of software that packages up code and all its
+  dependencies so the application runs quickly and reliably from one computing
+  environment to another.
+* Containers allow a developer to package up an application with all of the
+  parts it needs, such as libraries and other dependencies, and ship it all out
+  as one package.
+* Multiple containers can run on the same machine and share the OS kernel with
+  other containers, each running as isolated processes in user space, hence are
+  *lightweight* and have *low overhead*.
+* Containers ensure *portability* and *reproducibility* by isolating the
+  application from environment.
 
 
-.. figure:: images/cont_vm.png
-   :height: 500
-   :width: 700
+
+
+How is a Container Different from a VM?
+---------------------------------------
+
+Virtual machines enable application and resource isolation, run on top of a
+hypervisor (high overhead). Multiple VMs can run on the same physical
+infrastructure - from a few to dozens depending on resources. VMs take up more
+disk space and have long start up times (~minutes).
+
+.. figure:: images/arch_vm.png
+   :width: 400
    :align: center
 
+   Applications isolated by VMs.
 
-+-------------------------------------------------+------------------------------------+
-|          VM                                     | Container                          |
-+=================================================+====================================+
-|  OS level isolation with virtualized hardware   | OS process level isolation         |
-+-------------------------------------------------+------------------------------------+
-|  Can run “dozens” on a single machine.          | Can run 1,000s on a single machine |
-+-------------------------------------------------+------------------------------------+
-| Leverages hypervisors (requirements on hardware)| Leverages kernel features          |
-|                                                 | (requirements on kernel version)   |
-+-------------------------------------------------+------------------------------------+
-|  Start up time ~minutes                         | Start up time ~100s of ms          |
-+-------------------------------------------------+------------------------------------+
+Containers enable application and resource isolation, run on top of the host
+operating system. Many containers can run on the same physical infrastructure -
+up to 1,000s depending on resources. Containers take up less disk space than VMs
+and have very short start up times (~100s of ms).
+
+.. figure:: images/arch_container.png
+   :width: 400
+   :align: center
+
+   Applications isolated by containers.
+
 
 
 **Benefits of using containers include:**
 
-- Platform independence: Build it once, run it anywhere
-- Resource efficiency and density
-- Enables reproducible science
-- Effective isolation and resource sharing
+* Platform independence: Build it once, run it anywhere
+* Resource efficiency and density
+* Enables reproducible science
+* Effective isolation and resource sharing
+
 
 
 Container Technologies
-======================
+----------------------
 
-**Docker**
-
-Docker is a set of platform as a service products that use OS-level virtualization to deliver
-software in packages called containers.
-
-**Singularity**
-
-Singularity is a container solution which provides the functionality of a virtual machine, without the heavyweight
-implementation and performance costs of emulation and redundancy.
-Software developers can now build their stack onto whatever operating system base fits their needs best, and
-create distributable runtime encapsulated environments and the users never have to worry about dependencies,
-requirements, or anything else from the user space.
-
-Docker helps to develop containers and run them on our laptops.  We use Singularity as a runtime on our HPC systems.
-
-**We can find existing containers at:**
-
-1. `Docker Hub <https://hub.docker.com/>`_
-2. `Singularity Hub <https://singularity-hub.org/>`_
-3. `BioContainers <https://biocontainers.pro/#/>`_
+Docker
+~~~~~~
 
 .. figure:: images/docker_logo.jpg
    :height: 180
@@ -79,101 +76,111 @@ Docker helps to develop containers and run them on our laptops.  We use Singula
    :alt: Docker Logo
    :figclass: left
 
-Docker
-======
+Docker is a containerization platform that uses OS-level virtualization to
+package software and dependencies in deliverable units called containers. It is
+by far the most common containerization platform today, and most other container
+platforms are compatible with Docker. (E.g. Singularity and Shifter are two
+containerization platforms you'll find in HPC environments).
 
-`Docker <https://www.docker.com/>`_ is a platform for building and executing containers.
 
-   - Docker (2013) is the gold standard container technology.
-   - It can package an application and its dependencies in a virtual container that can run on any Linux server.
-   - This helps provide **flexibility** and **portability** enabling the application to be run in various locations.
-   - Docker grants superuser privileges and some containers may allow users root access to host files.
-   - Docker-compatible technologies Singularity(Stampede2) and Shifter (Blue Waters, Cori) were designed for HPC environments.
 
-In the Docker world ...
-=======================
+Singularity (now Apptainer)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Containers**
+Singularity (recently renamed as Apptainer) is a container solution which provides
+the functionality of a virtual machine, without the heavyweight implementation and
+performance costs of emulation and redundancy. Software developers can now build
+their stack onto whatever operating system base fits their needs best, and create
+distributable runtime encapsulated environments and the users never have to worry
+about dependencies, requirements, or anything else from the user space.
+
+
+In general we use **Docker** to develop new containers and run them on our laptops.
+We use **Singularity (Apptainer)** as a runtime on our HPC systems.
+We can find existing containers that are compatible with both Docker and Singularity
+(Apptainer) platforms (among others) at:
+
+1. `Docker Hub <https://hub.docker.com/>`_
+2. `Quay.io <https://quay.io/>`_
+3. `BioContainers <https://biocontainers.pro/#/>`_
+
+
+
+Some Quick Definitions
+----------------------
+
+Container
+~~~~~~~~~
 
 A container is a standard unit of software that packages up code and all its
-dependencies so the application runs quickly and reliably from one computing environment to another. Containers includes everything from the
-operating system, user-added files, metadata.
+dependencies so the application runs quickly and reliably from one computing
+environment to another. Containers includes everything from the operating
+system, user-added files, metadata.
 
-Containers are very useful as they are available for both Linux and Windows-based applications, containerized software
-will run the same, irrespective of the infrastructure. They isolate the software from the environment, facilitating users to overcome
-conflicts between local development environments and execution environment.
+Image
+~~~~~
 
-*Running an image creates a Docker Container*
-They feature a read-write layer on top, are interactive and can store state. This means that once you execute inside a Docker container,
-you can save a snapshot of the resulting state as another image.
+A Docker images is a read-only file used to produce Docker containers. It is
+comprised of layers of other images, and any changes made to an image can only
+be saved and propagated on by adding new layers. The "base image" is the
+bottom-most layer that does not depend on any other layer and typically defines,
+e.g., the operating system for the container. Running a Docker image creates an
+instance of a Docker container.
 
-**Images**
+Dockerfile
+~~~~~~~~~~
 
-A Docker image is a read-only file used to produce Docker containers.
-It is comprised of layers of other images, any change made to an image is carried out by adding a new layer.
+The Dockerfile is a recipe for creating a Docker image. They are simple, usually
+short plain text files that contain a sequential set of commands (*a recipe*)
+for installing and configuring your application and all of its dependencies. The
+Docker command line interface is used to "build" an image from a Dockerfile.
 
-Base Image is the layer that does not depend on any other layer. For example most of the time this layer defines the operating system
-for the docker container's environment.
+Image Registry
+~~~~~~~~~~~~~~
 
-An image gets built by building a Dockerfile.
+The Docker images you build can be stored in online image registries, such as
+`Docker Hub <https://hub.docker.com/>`_. (It is similar to the way we store
+Git repositories on GitHub.) Image registries support the notion of tags on
+images to identify specific versions of images. It is mostly public, and many
+"official" images can be found.
 
-... which brings us to
 
-**What is a Dockerfile?**
+Image Tags
+~~~~~~~~~~
 
-Dockerfiles are text files you create with the commands you would like to execute on the command line inside a container to
-create a Docker image. Docker reads the commands from top to bottom and builds a Docker image from it.
-
-Dockerfiles are useful as they contain the history of the procedure used to create an image. They can be used to install required dependencies,
-tools, tool-related files into the docker container.
-
-Some best practices for writing Dockerfiles can be found at: `Best Practices <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_.
-
-The *docker build* command builds an image from a Dockerfile and a context. The build’s context is the set of files at a specified location PATH or URL.
-The PATH is a directory on your local filesystem. The URL is a Git repository location.
-
-With a Dockerfile in the current directory, we can build an image from it by
-
-.. code-block:: console
-
-  $ docker build .
-  Sending build context to Docker daemon  6.51 MB
-  . . .
-
-**Image Registry**
-
-We can store the docker images we create in image registries. Registries are organized into collections of images called *repositories*.
-
-`Docker Hub <https://hub.docker.com/>`_ is a central, public repository of images.
-The docker hub contains images contributed by individual users and organizations as well as
-“official images”. Explore the offcial docker images here: https://hub.docker.com/explore/
-
-**Image Tags**
-
-Docker supports the notion of image tags, similar to tags in a git repository. Tags identify a specific version of an image.
-
-The full name of an image on the Docker Hub is comprised of components separated by slashes.
-The components include a “repository” (which could be owned by an individual or organization),
-the “name”, and the “tag”. For example, an image with the full name
+Docker supports the notion of image tags, similar to tags in a git repository.
+Tags identify a specific version of an image. The full name of an image on
+Docker Hub is comprised of components separated by slashes. The components include
+a “repository” (which could be owned by an individual or organization), the “name”,
+and the “tag”. For example, an image with the full name
 
 .. code-block:: text
 
    tacc/gateways19:0.1
 
-would refer to the gateways19 image within the “tacc” repository and have a
+would refer to the gateways19 image within the “tacc” registry and have a
 tag of “0.1”.
 
-TACC maintains multiple repositories on the Docker Hub including:
+Summing Up
+----------
 
-  - tacc
-  - taccsciapps
-  - tapis
-  - abaco
-
-**Docker Worflow Overview**
+If you are developing an app or web service, you will almost certainly want to
+work with containers. First you must either **build** an image from a
+Dockerfile, or **pull** an image from a public registry. Then, you **run** (or
+deploy) an instance of your image into a container. The container represents
+your app or web service, running in the wild, isolated from other apps and
+services.
 
 .. figure:: images/docker_workflow.png
-    :height: 400
-    :width: 800
-    :align: center
-    :alt: Simple Docker Workflow
+   :width: 600
+   :align: center
+
+   Simple Docker workflow.
+
+
+
+
+Additional Resources
+--------------------
+
+* `Best Practices <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_.
