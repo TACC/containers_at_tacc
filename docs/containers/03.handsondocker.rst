@@ -132,22 +132,21 @@ Alternatively, you could also do this *interactively*
 
 .. code-block:: console
 
-   $ docker run --rm -it ubuntu /bin/bash
+   $ docker run -it ubuntu:18.04 /bin/bash
 
 
 *Unpacking the interactive 'docker run' command*
 
-+------------+----------------------------------------+
-| docker run |  Run something                         |
-+------------+----------------------------------------+
-| --rm -it   |  Remove the container when the process |
-|            |  completes and connect your            |
-|            |  terminal to the container runtime     |
-+------------+----------------------------------------+
-| ubuntu     |  The name of the container             |
-+------------+----------------------------------------+
-| /bin/bash  |  The type of shell to start            |
-+------------+----------------------------------------+
++--------------+----------------------------------------+
+| docker run   |  Run something                         |
++--------------+----------------------------------------+
+| -it          |  Connect your terminal to the          |
+|              |  container runtime                     |
++--------------+----------------------------------------+
+| ubuntu:18.04 |  The name of the container             |
++--------------+----------------------------------------+
+| /bin/bash    |  The type of shell to start            |
++--------------+----------------------------------------+
 
 **Install your tool in the image**
 
@@ -200,7 +199,7 @@ We can also run a container in the background. We do so using the -d flag:
 
 .. code-block:: console
 
-   $ docker run -d ubuntu sleep infinity
+   $ docker run -d ubuntu:18.04 sleep infinity
    f406f6b0c34d4bba552a7106e951a5d667dcbfddcb429e2d42b0ac7a10a919fc
 
    $ docker ps
@@ -220,5 +219,5 @@ In order to see all containers on the system use docker ps -a.
 
 **Summary**
 
-A Dockerfile allows you to transparently document all the dependancies and steps needed to describe a software tool.
+A Dockerfile allows you to transparently document all the dependencies and steps needed to describe a software tool.
 You can then run this tool as a Docker container for full reproducibility.
