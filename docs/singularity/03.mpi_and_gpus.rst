@@ -175,13 +175,13 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 	#!/bin/bash
 
-	#SBATCH -J calculate-pi-mpi           # Job name
-	#SBATCH -o calculate-pi-mpi.%j        # Name of stdout output file (%j expands to jobId)
-	#SBATCH -p development                # Queue name
-	#SBATCH -N 1                          # Total number of nodes requested (56 cores/node)
-	#SBATCH -n 8                          # Total number of mpi tasks requested
-	#SBATCH -t 00:10:00                   # Run time (hh:mm:ss)
-	#SBATCH --reservation Containers_dev  # a reservation only active during the training
+	#SBATCH -J calculate-pi-mpi              # Job name
+	#SBATCH -o calculate-pi-mpi.%j           # Name of stdout output file (%j expands to jobId)
+	#SBATCH -p development                   # Queue name
+	#SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
+	#SBATCH -n 8                             # Total number of mpi tasks requested
+	#SBATCH -t 00:10:00                      # Run time (hh:mm:ss)
+	#SBATCH --reservation ContainerTraining  # a reservation only active during the training
 
 	module load tacc-singularity
 	cd $SCRATCH
