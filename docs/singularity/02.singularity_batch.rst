@@ -32,7 +32,7 @@ On a HPC system, your job submission script would look something like:
   #SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                             # Total number of mpi tasks requested
   #SBATCH -t 02:00:00                      # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation ContainerTraining  # a reservation only active during the training
+  #SBATCH --reservation taccster_tutorials # a reservation only active during the training
 
   module load tacc-singularity
   singularity exec docker://python:latest /usr/local/bin/python
@@ -107,7 +107,7 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   #SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                             # Total number of mpi tasks requested
   #SBATCH -t 00:10:00                      # Run time (hh:mm:ss)
-  #SBATCH --reservation ContainerTraining  # a reservation only active during the training
+  #SBATCH --reservation taccster_tutorials # a reservation only active during the training
 
   module load tacc-singularity
 

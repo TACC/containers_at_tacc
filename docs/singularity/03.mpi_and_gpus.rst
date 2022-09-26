@@ -181,7 +181,7 @@ After pulling the container, the image file can be referred to in an sbatch scri
 	#SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
 	#SBATCH -n 8                             # Total number of mpi tasks requested
 	#SBATCH -t 00:10:00                      # Run time (hh:mm:ss)
-	#SBATCH --reservation ContainerTraining  # a reservation only active during the training
+	#SBATCH --reservation taccster_tutorials # a reservation only active during the training
 
 	module load tacc-singularity
 	cd $SCRATCH
@@ -227,7 +227,7 @@ When running at TACC, we have a set of curated Docker images that include `Tenso
 | tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7              | X            | X         |          |           |
 +------------------------------------------------------+--------------+-----------+----------+-----------+
 | tacc/tacc-ml:centos7-cuda11-tf2.6-pt1.10             | X            | X         |          | X         |
-+------------------------------------------------------+--------------+-----------+----------+-----------+   
++------------------------------------------------------+--------------+-----------+----------+-----------+
 | tacc/tacc-ml:ppc64le-centos7-cuda10-tf1.15-pt1.2     |              |           | X        |           |
 +------------------------------------------------------+--------------+-----------+----------+-----------+
 | tacc/tacc-ml:ppc64le-centos7-cuda10-tf2.1-pt1.3      |              |           | X        |           |
