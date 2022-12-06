@@ -18,7 +18,7 @@ For example, if you want to run the command:
 
 .. code-block:: text
 
-  singularity exec docker://python:latest /usr/local/bin/python
+  singularity exec docker://python:latest /usr/local/bin/python --version
 
 On a HPC system, your job submission script would look something like:
 
@@ -26,16 +26,16 @@ On a HPC system, your job submission script would look something like:
 
   #!/bin/bash
 
-  #SBATCH -J myjob                         # Job name
-  #SBATCH -o output.%j                     # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p development                   # Queue name
-  #SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                             # Total number of mpi tasks requested
-  #SBATCH -t 02:00:00                      # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation taccster_tutorials # a reservation only active during the training
+  #SBATCH -J myjob                           # Job name
+  #SBATCH -o output.%j                       # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                             # Queue name
+  #SBATCH -N 1                               # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 1                               # Total number of mpi tasks requested
+  #SBATCH -t 02:00:00                        # Run time (hh:mm:ss) - 4 hours
+  #SBATCH --reservation Containers_Training  # a reservation only active during the training
 
   module load tacc-singularity
-  singularity exec docker://python:latest /usr/local/bin/python
+  singularity exec docker://python:latest /usr/local/bin/python --version
 
 This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines looks like a comment to the bash kernel, but the scheduler reads all those lines to know what resources to reserve for you.
 
@@ -101,13 +101,13 @@ Those commands should open a new file in the nano editor.  Either type in (or co
 
   #!/bin/bash
 
-  #SBATCH -J calculate-pi                  # Job name
-  #SBATCH -o output.%j                     # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p development                   # Queue name
-  #SBATCH -N 1                             # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                             # Total number of mpi tasks requested
-  #SBATCH -t 00:10:00                      # Run time (hh:mm:ss)
-  #SBATCH --reservation taccster_tutorials # a reservation only active during the training
+  #SBATCH -J calculate-pi                    # Job name
+  #SBATCH -o output.%j                       # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                             # Queue name
+  #SBATCH -N 1                               # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 1                               # Total number of mpi tasks requested
+  #SBATCH -t 00:10:00                        # Run time (hh:mm:ss)
+  #SBATCH --reservation Containers_Training  # a reservation only active during the training
 
   module load tacc-singularity
 
@@ -117,7 +117,7 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   echo "estimating the value of Pi:"
   singularity exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
 
-* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wallen" as the username to pull Joe Allen's container.
+* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wjallen" as the username to pull Joe Allen's container.
 
 * If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
 

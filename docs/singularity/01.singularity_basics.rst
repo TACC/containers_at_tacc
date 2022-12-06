@@ -1,6 +1,6 @@
-******************************
+*************************************
 Introduction to Singularity/Apptainer
-******************************
+*************************************
 
 .. Note::
 
@@ -13,12 +13,12 @@ If you are familiar with Docker, Singularity will feel familiar.
 
 .. Note::
 
-    Singularity has rebranded itself as Apptainer, and they are the same software.  At some point, the name of the executable will change as well, but this has not happened yet at TACC. For now, we will stick to calling it Singularity to avoid confusion. More info is here:  `https://apptainer.org/ <https://apptainer.org/>`_
+    Singularity has rebranded itself as Apptainer, and they are the same software.  At some point, the name of the executable will change as well, but this has not happened yet on all systems at TACC. For now, we will stick to calling it Singularity to avoid confusion. More info is here:  `https://apptainer.org/ <https://apptainer.org/>`_
 
 Login to Frontera
 =================
 
-For today's training, we will use the Frontera supercomputer, the 13th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
+For today's training, we will use the Frontera supercomputer, the 19th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
 
 Mac / Linux:
 

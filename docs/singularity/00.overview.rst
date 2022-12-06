@@ -5,7 +5,7 @@ High performance computing (HPC) systems serve a large role in academic computin
 
 **Objectives for this session**
 
-  * Use Singularity to execute Docker containers on a HPC system
+  * Use Singularity (now *Apptainer*) to execute Docker containers on a HPC system
   * Create a container that can use the Message Passing Interface (MPI) to use multiple nodes in parallel
   * Understand how to run containers that use GPUs for computation
   * Discover community curated software containers available at TACC
