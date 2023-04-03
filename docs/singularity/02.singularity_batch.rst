@@ -26,13 +26,13 @@ On a HPC system, your job submission script would look something like:
 
   #!/bin/bash
 
-  #SBATCH -J myjob                           # Job name
-  #SBATCH -o output.%j                       # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p rtx                             # Queue name
-  #SBATCH -N 1                               # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                               # Total number of mpi tasks requested
-  #SBATCH -t 02:00:00                        # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation Containers_Training  # a reservation only active during the training
+  #SBATCH -J myjob                            # Job name
+  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                              # Queue name
+  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 1                                # Total number of mpi tasks requested
+  #SBATCH -t 02:00:00                         # Run time (hh:mm:ss) - 4 hours
+  #SBATCH --reservation Containers_Class_RTX  # a reservation only active during the training
 
   module load tacc-singularity
   singularity exec docker://python:latest /usr/local/bin/python --version
@@ -101,13 +101,13 @@ Those commands should open a new file in the nano editor.  Either type in (or co
 
   #!/bin/bash
 
-  #SBATCH -J calculate-pi                    # Job name
-  #SBATCH -o output.%j                       # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p rtx                             # Queue name
-  #SBATCH -N 1                               # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                               # Total number of mpi tasks requested
-  #SBATCH -t 00:10:00                        # Run time (hh:mm:ss)
-  #SBATCH --reservation Containers_Training  # a reservation only active during the training
+  #SBATCH -J calculate-pi                     # Job name
+  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                              # Queue name
+  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 1                                # Total number of mpi tasks requested
+  #SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
+  #SBATCH --reservation Containers_Class_RTX  # a reservation only active during the training
 
   module load tacc-singularity
 

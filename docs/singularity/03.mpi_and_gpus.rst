@@ -20,31 +20,25 @@ Base Docker images
 
 When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_.
 
-+---------------------------------------+----------+-----------+-----------+-----------+
-| Image                                 | Frontera | Stampede2 | Maverick2 | Local Dev |
-+=======================================+==========+===========+===========+===========+
-| tacc/tacc-centos7-mvapich2.3-ib       | X        |           | X         | X         |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-ppc64le-mvapich2-ib |          |           |           | X         |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-mvapich2.3-psm2     |          | X         |           |           |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-centos7-impi19.0.7-common   | X        | X         |           | X         |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-mvapich2.3-ib      | X        |           | X         | X         |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-mvapich2.3-psm2    |          | X         |           |           |
-+---------------------------------------+----------+-----------+-----------+-----------+
-| tacc/tacc-ubuntu18-impi19.0.7-common  | X        | X         |           |  X        |
-+---------------------------------------+----------+-----------+-----------+-----------+
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| Image                                 | Frontera | Stampede2 | Maverick2 | Lonestar6 | Local Dev |
++=======================================+==========+===========+===========+===========+===========+
+| tacc/tacc-centos7-mvapich2.3-ib       | X        |           | X         | X         | X         |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| tacc/tacc-centos7-mvapich2.3-psm2     |          | X         |           |           |           |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| tacc/tacc-centos7-impi19.0.7-common   | X        | X         |           | X         | X         |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-ib      | X        |           | X         | X         | X         |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-mvapich2.3-psm2    |          | X         |           |           |           |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
+| tacc/tacc-ubuntu18-impi19.0.7-common  | X        | X         |           | X         | X         |
++---------------------------------------+----------+-----------+-----------+-----------+-----------+
 
 .. Note::
 
    The singularity version of these containers should be invoked with ``singularity run`` on HPC.
-
-   \* Must be used with the ``mvapich2-gdr`` module.
-
-   Lonestar6 will be added to this list soon.
 
 In this tutorial, we will be using use the ``tacc/tacc-ubuntu18-impi19.0.7-common`` image to satisfy the MPI architecture on Frontera, while also allowing intra-node (single-node, multiple-core) testing on your local development system.
 
@@ -175,13 +169,13 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 	#!/bin/bash
 
-	#SBATCH -J calculate-pi-mpi                # Job name
-	#SBATCH -o calculate-pi-mpi.%j             # Name of stdout output file (%j expands to jobId)
-	#SBATCH -p rtx                             # Queue name
-	#SBATCH -N 1                               # Total number of nodes requested (56 cores/node)
-	#SBATCH -n 8                               # Total number of mpi tasks requested
-	#SBATCH -t 00:10:00                        # Run time (hh:mm:ss)
-	#SBATCH --reservation Containers_Training  # a reservation only active during the training
+	#SBATCH -J calculate-pi-mpi                 # Job name
+	#SBATCH -o calculate-pi-mpi.%j              # Name of stdout output file (%j expands to jobId)
+	#SBATCH -p rtx                              # Queue name
+	#SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
+	#SBATCH -n 8                                # Total number of mpi tasks requested
+	#SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
+	#SBATCH --reservation Containers_Class_RTX  # a reservation only active during the training
 
 	module load tacc-singularity
 	cd $SCRATCH
