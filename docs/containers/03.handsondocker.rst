@@ -1,223 +1,199 @@
-===================
 Working with Docker
 ===================
 
-In this section, we will learn to create and use our own docker container.
-
-.. note::
-  Prerequisites:
-  1. Have Docker installed on your laptop
-  2. Create a Docker Hub Account
-
-Building Images From a *Dockerfile*
------------------------------------
-
-  - Dockerfiles are a reproducible and well documented method of developing your own container.
-  - They store the whole procedure of how an image is built.
+In this section, we will look at a few more advanced examples of working with
+container images that are available on `Docker Hub <https://hub.docker.com/>`_. 
+We will run commands using the containerized assets both *interactively* and
+*non-interactively*.
 
 
-**Dockerfile Format**
+Pull An Official Image
+----------------------
 
-A Dockerfile has two type of fields:
+One powerful aspect of developing with containers and the Docker ecosystem is the 
+large collection of container images freely available. There are 10s of millions of
+images on Docker Hub alone, but beware: using an image that you don't know anything 
+about comes with the same risks involved with running any software.
 
-  - Instructions followed by arguments and comments
-  - A basic Dockerfile looks like
+.. warning::
 
-.. code-block:: dockerfile
+   Be careful running container images that you are not familiar with. Some could contain 
+   security vulnerabilities or, even worse, malicious code like viruses or ransomware. 
 
-   # Comment
-   INSTRUCTION arguments
+To combat this, Docker Hub provides `"Official Images" <https://docs.docker.com/docker-hub/official_images/>`_,
+a well-maintained set of container images providing high-quality installations of operating
+systems, programming language environments and more.
 
+We can search through the official images on Docker Hub `here <https://hub.docker.com/search?image_filter=official&q=&type=image>`_.
 
-**General Steps**
+Scroll down to find the Python official image called ``python``, then 
+click on that `image <https://hub.docker.com/_/python>`_.
 
-1. Choose a base operating system
-2. Install dependencies and other useful packages
-3. Install scientific application
-4. Set any environment variable that might be useful
+We see a lot of information about how to use the image, including information about the different 
+"tags" available. We see tags such as ``3.12-rc``, ``3.11.2``, ``3.11``, ``3``, etc.
+We'll discuss tags in detail later, but for now, does anyone have a guess as to what
+the Python tags refer to? 
 
-Install a tool in a Docker container
-------------------------------------
-Let’s build a container that will run `fastqc <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_ a popular bioinformatics
-tool for checking the quality of DNA sequencing reads.
-
-To make it easier, follow along with the sample `Dockerfile <https://github.com/TACC/containers_at_tacc/blob/master/docs/containers/fastqc-dev/Dockerfile>`_.
+We can pull the official Python image using command, then check to make sure it is
+available locally:
 
 .. code-block:: console
 
-   $ cat Dockerfile
-
-
-.. code-block:: dockerfile
-   :linenos:
-
-   # Choose a base operating system
-   FROM ubuntu:18.04
-
-   # Update and install necessary packages
-   RUN apt-get update && apt-get upgrade -y \
-     && apt-get install -y wget unzip default-jdk libfindbin-libs-perl
-
-   # Install the application
-   RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip \
-       && unzip fastqc_v0.11.8.zip \
-       && rm fastqc_v0.11.8.zip \
-       && chmod 755 /FastQC/fastqc
-
-   # Use environment variable to add executable to PATH
-   ENV PATH "/FastQC:$PATH"
-
-From your current working directory, preferably a clean one, copy the contents of this file into a new file called
-Dockerfile and save it.
-
-**Build**
-
-.. code-block:: console
-
-   $ docker build -t username/fastqc:0.11.8 .
-   Sending build context to Docker daemon  251.4MB
-   Step 1/4 : FROM ubuntu:18.04
-   ---> 775349758637
-   . . .
-   Successfully built b5d705fbdfa1
-   Successfully tagged reshg/fastqc:0.11.8
-
-**Check images**
-
-.. code-block:: console
-
+   $ docker pull python
+   ...
    $ docker images
-   REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
-   reshg/fastqc                   0.11.8              b5d705fbdfa1        3 hours ago         708MB
+   ...
+   $ docker inspect python
+   ...
 
-**Run**
+.. tip::
 
-We use the **docker run** command to run containers from an image. We pass a command to run in the container.
-Similar to running other programs on Unix systems, we can run containers in the foreground (attached) or in the background.
-
-.. code-block:: console
-
-   $ docker run username/fastqc:0.11.8 which fastqc
-   /FastQC/fastqc
-
-*Unpacking the 'docker run' command*
-
-+-----------------------+----------------------------------------+
-| docker run            |  Run something                         |
-+-----------------------+----------------------------------------+
-| --rm                  |  Remove the container when the process |
-|                       |  completes                             |
-+-----------------------++---------------------------------------+
-| username/fastqc:0.11.8|  The name of the container             |
-+-----------------------+----------------------------------------+
-| which fastqc          |  The command to run                    |
-+-----------------------+----------------------------------------+
+   Use ``docker inspect`` to find some metadata available for each image.
 
 
-**Push Image to Docker hub**
+
+Start an Interactive Shell Inside a Container
+---------------------------------------------
+
+Using an interactive shell is a great way to poke around inside a container and
+see what is in there. Imagine you are ssh-ing to a different Linux server, have
+root access, and can see what files, commands, environment, etc., is available.
+
+Before starting an interactive shell inside the container, execute the following
+commands on your local device (we will see why in a minute):
 
 .. code-block:: console
 
-   $ docker push username/fastqc:0.11.8
-
-
-Alternatively, you could also do this *interactively*
------------------------------------------------------
-
-.. note:: Preferred way to build a docker image is by using Dockerfile.
-   For the purpose of testing, working inside the container is sometimes helpful.
-
-
-**Open a base Docker Image**
+   $ whoami
+   wallen
 
 .. code-block:: console
 
-   $ docker run -it ubuntu:18.04 /bin/bash
+   $ pwd
+   /Users/wallen
 
+.. code-block:: console
+   
+   $ uname -a
+   Darwin wireless-10-147-13-120.public.utexas.edu 22.1.0 Darwin Kernel Version 22.1.0: Sun Oct  9 20:14:54 PDT 2022; root:xnu-8792.41.9~2/RELEASE_X86_64 x86_64
 
-*Unpacking the interactive 'docker run' command*
-
-+--------------+----------------------------------------+
-| docker run   |  Run something                         |
-+--------------+----------------------------------------+
-| -it          |  Connect your terminal to the          |
-|              |  container runtime                     |
-+--------------+----------------------------------------+
-| ubuntu:18.04 |  The name of the container             |
-+--------------+----------------------------------------+
-| /bin/bash    |  The type of shell to start            |
-+--------------+----------------------------------------+
-
-**Install your tool in the image**
+Now start the interactive shell inside a Python container:
 
 .. code-block:: console
 
-   root@ded8d40f1a1e:/#
-   install dependencies
-   $ apt-get update && apt-get upgrade -y
-   $ apt-get install -y wget unzip default-jdk libfindbin-libs-perl
+   $ docker run --rm -it python /bin/bash
+   root@fc5b620c5a88:/#
 
-   install FastQC
-   $ wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip
-   $ unzip fastqc_v0.11.8.zip
-   $ rm fastqc_v0.11.8.zip
+Here is an explanation of the command options:
 
-   make fastqc executable
-   $ chmod 755 /FastQC/fastqc
+.. code-block:: text
 
-   add fastqc to the system path by linking to /bin
-   $ ln -s /FastQC/fastqc /bin
-   $ exit
+   docker run       # run a container
+   --rm             # remove the container when we exit
+   -it              # interactively attach terminal to inside of container
+   python           # use the official python image 
+   /bin/bash        # execute the bash shell program inside container
 
-**Commit your image**
+Try the following commands - the same commands you did above before staring the
+interactive shell in the container - and note what has changed:
 
 .. code-block:: console
 
-   $ docker ps -a
-   CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                      PORTS                    NAMES
-   9f0d7afff313        ubuntu                         "/bin/bash"              9 minutes ago       Exited (0) 18 seconds ago                            affectionate_einstein
-
-   Grab the CONTAINER ID of the ubuntu image created just few minutes ago.
-   $ docker commit CONTAINER ID username/fastqc:0.11.8
-   sha256:738f35b39c5711f722cc6d9b550215454f2a7ea765c73667355d383a8a9285bf
-
-   $ docker images
-   REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
-   reshg/fastqc                  0.11.8              738f35b39c57        12 seconds ago      718MB
-
-**Push your image to Docker Hub**
+   root@fc5b620c5a88:/# whoami
+   root
 
 .. code-block:: console
 
-   $ docker push username/fastqc:0.11.8
-   The push refers to repository [docker.io/reshg/fastqc]
-   6750c6c8d397: Pushing [=========>                                         ]  124.3MB/654.2MB
-
-**Running a Container in Daemon mode**
-
-We can also run a container in the background. We do so using the -d flag:
+   root@fc5b620c5a88:/# pwd
+   /
 
 .. code-block:: console
 
-   $ docker run -d ubuntu:18.04 sleep infinity
-   f406f6b0c34d4bba552a7106e951a5d667dcbfddcb429e2d42b0ac7a10a919fc
+   root@fc5b620c5a88:/# uname -a
+   Linux e8bdfbf0fad7 5.10.104-linuxkit #1 SMP Thu Mar 17 17:08:06 UTC 2022 x86_64 GNU/Linux
 
-   $ docker ps
-   CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-   f406f6b0c34d        ubuntu              "sleep infinity"    6 seconds ago       Up 5 seconds                            romantic_wilson
+Now you are the ``root`` user on a different operating system inside a running
+Linux container! You can type ``exit`` to escape the container.
 
-   $ docker ps -a
-   CONTAINER ID        IMAGE                          COMMAND             CREATED             STATUS                    PORTS               NAMES
-   f406f6b0c34d        ubuntu                         "sleep infinity"    15 seconds ago      Up 14 seconds                                 romantic_wilson
-   b7c50065ea75        ubuntu                         "/bin/bash"         21 hours ago        Up 21 hours                                   charming_robinson
-   a197e85bee14        reshg/fastqc:latest            "/bin/bash"         21 hours ago        Exited (0) 21 hours ago                       reverent_williamson
-   4eb4cf433d32        reshg/fastqc:latest            "which fastqc"      21 hours ago        Exited (1) 21 hours ago                       stoic_dhawan
-   1eb1de6ac64c        reshg/fastqc                   "which fastqc"      21 hours ago        Exited (1) 21 hours ago                       upbeat_mcnulty
+EXERCISE
+~~~~~~~~
 
-*Note: The docker ps command only shows you running containers - it does not show you containers that have exited.*
-In order to see all containers on the system use docker ps -a.
+Before you exit the container, try running the command ``python``. What happens?
+Compare that with running the command ``python`` directly on your local device. 
 
-**Summary**
 
-A Dockerfile allows you to transparently document all the dependencies and steps needed to describe a software tool.
-You can then run this tool as a Docker container for full reproducibility.
+Run a Command Inside a Container
+--------------------------------
+
+Back out on your local device, we now know we have a container image called
+``python`` that has a particular version of Python (3.11.x) that may 
+not otherwise be available on your local device. The 3.11.x Python interpreter,  
+it's standard library, and all of the dependencies of those are included in the 
+container image and 
+are *isolated* from everything else. This image (``python``) is portable
+and will run the exact same way on any OS that Docker supports.
+
+In practice, though, we don't want to start interactive shells each time we need
+to use a software application inside an image. Docker allows you to spin up an
+*ad hoc* container to run applications from outside. For example, try:
+
+
+.. code-block:: console
+
+   $ docker run --rm python whoami
+   root
+
+.. code-block:: console
+
+   $ docker run --rm python pwd
+   /
+
+.. code-block:: console
+
+   $ docker run --rm python uname -a
+   Linux e8bdfbf0fad7 5.10.104-linuxkit #1 SMP Thu Mar 17 17:08:06 UTC 2022 x86_64 GNU/Linux
+
+.. code-block:: console
+
+   $ docker run -it --rm python
+   Python 3.11.2 (main, Feb 11 2023, 02:24:27) [GCC 10.2.1 20210110] on linux
+   Type "help", "copyright", "credits" or "license" for more information.
+   >>> # type exit() to escape
+
+
+The first three commands above omitted the ``-it`` flags because they did not
+require an interactive terminal to run. On each of these commands, Docker finds
+the image the command refers to, spins up a new container based on that image,
+executes the given command inside, prints the result, and exits and removes the
+container.
+
+The last command, which did not specify a command to run inside the container, uses the container's 
+default command. We don't know ahead of time what (if any) default command is provided for 
+any given image, but what default command was provided for the ``python`` image? 
+
+Yes, it was the ``python`` command itself, and that requires an interactivity to use, 
+so we provide the ``-it`` flags.
+
+
+
+If all else fails, display the help text:
+
+.. code-block:: console
+
+   $ docker --help
+   shows all docker options and summaries
+
+
+.. code-block:: console
+
+   $ docker COMMAND --help
+   shows options and summaries for a particular command
+
+Additional Resources
+--------------------
+
+* `Docker Docs <https://docs.docker.com/>`_
+* `Best practices for writing Dockerfiles <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_
+* `Docker Hub <https://hub.docker.com/>`_
+* `Docker for Beginners <https://training.play-with-docker.com/beginner-linux/>`_
+* `Play with Docker <https://labs.play-with-docker.com/>`_
