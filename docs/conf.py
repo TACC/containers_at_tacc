@@ -22,7 +22,7 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 # -- Project information -----------------------------------------------------
 
 project = 'Containers@TACC'
-copyright = '2019, Texas Advanced Computing Center'
+copyright = '2023, Texas Advanced Computing Center'
 author = 'Texas Advanced Computing Center'
 
 # The short X.Y version
@@ -41,6 +41,7 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinxemoji.sphinxemoji'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -60,7 +61,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -186,4 +187,4 @@ epub_exclude_files = ['search.html']
 
 # To allow css styling
 def setup(app):
-    app.add_stylesheet('custom.css')
+    app.add_css_file('custom.css')
