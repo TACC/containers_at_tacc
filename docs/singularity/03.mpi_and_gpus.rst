@@ -251,29 +251,26 @@ For instance, the latest version of caffe can be used on TACC systems as follows
 
 As previously mentioned, the main requirement for GPU-enabled containers to work is that the version of the host drivers matches the major version of the library inside the container.  So, for example, if CUDA 10 is on the host, the container needs to use CUDA 10 internally.
 
-For a more exciting test, the latest version of Tensorflow can be benchmarked as follows:
+For a more exciting test, the latest version of Tensorflow can be tested as follows:
 
 .. code-block:: console
 
   Change to your $SCRATCH directory
   $ cd $SCRATCH
 
-  Download the benchmarking code
-  $ git clone https://github.com/tensorflow/benchmarks.git
+  Download the test code
+  $ wget https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/tf_test.py
 
   Pull the image
   $ singularity pull docker://tensorflow/tensorflow:latest-gpu
 
   Run the code
-  $ singularity exec --nv tensorflow_latest-gpu.sif python \
-      benchmarks/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py \
-      --num_gpus=4 --model resnet50 --batch_size 32 --num_batches 100
-
-Try different numbers of gpus, batch sizes, and total batches to see how the parameters affect the benchmark.
+  $ singularity exec --nv tensorflow_latest-gpu.sif python tf_test.py
 
 .. Note::
 
-	If the benchmark crashes the batch may be too large for GPU memory, or you requested more GPUs than exist on the system.
+	If you would like avoid the wordy tensorflow warning messages, run the above command and
+	redirect STDERR to a file (i.e. ``2>warnings.txt``).
 
 Building a GPU aware container
 ------------------------------
