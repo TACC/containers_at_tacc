@@ -143,7 +143,8 @@ In our local tests, the **container** ``mpirun`` program was used to launch mult
 
 .. Note::
 
-	The ``*impi*`` containers **must** be launched with ``singularity run`` on HPC systems.
+	The ``*impi*`` containers **must** be launched with ``singularity run`` on HPC systems. Also, you
+	might need to set ``FI_PROVIDER=tcp`` temporarily when running on rtx nodes.
 
 	TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network, and binds processes to specific cores.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``.
 
