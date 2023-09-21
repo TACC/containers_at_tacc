@@ -16,6 +16,6 @@ called "Docker".
    :maxdepth: 1
    :caption: Sections:
 
-   01.intro.rst
-   02.dockerbasics.rst
-   03.handsondocker.rst
+   01.intro
+   02.dockerbasics
+   03.handsondocker

@@ -6,9 +6,9 @@ Prerequisites
 
 1) Install Docker on your laptop:
 
-  - `Mac <https://docs.docker.com/desktop/mac/>`_
-  - `Windows <https://docs.docker.com/desktop/windows//>`_
-  - `Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
+  - `Mac <https://docs.docker.com/desktop/install/mac-install/>`_
+  - `Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+  - Linux `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or `Engine (CLI) <https://docs.docker.com/engine/install/>`_
 
 To check if the installation was successful, open up your favorite Terminal (Mac,Linux) or the Docker Terminal (Windows)
 and try running

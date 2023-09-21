@@ -15,6 +15,6 @@ High performance computing (HPC) systems serve a large role in academic computin
    :maxdepth: 1
    :caption: Sections:
 
-   01.singularity_basics.rst
-   02.singularity_batch.rst
-   03.mpi_and_gpus.rst
+   01.singularity_basics
+   02.singularity_batch
+   03.mpi_and_gpus

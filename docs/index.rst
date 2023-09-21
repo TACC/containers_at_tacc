@@ -14,6 +14,7 @@ Topics will include:
 - Containerizing your own code
 - Running containers at TACC, including MPI parallelism and GPU enabled containers
 - Integration with BioContainers and the module system
+- Multi-stage and Multi-architecture builds
 
 
 .. toctree::
@@ -23,6 +24,7 @@ Topics will include:
    containers/00.overview
    containerize-your-code/overview
    singularity/00.overview
+   advanced/00.overview
 
 
 Indices and tables

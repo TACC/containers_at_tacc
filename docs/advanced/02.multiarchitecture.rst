@@ -1,0 +1,229 @@
+Multi-architecture builds
+=========================
+
+Multi-architecture (also known as multi-platform) builds create a Docker image that can support multiple
+architectures (i.e. linux/amd64, linux/arm64, linux/ppc64le, etc). This is really important if you know
+that your image has to be run on machines with different architectures and/or you're developing an image
+for others to use and you want to support that.
+
+Prerequisites
+-------------
+
+- Mac
+
+  - `Docker Desktop for Mac <https://docs.docker.com/desktop/install/mac-install/>`_
+
+- Windows
+
+  - `Docker Desktop for Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+- Linux
+
+  - `Docker Engine <https://docs.docker.com/engine/install/>`_
+  - `Host or Docker Image-based installation of emulation tools <https://medium.com/@artur.klauser/building-multi-architecture-docker-images-with-buildx-27d80f7e2408/>`_
+
+Building for an architecture different than the one the operating system is running on requires emulation. Fortunately,
+for users of Mac and Windows, the Docker Desktop includes `QEMU <https://www.qemu.org/>`_ which is an open source machine
+emulator and virtualizer so nothing else needs to be installed. On a Linux system, QEMU and a few other tools need to
+be installed on the host or by using a special Docker image (see `qemu-user-static <https://github.com/multiarch/qemu-user-static>`_).
+
+A simple example
+----------------
+
+Let's look at a very simple Dockerfile:
+
+.. code-block:: dockerfile
+
+   FROM alpine:3.15.0
+   LABEL maintainer="Erik Ferlanti <eferlanti@tacc.utexas.edu>"
+
+   RUN apk add --no-cache curl
+
+   CMD ["curl"]
+
+
+The important thing when building an image for multiple architectures is to make sure that the base image
+(FROM line) supports multiple architectures (see `alpine at Docker Hub <https://hub.docker.com/_/alpine/tags?page=1&name=3.15.0>`_).
+
+
+Docker Hub Integration with GitHub Actions
+------------------------------------------
+
+**GitHub Actions** is a relatively new CI service used to automate, customize,
+and execute software development workflows right in your GitHub repository.
+
+* One interface for both your source code repositories and your CI/CD pipelines
+* Catalog of available Actions you can utilize without reinventing the wheel
+* Hosted services are subject to usage limits, although the free-tier limits are
+  `fairly generous <https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration>`_
+  (for now)
+* Simple YAML descriptions of workflows, many templates and examples available
+* It is a newer platform, so not as many features as some of the others, but it
+  is quickly gaining steam
+
+.. note::
+    Rather than clone my calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
+    it's better to fork it and clone your own repository (`Fork a repo on GitHub <https://docs.github.com/en/get-started/quickstart/fork-a-repo>`_).
+
+To see the GitHub Actions workflow in an existing repository, clone your calculate-pi repository as follows:
+
+.. code-block:: console
+
+   $ git clone git@github.com:<username>/calculate-pi.git
+   $ cd calculate-pi
+   $ ls -l .github/workflows
+   total 8
+   -rw-r--r-- 1 eriksf staff 1759 Sep 20 14:21 docker-image.yml
+   -rw-r--r-- 1 eriksf staff  905 Sep 20 14:21 pytest.yml
+
+Within that ``.github/workflows`` folder we will put YAML files describing when, how, and what workflows
+should be triggered.
+
+Rather than commit to GitHub AND push to Docker Hub each time you want to
+release a new version of code, you can set up an integration between the two
+services that automates it. The key benefit is you only have to commit to one
+place (GitHub), and you can be sure the image on Docker Hub will always be in sync.
+
+Consider the following docker build workflow, located in ``.github/workflows/docker-image.yml``:
+
+.. code-block:: yaml
+
+  name: Docker Image CI
+
+  on:
+    push:
+      branches: [ "main" ]
+      tags: [ "*.*.*" ]
+    pull_request:
+      branches: [ "main" ]
+
+  jobs:
+
+    build-calculate-pi:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v2
+
+        - name: Set up Docker Buildx
+          id: buildx
+          uses: docker/setup-buildx-action@v2
+
+        - name: Cache Docker layers
+          uses: actions/cache@v3
+          with:
+            path: /tmp/.buildx-cache
+            key: ${{ runner.os }}-buildx-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-buildx-
+
+        - name: Docker metadata
+          id: meta
+          uses: docker/metadata-action@v4
+          with:
+            images: eriksf/calculate_pi
+            flavor: latest=true
+            tags: |
+              type=ref, event=branch
+              type=ref, event=pr
+              type=semver, pattern={{version}}
+
+        - name: Login to DockerHub
+          if: github.ref_type == 'tag'
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: Build and push image
+          uses: docker/build-push-action@v4
+          with:
+            context: .
+            platforms: linux/amd64,linux/arm64
+            push: ${{ github.ref_type == 'tag' }}
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
+            cache-from: type=local,src=/tmp/.buildx-cache
+            cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+        - name: Move cache
+          run: |
+            rm -rf /tmp/.buildx-cache
+            mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+
+This workflow is triggered on pushes or pull_requests to the ``main`` branch or when a new tag is pushed
+(``tag: - '*.*.*'``). The first step of this workflow checks out the code. Then, it uses a couple of different
+actions to set up QEMU (for multi-architecture builds), docker buildx, caching of the build layers,
+and docker metadata to setup the repo name and version. It will attempt to use the ``docker/login-action``
+to log in to Docker Hub on the command line only if the workflow is run based on a tag. The username and token
+can be set by navigating to Settings => Secrets and variables => Actions => New Repository Secret within the project repository.
+
+.. figure:: ../images/secrets.png
+   :width: 600
+   :align: center
+
+   Secrets are tied to specific repos.
+
+
+Finally, this workflow will build the image for both the ``linux/amd64`` and ``linux/arm64`` platforms using
+the build cache from previous runs if it exists (and hasn't changed). It will only push the image to docker Hub
+if the workflow is run based on a tag. This uses the ``docker/build-push-action`` from the GitHub Actions catalog.
+
+.. tip::
+
+   Don't re-invent the wheel when performing GitHub Actions. There is likely an
+   existing action that already does what you're trying to do.
+
+
+Trigger the Integration
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To trigger the build in a real-world scenario, make some changes to your source
+code, push your modified code to GitHub and tag the release as ``X.Y.Z`` (whatever
+new tag is appropriate) to trigger another automated build:
+
+.. code-block:: console
+
+   $ git add *
+   $ git commit -m "made some changes"
+   $ git push
+   $ git tag -a 0.1.0 -m "release version 0.1.0"
+   $ git push origin 0.1.0
+
+By default, the git push command does not transfer tags, so we are explicitly
+telling git to push the tag we created (0.1.0) to the remote (origin).
+
+Then navigate to the repo on GitHub and click the 'Actions' tab to watch the
+progress of the Action. You can click on your saved workflows to narrow the view,
+or click on a specific instance of a workflow (a "run") to see the logs.
+
+
+.. figure:: ../images/actions_overview.png
+   :width: 600
+   :align: center
+
+   History of all workflow runs.
+
+
+By looking through the history of recent workflow runs, you can see that each is
+assigned to a specific commit and commit message. That way, you know
+who to credit or blame for successful or errant runs.
+
+Now check the Docker Hub repo to see if your new tag has been pushed.
+
+.. figure:: ../images/docker_hub_result.png
+   :width: 600
+   :align: center
+
+   New tag automatically pushed.
+
+
+Additional Resources
+--------------------
+
+* `GitHub Actions Docs <https://docs.github.com/en/actions>`_
+* `Demo Repository <https://github.com/eriksf/calculate-pi>`_
