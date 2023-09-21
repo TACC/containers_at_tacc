@@ -13,5 +13,5 @@ using Docker, including multi-stage and multi-architecture builds.
    :maxdepth: 1
    :caption: Sections:
 
-   01.multistage.rst
-   02.multiarchitecture.rst
+   01.multistage
+   02.multiarchitecture
