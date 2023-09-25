@@ -1,6 +1,217 @@
 Multi-stage builds
 ==================
 
+Multi-stage builds (introduced in Docker version 17.06 CE) allow users to create Dockerfiles that contain
+multiple build stages. With this in place, you can then copy build artifacts from one stage to
+another while leaving behind all the dependencies that were required to perform the build. This is
+another tool used to build more optimized Docker images. Each stage in the build is started with
+a ``FROM`` statement in the Dockerfile.
 
-MS1
----
+.. figure:: ../images/multi-stage.jpg
+  :width: 600
+  :align: center
+
+  Multiple stages of a Dockerfile
+
+Prerequisites
+-------------
+
+- Mac
+
+  - `Docker Desktop for Mac <https://docs.docker.com/desktop/install/mac-install/>`_
+
+- Windows
+
+  - `Docker Desktop for Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+- Linux
+
+  - `Docker Engine <https://docs.docker.com/engine/install/>`_
+
+
+A simple example
+----------------
+
+Let's create a very simple `Go <https://go.dev/>`_ application:
+
+.. code-block:: console
+
+  $ cd ~/
+  $ mkdir hellogo/
+  $ cd hellogo/
+  $ touch Dockerfile
+  $ pwd
+  /Users/username/hellogo/
+  $ ls
+  Dockerfile
+
+Now, grab a copy of the Go source code that we want to containerize:
+
+.. code-block:: golang
+
+  package main
+
+  import (
+      "fmt"
+      "os/user"
+  )
+
+  func main () {
+      user, err := user.Current()
+      if err != nil {
+          panic(err)
+      }
+
+      fmt.Println("Hello, " + user.Username + "!")
+  }
+
+You can cut and paste the code block above into a new file called,
+``app.go``, or download it from the following link: `https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/app.go <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/app.go>`_
+
+Now, you should have two files and nothing else in this folder:
+
+.. code-block:: console
+
+   $ pwd
+   /Users/username/hellogo/
+   $ ls
+   Dockerfile  app.go
+
+Edit the Dockerfile and enter the following:
+
+.. code-block:: dockerfile
+
+  FROM golang:1.21
+
+  COPY app.go .
+
+  RUN CGO_ENABLED=0 go build -o /usr/local/bin/hello ./app.go
+
+  CMD [ "/usr/local/bin/hello" ]
+
+We're going to base our image on the official Go image
+(based on `Debian Bookworm <https://www.debian.org/releases/bookworm/>`_) and specify a tagged
+version (1.21). Then, we're going to simply copy in the Go source code (``app.go``) and compile it to an
+executable called ``hello``. Running this executable will also be our default command. Next, we'll create
+a docker image and run a container from that image:
+
+.. code-block:: console
+
+  $ docker build -t <username>/hellogo:0.0.1 .
+  [+] Building 5.7s (8/8) FINISHED                                                                                  docker:desktop-linux
+   => [internal] load build definition from Dockerfile                                                                              0.1s
+   => => transferring dockerfile: 162B                                                                                              0.1s
+   => [internal] load .dockerignore                                                                                                 0.1s
+   => => transferring context: 2B                                                                                                   0.0s
+   => [internal] load metadata for docker.io/library/golang:1.21                                                                    0.0s
+   => [internal] load build context                                                                                                 0.0s
+   => => transferring context: 28B                                                                                                  0.0s
+   => CACHED [1/3] FROM docker.io/library/golang:1.21                                                                               0.0s
+   => [2/3] COPY app.go .                                                                                                           0.2s
+   => [3/3] RUN CGO_ENABLED=0 go build -o /usr/local/bin/hello ./app.go                                                             5.0s
+   => exporting to image                                                                                                            0.2s
+   => => exporting layers                                                                                                           0.2s
+   => => writing image sha256:d7ba5612bc490f5645eda701b179ce2ecce4f51280bae66db7e5ea7ccbf2a79d                                      0.0s
+   => => naming to docker.io/eriksf/hellogo:0.0.1
+  $ docker run --rm <username>/hellogo:0.0.1
+  Hello, root!
+
+Let's take a look at the size of our image:
+
+.. code-block:: console
+
+  $ docker images <username>/hellogo
+  REPOSITORY       TAG       IMAGE ID       CREATED             SIZE
+  eriksf/hellogo   0.0.1     d7ba5612bc49   3 minutes ago       851MB
+
+OK, let's see if we can reduce the size of our image by using multiple stages. Create a new
+dockerfile named ``Dockerfile.ms``.
+
+.. code-block:: console
+
+  $ touch Dockerfile.ms
+  $ pwd
+  /Users/username/hellogo/
+  $ ls
+  Dockerfile  Dockerfile.ms  app.go
+
+Edit ``Dockerfile.ms`` and enter the following:
+
+.. code-block:: dockerfile
+
+  FROM golang:1.21 as build
+  WORKDIR /src
+
+  COPY app.go .
+
+  RUN CGO_ENABLED=0 go build -o /usr/local/bin/hello ./app.go
+
+  FROM alpine:3.18.3
+
+  COPY --from=build /usr/local/bin/hello /usr/local/bin/hello
+
+  CMD [ "/usr/local/bin/hello" ]
+
+We've now got a Dockerfile with two build stages (starting with the ``FROM`` statements). The first stage grabs
+an image with all the Go tools installed, copies in our source code, and compiles it to an executable. In the
+second stage, we start with an `Alpine linux <https://www.alpinelinux.org/>`_ image (small, simple, and lightweight
+Linux distribution) and then just copy in the executable from the build stage while jettisoning all the Go tools.
+
+.. note::
+
+  Note that we named our build stage, ``FROM golang:1.21 as build``. This makes it easier to read and
+  identify the stage when copying from it.
+
+Now, we'll create a new docker image and run a container from that new image:
+
+.. code-block:: console
+
+  $ docker build -t <username>/hellogo:0.0.2 -f Dockerfile.ms .
+  [+] Building 6.7s (13/13) FINISHED                                                                                docker:desktop-linux
+   => [internal] load build definition from Dockerfile.ms                                                                           0.1s
+   => => transferring dockerfile: 270B                                                                                              0.0s
+   => [internal] load .dockerignore                                                                                                 0.1s
+   => => transferring context: 2B                                                                                                   0.0s
+   => [internal] load metadata for docker.io/library/alpine:3.18.3                                                                  1.2s
+   => [internal] load metadata for docker.io/library/golang:1.21                                                                    0.0s
+   => [auth] library/alpine:pull token for registry-1.docker.io                                                                     0.0s
+   => [build 1/4] FROM docker.io/library/golang:1.21                                                                                0.0s
+   => CACHED [stage-1 1/2] FROM docker.io/library/alpine:3.18.3@sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54  0.0s
+   => CACHED [build 2/4] WORKDIR /src                                                                                               0.0s
+   => [internal] load build context                                                                                                 0.0s
+   => => transferring context: 28B                                                                                                  0.0s
+   => [build 3/4] COPY app.go .                                                                                                     0.2s
+   => [build 4/4] RUN CGO_ENABLED=0 go build -o /usr/local/bin/hello ./app.go                                                       4.8s
+   => [stage-1 2/2] COPY --from=build /usr/local/bin/hello /usr/local/bin/hello                                                     0.2s
+   => exporting to image                                                                                                            0.1s
+   => => exporting layers                                                                                                           0.1s
+   => => writing image sha256:2c2ab690cadf84cbf0f03d87effea87b1ff7726db0a4c3aabfbd18c3656975a4                                      0.0s
+   => => naming to docker.io/eriksf/hellogo:0.0.2
+  $ docker run --rm <username>/hellogo:0.0.2
+  Hello, root!
+
+.. note::
+
+  As a debugging tool, you can also stop the build at a specific stage, i.e.
+  ``docker build --target build -t <username>/hellogo:0.0.2 -f Dockerfile.ms .``.
+
+Finally, let's see if we actually reduced our image size by using the multi-stage build.
+
+.. code-block:: console
+
+  $ docker images <username>/hellogo
+  REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+  eriksf/hellogo   0.0.2     2c2ab690cadf   7 minutes ago    9.62MB
+  eriksf/hellogo   0.0.1     d7ba5612bc49   27 minutes ago   851MB
+
+.. note::
+
+  When using multi-stage builds, you are not limited to only copying from stages created earlier in the Dockerfile.
+  You can also copy from another image, either locally or on another registry. For example,
+  ``COPY --from=nginx:latest /etc/nginx/nginx.conf /nginx.conf``, which will get the latest nginx image from
+  Docker Hub and grab only the default configuration file.
+
+A real-world example
+--------------------
+
+
+
