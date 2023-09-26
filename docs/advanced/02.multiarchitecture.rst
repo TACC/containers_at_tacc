@@ -101,7 +101,8 @@ Targeting multiple platforms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For targeting multiple platforms, we'll need to use a different command called ``docker buildx``. Let's start
-by listing the current builders.
+by listing the current builders. A builder is a `BuildKit <https://docs.docker.com/build/buildkit/>`_
+(the build engine that solves the build steps in a Dockerfile) daemon used to run your builds.
 
 .. code-block:: console
 
@@ -161,9 +162,9 @@ Let's now build our example image for multiple platforms with ``docker buildx``.
    => [linux/arm64 2/2] RUN apk add --no-cache curl                                                                                 1.5s
   WARNING: No output specified with docker-container driver. Build result will only remain in the build cache. To push result image into registry use --push or to load image into docker use --load
 
-Notice the warning message printed at the end of the log. Since you can't have multiple images of same name with
-different architectures, it doesn't load anything into Docker (running ``docker images`` would confirm that) and
-just keeps them in the build cache. In order to successfully create the manifest and push them to docker hub,
+Notice the warning message printed at the end of the log. Since you can't have multiple images of the same name with
+different architectures, it doesn't load anything into the Docker daemon (running ``docker images`` would confirm that) and
+just keeps them in the build cache. In order to successfully create the manifest and push them to Docker Hub,
 you must include the ``--push`` option.
 
 .. code-block:: console
@@ -196,15 +197,15 @@ you must include the ``--push`` option.
    => => pushing manifest for docker.io/eriksf/curl-example:0.0.1@sha256:9d8106720c79d7e3a351fb7beaccbcddfcb3d44d95c8c05268fa3a27e  1.4s
    => [auth] eriksf/curl-example:pull,push token for registry-1.docker.io
 
-And now if we check docker hub, we'll see that our images were successfully pushed up to the repository.
+And now if we check Docker Hub, we'll see that our images were successfully pushed up to the repository.
 
 .. figure:: ../images/docker_hub_multi-arch_example.png
   :width: 600
   :align: center
 
-  Docker hub curl-example repository.
+  Docker Hub curl-example repository.
 
-Notice that if we pull our image down from docker hub, it will pull the one matching our current
+Notice that if we pull our image down from Docker Hub, it will pull the one matching our current
 architecture.
 
 .. code-block:: console
@@ -337,9 +338,9 @@ Consider the following docker build workflow, located in ``.github/workflows/doc
             mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
 
-This workflow is triggered on pushes or pull_requests to the ``main`` branch or when a new tag is pushed
+This workflow is triggered on pushes or pull requests to the ``main`` branch or when a new tag is pushed
 (``tag: - '*.*.*'``). The first step of this workflow checks out the code. Then, it uses a couple of different
-actions to set up QEMU (for multi-architecture builds), docker buildx, caching of the build layers,
+actions to set up QEMU (for Multi-architecture builds), docker buildx, caching of the build layers,
 and docker metadata to setup the repo name and version. It will attempt to use the ``docker/login-action``
 to log in to Docker Hub on the command line only if the workflow is run based on a tag. The username and token
 can be set by navigating to Settings => Secrets and variables => Actions => New Repository Secret within the project repository.
@@ -352,7 +353,7 @@ can be set by navigating to Settings => Secrets and variables => Actions => New 
 
 
 Finally, this workflow will build the image for both the ``linux/amd64`` and ``linux/arm64`` platforms using
-the build cache from previous runs if it exists (and hasn't changed). It will only push the image to docker Hub
+the build cache from previous runs if it exists (and hasn't changed). It will only push the image to Docker Hub
 if the workflow is run based on a tag. This uses the ``docker/build-push-action`` from the GitHub Actions catalog.
 
 .. tip::

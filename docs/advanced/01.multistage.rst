@@ -65,7 +65,7 @@ Now, grab a copy of the Go source code that we want to containerize:
   }
 
 You can cut and paste the code block above into a new file called,
-``app.go``, or download it from the following link: `https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/app.go <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/app.go>`_
+``app.go``, or download it from the following link: `https://raw.githubusercontent.com/TACC/containers_at_tacc/main/docs/scripts/app.go <https://raw.githubusercontent.com/TACC/containers_at_tacc/main/docs/scripts/app.go>`_
 
 Now, you should have two files and nothing else in this folder:
 
@@ -81,6 +81,7 @@ Edit the Dockerfile and enter the following:
 .. code-block:: dockerfile
 
   FROM golang:1.21
+  WORKDIR /src
 
   COPY app.go .
 
@@ -92,7 +93,7 @@ We're going to base our image on the official Go image
 (based on `Debian Bookworm <https://www.debian.org/releases/bookworm/>`_) and specify a tagged
 version (1.21). Then, we're going to simply copy in the Go source code (``app.go``) and compile it to an
 executable called ``hello``. Running this executable will also be our default command. Next, we'll create
-a docker image and run a container from that image:
+a Docker image and run a container from that image:
 
 .. code-block:: console
 
@@ -124,7 +125,7 @@ Let's take a look at the size of our image:
   eriksf/hellogo   0.0.1     d7ba5612bc49   3 minutes ago       851MB
 
 OK, let's see if we can reduce the size of our image by using multiple stages. Create a new
-dockerfile named ``Dockerfile.ms``.
+Dockerfile named ``Dockerfile.ms``.
 
 .. code-block:: console
 
@@ -161,7 +162,7 @@ Linux distribution) and then just copy in the executable from the build stage wh
   Note that we named our build stage, ``FROM golang:1.21 as build``. This makes it easier to read and
   identify the stage when copying from it.
 
-Now, we'll create a new docker image and run a container from that new image:
+Now, we'll create a new Docker image and run a container from that new image:
 
 .. code-block:: console
 
@@ -246,7 +247,7 @@ project from GitHub.
 In the :ref:`Containerize Your Code <install_code_interactively>` section, we introduced some Python
 code to calculate Pi. This is basically the same code but built using
 `Poetry <https://python-poetry.org/>`_ and adding in the `Click <https://click.palletsprojects.com/en/8.1.x/>`_
-module for creating a command line interface. Poetry is a tool for python packaging and dependency management.
+module for creating a command line interface. Poetry is a tool for Python packaging and dependency management.
 It is a bit like having a dependency manager and a virtual environment rolled into one with the ability
 to handle publishing to `PyPI <https://pypi.org/>`_ as well.
 
@@ -283,12 +284,12 @@ The important file that controls the package and dependencies is ``pyproject.tom
    build-backend = "poetry.core.masonry.api"
 
 We show this file only to give some insight into how the Dockerfile will used to build the project. In this
-new poetry-based calculate-pi python package, we'll discuss each of the important Dockerfile sections in detail.
+new poetry-based calculate-pi Python package, we'll discuss each of the important Dockerfile sections in detail.
 
 In the first part of stage 1 (build stage), we're going to base our image on a tagged version (3.9.17) of the official Python image
 (based on `Debian Bookworm <https://www.debian.org/releases/bookworm/>`_), label it ``poetry``,
 and then install a version (1.5.1) of poetry using `pip <https://pip.pypa.io/en/stable/>`_
-(the package installer for python).
+(the package installer for Python).
 
 .. code-block:: dockerfile
 
@@ -310,7 +311,7 @@ dependencies.
   RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 Next, we'll copy in the README and source code and then run ``poetry build`` to build a
-`Python wheel <https://realpython.com/python-wheels/>`_, a built distribution file for the python package
+`Python wheel <https://realpython.com/python-wheels/>`_, a built distribution file for the Python package
 compatible with your system.
 
 .. code-block:: dockerfile
