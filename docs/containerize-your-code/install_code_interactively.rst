@@ -1,3 +1,5 @@
+.. _install_code_interactively:
+
 Install Code Interactively
 ==========================
 
