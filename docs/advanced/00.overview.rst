@@ -1,0 +1,17 @@
+Advanced Topics
+===============
+
+In this section, we will be introduced to some advanced topics concerning the building of containers
+using Docker, including multi-stage and multi-architecture builds.
+
+**Objectives for this session:**
+
+  * Optimizing Dockerfiles with multi-stage builds
+  * Building for different architectures
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Sections:
+
+   01.multistage
+   02.multiarchitecture
