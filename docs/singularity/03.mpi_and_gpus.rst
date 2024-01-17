@@ -176,7 +176,7 @@ After pulling the container, the image file can be referred to in an sbatch scri
 	#SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
 	#SBATCH -n 8                                # Total number of mpi tasks requested
 	#SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
-	#SBATCH --reservation HPC-Thurs             # a reservation only active during the training
+	#SBATCH --reservation Containers_training   # a reservation only active during the training
 
 	module load tacc-apptainer
 	cd $SCRATCH
