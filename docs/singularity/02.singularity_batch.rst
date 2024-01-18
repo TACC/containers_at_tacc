@@ -6,7 +6,7 @@ Using HPC Environments
 .. Note::
 
     Prerequisites
-	This section uses the Frontera compute cluster to run Singularity. An active allocation on Frontera is required, though most content will apply to any system that supports Singularity.
+	This section uses the Frontera compute cluster to run Apptainer. An active allocation on Frontera is required, though most content will apply to any system that supports Apptainer.
 
 
 
@@ -18,7 +18,7 @@ For example, if you want to run the command:
 
 .. code-block:: text
 
-  singularity exec docker://python:latest /usr/local/bin/python --version
+  apptainer exec docker://python:latest /usr/local/bin/python --version
 
 On a HPC system, your job submission script would look something like:
 
@@ -32,10 +32,10 @@ On a HPC system, your job submission script would look something like:
   #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                                # Total number of mpi tasks requested
   #SBATCH -t 02:00:00                         # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation HPC-Thurs             # a reservation only active during the training
+  #SBATCH --reservation Containers_training   # a reservation only active during the training
 
-  module load tacc-singularity
-  singularity exec docker://python:latest /usr/local/bin/python --version
+  module load tacc-apptainer
+  apptainer exec docker://python:latest /usr/local/bin/python --version
 
 This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines looks like a comment to the bash kernel, but the scheduler reads all those lines to know what resources to reserve for you.
 
@@ -49,12 +49,12 @@ How do HPC systems fit into the development workflow?
 
 A couple of things to consider when using HPC systems:
 
-#. Using 'sudo' is not allowed on HPC systems, and building a Singularity container from scratch requires sudo.  That means you have to build your containers on a different development system, which is why we started this course developing Docker on your own laptop).  You can pull a docker image on HPC systems.
+#. Using 'sudo' is not allowed on HPC systems, and building an Apptainer container from scratch requires sudo.  That means you have to build your containers on a different development system, which is why we started this course developing Docker on your own laptop).  You can pull a docker image on HPC systems.
 #. If you need to edit text files, command line text editors don't support using a mouse, so working efficiently has a learning curve.  There are text editors that support editing files over SSH.  This lets you use a local text editor and just save the changes to the HPC system.
 
-In general, most TACC staff that work with containers develop their code locally and then deploy their containers to HPC systems to do analyses at scale.  If the containers are written in a way that accommodates the small differences between the Docker and Singularity runtimes, the transition is fairly seamless.
+In general, most TACC staff that work with containers develop their code locally and then deploy their containers to HPC systems to do analyses at scale.  If the containers are written in a way that accommodates the small differences between the Docker and Apptainer runtimes, the transition is fairly seamless.
 
-Differences between Docker and Singularity
+Differences between Docker and Apptainer
 ==========================================
 
 Host Directories
@@ -62,21 +62,21 @@ Host Directories
 
 **Docker:** None by default. Use ``-v <source>:<destination>`` to mount a source host directory to an arbitrary destination within the container.
 
-**Singularity:** Mounts your current working directory, $HOME directory, and some system directories by default. Other defaults may be set in a system-wide configuration. The ``--bind`` flag is supported but rarely used in practice.
+**Apptainer:** Mounts your current working directory, $HOME directory, and some system directories by default. Other defaults may be set in a system-wide configuration. The ``--bind`` flag is supported but rarely used in practice.
 
 User ID
 ^^^^^^^
 
 **Docker:** Defined in the Dockerfile, but containers run as root unless a different user is defined or specified on the command line.  This user ID only exists within the container, and care must be taken when working with files on the host filesystem to make sure permissions are set correctly.
 
-**Singularity:** Containers are run in "userspace", so you are the same user and user ID both inside and outside the container.
+**Apptainer:** Containers are run in "userspace", so you are the same user and user ID both inside and outside the container.
 
 Image Format
 ^^^^^^^^^^^^
 
 **Docker:** Containers are stored in layers and managed in a repository by Docker.  The ``docker images`` command will show you what containers are on your local machine and images are always referenced by their repository and tag name.
 
-**Singularity:** Containers are files.  Singularity can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
+**Apptainer:** Containers are files.  Apptainer can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
 
 
 Running a Batch Job on Frontera
@@ -107,15 +107,15 @@ Those commands should open a new file in the nano editor.  Either type in (or co
   #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                                # Total number of mpi tasks requested
   #SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
-  #SBATCH --reservation HPC-Thurs             # a reservation only active during the training
+  #SBATCH --reservation Containers_training   # a reservation only active during the training
 
-  module load tacc-singularity
+  module load tacc-apptainer
 
   echo "running the lolcow container:"
-  singularity run docker://godlovedc/lolcow:latest
+  apptainer run docker://godlovedc/lolcow:latest
 
   echo "estimating the value of Pi:"
-  singularity exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
+  apptainer exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
 
 * Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wjallen" as the username to pull Joe Allen's container.
 

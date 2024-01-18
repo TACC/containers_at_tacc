@@ -1,24 +1,21 @@
 *************************************
-Introduction to Singularity/Apptainer
+Introduction to Apptainer
 *************************************
 
 .. Note::
 
     Prerequisites
-	This section uses the Frontera compute cluster to run Singularity. An active allocation on Frontera is required, though most content will apply to any system that supports Singularity.
+	This section uses the Frontera compute cluster to run Apptainer. An active allocation on Frontera is required, though most content will apply to any system that supports Apptainer.
 
-At face value, Singularity is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Singularity is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Singularity runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Singularity simply as a runtime to execute containers on HPC systems.
+At face value, Apptainer is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Apptainer is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Apptainer runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Apptainer simply as a runtime to execute containers on HPC systems.
 
-If you are familiar with Docker, Singularity will feel familiar.
+If you are familiar with Docker, Apptainer will feel familiar.
 
-.. Note::
-
-    Singularity has rebranded itself as Apptainer, and they are the same software.  At some point, the name of the executable will change as well, but this has not happened yet on all systems at TACC. For now, we will stick to calling it Singularity to avoid confusion. More info is here:  `https://apptainer.org/ <https://apptainer.org/>`_
 
 Login to Frontera
 =================
 
-For today's training, we will use the Frontera supercomputer, the 21st most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
+For today's training, we will use the Frontera supercomputer, the 29th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
 
 Mac / Linux:
 
@@ -45,7 +42,7 @@ When you have successfully logged in, you should be greeted with some welcome te
 Start an Interactive Session
 ================================
 
-The Singularity module is currently only available on compute nodes at TACC. To use Singularity interactively, start an interactive session on a compute node using the ``idev`` command.
+The Apptainer module is currently only available on compute nodes at TACC. To use Apptainer interactively, start an interactive session on a compute node using the ``idev`` command.
 
 .. code-block:: console
 
@@ -54,31 +51,31 @@ The Singularity module is currently only available on compute nodes at TACC. To 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
 
 
-Load the Singularity Module
+Load the Apptainer Module
 ===============================
 
-By default, the ``singularity`` command is not visible, but it can be added to the environment by loading the module.
+By default, the ``apptainer`` command is not visible, but it can be added to the environment by loading the module.
 
 .. code-block:: console
 
 	$ module list
 
-	$ module spider singularity
+	$ module spider apptainer
 
-	$ module load tacc-singularity
+	$ module load tacc-apptainer
 
 	$ module list
 
-Now the singularity command is available.
+Now the apptainer command is available.
 
 .. code-block:: console
 
-	$ type singularity
+	$ type apptainer
 
-	$ singularity help
+	$ apptainer help
 
 
-Core Singularity Commands
+Core Apptainer Commands
 =============================
 
 
@@ -89,7 +86,7 @@ Containers in the Docker registry may be downloaded and used, assuming the under
 
 .. code-block:: console
 
-	$ singularity pull docker://godlovedc/lolcow
+	$ apptainer pull docker://godlovedc/lolcow
 
 	$ ls
 
@@ -103,38 +100,38 @@ The ``shell`` command allows you to spawn a new shell within your container and 
 
 .. code-block:: console
 
-	$ singularity shell lolcow_latest.sif
+	$ apptainer shell lolcow_latest.sif
 
-	Singularity lolcow_latest.sif:~>
+	Apptainer>
 
 The change in prompt indicates that you have entered the container (though you should not rely on that to determine whether you are in container or not).
 
-Once inside of a Singularity container, you are the same user as you are on the host system.  Also, a number of host directories are mounted by default.
+Once inside of an Apptainer container, you are the same user as you are on the host system.  Also, a number of host directories are mounted by default.
 
 .. code-block:: bash
 
-	Singularity lolcow_latest.sif:~> whoami
+	Apptainer> whoami
 
-	Singularity lolcow_latest.sif:~> id
+	Apptainer> id
 
-	Singularity lolcow_latest.sif:~> pwd
+	Apptainer> pwd
 
-	Singularity lolcow_latest.sif:~> exit
+	Apptainer> exit
 
 
 .. Note::
 
-	Docker and Singularity have very different conventions around how host directories are mounted within the container. In many ways, Singularity has a simpler process for working with data on the host, but it is also more prone to inadvertantly having host configurations "leak" into the container.
+	Docker and Apptainer have very different conventions around how host directories are mounted within the container. In many ways, Apptainer has a simpler process for working with data on the host, but it is also more prone to inadvertantly having host configurations "leak" into the container.
 
 
 Run a container's default command
 -------------------------------------
 
-Just like with Docker, Singularity can run the default "entrypoint" or default command of a container with the ``run`` subcommand.  These defaults are defined in the Dockerfile (or Singularityfile) that define the actions a container should perform when someone runs it.
+Just like with Docker, Apptainer can run the default "entrypoint" or default command of a container with the ``run`` subcommand.  These defaults are defined in the Dockerfile (or Apptainer Definition file) that define the actions a container should perform when someone runs it.
 
 .. code-block:: console
 
-	$ singularity run lolcow_latest.sif
+	$ apptainer run lolcow_latest.sif
 
      ________________________________________
     < The time is right to make new friends. >
@@ -148,7 +145,7 @@ Just like with Docker, Singularity can run the default "entrypoint" or default c
 
 .. Note::
 
-    You may receive a warning about "Setting locale failed".  This is because, by default, Singularity sets all shell environment variables inside the container to match whatever is on the host.  To override this behavior, add the ``--cleanenv`` argument to your command.
+    You may receive a warning about "Setting locale failed".  This is because, by default, Apptainer sets all shell environment variables inside the container to match whatever is on the host.  To override this behavior, add the ``--cleanenv`` argument to your command.
 
 
 Executing arbitrary commands
@@ -158,9 +155,9 @@ The exec command allows you to execute a custom command within a container. For 
 
 .. code-block:: console
 
-	$ singularity exec --cleanenv lolcow_latest.sif cowsay Singularity runs Docker containers on HPC systems
+	$ apptainer exec --cleanenv lolcow_latest.sif cowsay Apptainer runs Docker containers on HPC systems
      _______________________________________
-    / Singularity runs Docker containers on \
+    / Apptainer runs Docker containers on \
     \ HPC systems                           /
      ---------------------------------------
             \   ^__^
