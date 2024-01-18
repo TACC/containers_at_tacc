@@ -192,7 +192,7 @@ Additional Resources
 --------------------
 
 * `Docker Docs <https://docs.docker.com/>`_
-* `Best practices for writing Dockerfiles <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_
+* `Best Practices for Writing Dockerfiles <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_
 * `Docker Hub <https://hub.docker.com/>`_
 * `Docker for Beginners <https://training.play-with-docker.com/beginner-linux/>`_
 * `Play with Docker <https://labs.play-with-docker.com/>`_
