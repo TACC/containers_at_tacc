@@ -130,7 +130,8 @@ Back out on your local device, we now know we have a container image called
 not otherwise be available on your local device. The 3.12.x Python interpreter,  
 its standard library, and all of the dependencies of those are included in the 
 container image and are *isolated* from everything else. This image (``python``)
-is portable and will run the exact same way on any OS that Docker supports.
+is portable and will run the exact same way on any OS that Docker supports, 
+assuming that image also supports the architecture.
 
 In practice, though, we do not want to start interactive shells each time we need
 to use a software application inside an image. Docker allows you to spin up an
