@@ -77,24 +77,24 @@ Docker
 Docker is a containerization platform that uses OS-level virtualization to
 package software and dependencies in deliverable units called containers. It is
 by far the most common containerization platform today, and most other container
-platforms are compatible with Docker. (E.g. Singularity and Shifter are two
-containerization platforms you'll find in HPC environments).
+platforms are compatible with Docker. (E.g. Apptainer, Singularity, and Shifter
+are other containerization platforms you may find in HPC environments).
 
 
 
-Singularity (now Apptainer)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Apptainer
+~~~~~~~~~
 
-Singularity (recently renamed as Apptainer) is a container solution designed to 
+Apptainer (a recent offshoot from Singularity) is a container solution designed to 
 execute applications at bare-metal performance while being secure, portable, and 
-100% reproducible. Singularity's permissions model makes it a popular choice for
+100% reproducible. Apptainer's permissions model makes it a popular choice for
 shared HPC environments where Docker cannot be supported. It has its own syntax
 for building containers but also support pulling and running Docker containers.
 
 In general we use **Docker** to develop new containers and run them on our laptops.
-We use **Singularity (Apptainer)** as a runtime on our HPC systems.
-We can find existing containers that are compatible with both Docker and Singularity
-(Apptainer) platforms (among others) at:
+We use **Apptainer** as a runtime on our HPC systems.
+We can find existing containers that are compatible with both Docker and Apptainer
+platforms (among others) at:
 
 1. `Docker Hub <https://hub.docker.com/>`_
 2. `Quay.io <https://quay.io/>`_
@@ -161,8 +161,8 @@ Summing Up
 ----------
 
 If you are developing an app or web service, you will almost certainly want to
-work with containers. First you must either **build** an image from a
-Dockerfile, or **pull** an image from a public registry. Then, you can **run** 
+work with containers. First you must either *build* an image from a
+Dockerfile, or *pull* an image from a public registry. Then, you can *run*
 (or deploy) an instance of your image as a container.
 
 .. figure:: images/docker_workflow.png

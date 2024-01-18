@@ -11,8 +11,8 @@ Pull An Official Image
 ----------------------
 
 One powerful aspect of developing with containers and the Docker ecosystem is the 
-large collection of container images freely available. There are 10s of millions of
-images on Docker Hub alone, but beware: using an image that you don't know anything 
+large collection of container images freely available. There are over 100,000
+images on Docker Hub, but beware: using an image that you do not know anything 
 about comes with the same risks involved with running any software.
 
 .. warning::
@@ -30,8 +30,8 @@ Scroll down to find the Python official image called ``python``, then
 click on that `image <https://hub.docker.com/_/python>`_.
 
 We see a lot of information about how to use the image, including information about the different 
-"tags" available. We see tags such as ``3.12-rc``, ``3.11.2``, ``3.11``, ``3``, etc.
-We'll discuss tags in detail later, but for now, does anyone have a guess as to what
+"tags" available. We see tags such as ``3.13-rc``, ``3.12.1``, ``3.12``, ``3``, etc.
+We will discuss tags in detail later, but for now, does anyone have a guess as to what
 the Python tags refer to? 
 
 We can pull the official Python image using command, then check to make sure it is
@@ -65,12 +65,12 @@ commands on your local device (we will see why in a minute):
 .. code-block:: console
 
    $ whoami
-   wallen
+   username
 
 .. code-block:: console
 
    $ pwd
-   /Users/wallen
+   /Users/username
 
 .. code-block:: console
    
@@ -110,7 +110,7 @@ interactive shell in the container - and note what has changed:
 .. code-block:: console
 
    root@fc5b620c5a88:/# uname -a
-   Linux e8bdfbf0fad7 5.10.104-linuxkit #1 SMP Thu Mar 17 17:08:06 UTC 2022 x86_64 GNU/Linux
+   Linux 8b1859f27f61 5.15.49-linuxkit-pr #1 SMP Thu May 25 07:17:40 UTC 2023 x86_64 GNU/Linux
 
 Now you are the ``root`` user on a different operating system inside a running
 Linux container! You can type ``exit`` to escape the container.
@@ -126,14 +126,14 @@ Run a Command Inside a Container
 --------------------------------
 
 Back out on your local device, we now know we have a container image called
-``python`` that has a particular version of Python (3.11.x) that may 
-not otherwise be available on your local device. The 3.11.x Python interpreter,  
-it's standard library, and all of the dependencies of those are included in the 
-container image and 
-are *isolated* from everything else. This image (``python``) is portable
-and will run the exact same way on any OS that Docker supports.
+``python`` that has a particular version of Python (3.12.x) that may 
+not otherwise be available on your local device. The 3.12.x Python interpreter,  
+its standard library, and all of the dependencies of those are included in the 
+container image and are *isolated* from everything else. This image (``python``)
+is portable and will run the exact same way on any OS that Docker supports, 
+assuming that image also supports the architecture.
 
-In practice, though, we don't want to start interactive shells each time we need
+In practice, though, we do not want to start interactive shells each time we need
 to use a software application inside an image. Docker allows you to spin up an
 *ad hoc* container to run applications from outside. For example, try:
 
@@ -151,14 +151,14 @@ to use a software application inside an image. Docker allows you to spin up an
 .. code-block:: console
 
    $ docker run --rm python uname -a
-   Linux e8bdfbf0fad7 5.10.104-linuxkit #1 SMP Thu Mar 17 17:08:06 UTC 2022 x86_64 GNU/Linux
+   Linux 8b1859f27f61 5.15.49-linuxkit-pr #1 SMP Thu May 25 07:17:40 UTC 2023 x86_64 GNU/Linux
 
 .. code-block:: console
 
    $ docker run -it --rm python
-   Python 3.11.2 (main, Feb 11 2023, 02:24:27) [GCC 10.2.1 20210110] on linux
+   Python 3.12.1 (main, Jan 17 2024, 06:18:08) [GCC 12.2.0] on linux
    Type "help", "copyright", "credits" or "license" for more information.
-   >>> # type exit() to escape
+   >>>
 
 
 The first three commands above omitted the ``-it`` flags because they did not
@@ -168,7 +168,7 @@ executes the given command inside, prints the result, and exits and removes the
 container.
 
 The last command, which did not specify a command to run inside the container, uses the container's 
-default command. We don't know ahead of time what (if any) default command is provided for 
+default command. We do not know ahead of time what (if any) default command is provided for 
 any given image, but what default command was provided for the ``python`` image? 
 
 Yes, it was the ``python`` command itself, and that requires an interactivity to use, 
@@ -193,7 +193,7 @@ Additional Resources
 --------------------
 
 * `Docker Docs <https://docs.docker.com/>`_
-* `Best practices for writing Dockerfiles <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_
+* `Best Practices for Writing Dockerfiles <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/>`_
 * `Docker Hub <https://hub.docker.com/>`_
 * `Docker for Beginners <https://training.play-with-docker.com/beginner-linux/>`_
 * `Play with Docker <https://labs.play-with-docker.com/>`_
