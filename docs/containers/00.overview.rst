@@ -1,4 +1,6 @@
-Welcome to Containers @ TACC!
+.. include:: ../substitutions.txt
+
+Welcome to |workshop_name|!
 =============================
 
 In this section, we will be introduced to containers, their uses, and different
