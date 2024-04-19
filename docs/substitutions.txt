@@ -1,0 +1,2 @@
+.. |workshop_name| replace:: Containers at UCL-ARC
+.. |site| replace:: UCL-ARC
