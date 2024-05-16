@@ -65,9 +65,9 @@ to your repository:
    (Enter username/password)
 
 
-3) Create a `TACC Account <https://portal.tacc.utexas.edu/account-request>`_
+3) Create a `|site| Account <|siteaccounturl|>`_
 
-We will use the TACC account later in this workshop to log in to Frontera and
+We will use the |site| account later in this workshop to log in to |machine| and
 run our containers on an HPC system with Apptainer.
 
 

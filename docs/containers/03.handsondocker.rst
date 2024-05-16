@@ -75,7 +75,7 @@ commands on your local device (we will see why in a minute):
 .. code-block:: console
    
    $ uname -a
-   Darwin wireless-10-147-13-120.public.utexas.edu 22.1.0 Darwin Kernel Version 22.1.0: Sun Oct  9 20:14:54 PDT 2022; root:xnu-8792.41.9~2/RELEASE_X86_64 x86_64
+   |uname-a|
 
 Now start the interactive shell inside a Python container:
 

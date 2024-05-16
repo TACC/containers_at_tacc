@@ -152,10 +152,9 @@ and the "tag". For example, an image with the full name
 
 .. code-block:: text
 
-   tacc/gateways19:0.1
+   docker/welcome-to-docker:latest
 
-would reference the "gateways19" image owned by the "tacc" organization with a
-tag of "0.1".
+would reference the "welcome-to-docker" image owned by the "docker" organization with the latest registered tag.
 
 Summing Up
 ----------
