@@ -1,3 +1,5 @@
+.. include:: ../substitutions.txt
+
 Getting Started With Docker
 ===========================
 
