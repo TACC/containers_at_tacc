@@ -22,9 +22,9 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Containers@TACC'
-copyright = '2023, Texas Advanced Computing Center'
-author = 'Texas Advanced Computing Center'
+project = 'Containers-at-UCL-ARC'
+copyright = '2024, UCL Advanced Research Computing'
+author = 'UCL Advanced Research Computing'
 
 # The short X.Y version
 version = ''
@@ -109,7 +109,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ContainersTACCdoc'
+htmlhelp_basename = 'ContainersUCLARCdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,8 +136,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ContainersTACC.tex', 'Containers@TACC Documentation',
-     'Texas Advanced Computing Center', 'manual'),
+    (master_doc, 'ContainersUCLARC.tex', 'Containers at UCL-ARC Documentation',
+     'UCL Advanced Research Computing', 'manual'),
 ]
 
 
@@ -146,7 +146,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'containerstacc', 'Containers@TACC Documentation',
+    (master_doc, 'containersuclarc', 'Containers at UCL-ARC Documentation',
      [author], 1)
 ]
 
@@ -157,8 +157,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ContainersTACC', 'Containers@TACC Documentation',
-     author, 'ContainersTACC', 'One line description of project.',
+    (master_doc, 'ContainersUCLARC', 'Containers at UCL-ARC Documentation',
+     author, 'ContainersUCLARC', 'One line description of project.',
      'Miscellaneous'),
 ]
 
