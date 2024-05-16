@@ -17,7 +17,7 @@ Topics will include:
 - Containerizing your own code
 - Multi-stage and Multi-architecture Docker builds
 - Running containers at |site|, including MPI parallelism and GPU enabled containers
-- Integration with BioContainers and the module system
+- Integration with the module system
 
 
 .. toctree::
