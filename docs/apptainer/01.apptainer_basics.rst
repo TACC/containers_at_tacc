@@ -25,38 +25,13 @@ When you have successfully logged in, you should be greeted with some welcome te
 Start an Interactive Session
 ================================
 
-The Apptainer module is currently only available on compute nodes at |site|. To use Apptainer interactively, start an interactive session on a compute node using the |interactivecmd| command.
-
-.. code-block:: console
-
-	$ idev -m 40
-
-If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be on a login node, but instead have a shell on a dedicated compute node.
+.. include:: ../site_snippets/start_interactive_session.txt
 
 
 Load the Apptainer Module
 ===============================
 
-By default, the ``apptainer`` command is not visible, but it can be added to the environment by loading the module.
-
-.. code-block:: console
-
-	$ module list
-
-	$ module spider apptainer
-
-	$ module load tacc-apptainer
-
-	$ module list
-
-Now the apptainer command is available.
-
-.. code-block:: console
-
-	$ type apptainer
-
-	$ apptainer help
-
+.. include:: ../site_snippets/load_apptainer_module.txt
 
 Core Apptainer Commands
 =============================

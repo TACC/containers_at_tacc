@@ -1,0 +1,7 @@
+The Apptainer module is currently only available on compute nodes at |site|. To use Apptainer interactively, start an interactive session on a compute node using the |interactivecmd| command.
+
+.. code-block:: console
+
+	qrsh -l h_rt=00:10:00 -now no
+
+Once the command runs successfully, you will no longer be on a login node, but instead have a shell on an allocated compute node.
