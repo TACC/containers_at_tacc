@@ -1,0 +1,4 @@
+.. Note::
+
+    Prerequisites
+	This section uses the |machine| compute cluster to run Apptainer. An active account on |machine| is required, though most content will apply to any system that supports Apptainer.

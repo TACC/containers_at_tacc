@@ -1,0 +1,19 @@
+.. code-block:: bash
+
+  #!/bin/bash
+
+  #SBATCH -J calculate-pi                     # Job name
+  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                              # Queue name
+  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 1                                # Total number of mpi tasks requested
+  #SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
+  #SBATCH --reservation Containers_training   # a reservation only active during the training
+
+  module load tacc-apptainer
+
+  echo "running the lolcow container:"
+  apptainer run docker://godlovedc/lolcow:latest
+
+  echo "estimating the value of Pi:"
+  apptainer exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000

@@ -1,14 +1,10 @@
+.. include:: ../substitutions.txt
 
 *************************
 Using HPC Environments
 *************************
 
-.. Note::
-
-    Prerequisites
-	This section uses the Frontera compute cluster to run Apptainer. An active allocation on Frontera is required, though most content will apply to any system that supports Apptainer.
-
-
+.. include:: ../site_snippets/apptainer_prereqs.txt
 
 Conducting analyses on high performance computing clusters happens through very different patterns of interaction than running analyses on a VM or on your own laptop.  When you login, you are on a node that is shared with lots of people.  Trying to run jobs on that node is not "high performance" at all.  Those login nodes are just intended to be used for moving files, editing files, and launching jobs.
 
@@ -22,26 +18,11 @@ For example, if you want to run the command:
 
 On a HPC system, your job submission script would look something like:
 
-.. code-block:: bash
-
-  #!/bin/bash
-
-  #SBATCH -J myjob                            # Job name
-  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p rtx                              # Queue name
-  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                                # Total number of mpi tasks requested
-  #SBATCH -t 02:00:00                         # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation Containers_training   # a reservation only active during the training
-
-  module load tacc-apptainer
-  apptainer exec docker://python:latest /usr/local/bin/python --version
-
-This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines looks like a comment to the bash kernel, but the scheduler reads all those lines to know what resources to reserve for you.
+.. include:: ../site_snippets/apptainer_batch_job_script.txt
 
 .. Note::
 
-  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Frontera system, the user guide is at: `https://frontera-portal.tacc.utexas.edu/user-guide/ <https://frontera-portal.tacc.utexas.edu/user-guide/>`_
+  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For |site|'s |machine| system, the user guide is at: |sitedocslink|_
 
 
 How do HPC systems fit into the development workflow?
@@ -49,10 +30,10 @@ How do HPC systems fit into the development workflow?
 
 A couple of things to consider when using HPC systems:
 
-#. Using 'sudo' is not allowed on HPC systems, and building an Apptainer container from scratch requires sudo.  That means you have to build your containers on a different development system, which is why we started this course developing Docker on your own laptop).  You can pull a docker image on HPC systems.
+#. Using 'sudo' is not allowed on HPC systems, and building an Apptainer container from scratch requires sudo.  That means you have to build your containers on a different development system, which is why we started this course developing Docker on your own laptop.  You can pull a docker image on HPC systems.
 #. If you need to edit text files, command line text editors don't support using a mouse, so working efficiently has a learning curve.  There are text editors that support editing files over SSH.  This lets you use a local text editor and just save the changes to the HPC system.
 
-In general, most TACC staff that work with containers develop their code locally and then deploy their containers to HPC systems to do analyses at scale.  If the containers are written in a way that accommodates the small differences between the Docker and Apptainer runtimes, the transition is fairly seamless.
+In general, most developers that work with containers develop their code locally and then deploy their containers to HPC systems to do analyses at scale.  If the containers are written in a way that accommodates the small differences between the Docker and Apptainer runtimes, the transition is fairly seamless.
 
 Differences between Docker and Apptainer
 ==========================================
@@ -79,14 +60,14 @@ Image Format
 **Apptainer:** Containers are files.  Apptainer can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
 
 
-Running a Batch Job on Frontera
-===============================
+Running a Batch Job on |machine|
+================================
 
-If you are not already, please login to the Frontera system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
+If you are not already, please login to the |machine| system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
 
-We will not be editing much text directly on Frontera, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
+We will not be editing much text directly on |machine|, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
 
-Create a file called "pi.slurm" on the work filesystem:
+Create a file called "|pijobscript|" on the work filesystem:
 
 .. code-block:: console
 
@@ -95,46 +76,21 @@ Create a file called "pi.slurm" on the work filesystem:
   $ cd containers-at-tacc
   $ nano pi.slurm
 
-Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the following Slurm script.
+Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the following job script.
 
-.. code-block:: bash
-
-  #!/bin/bash
-
-  #SBATCH -J calculate-pi                     # Job name
-  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p rtx                              # Queue name
-  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                                # Total number of mpi tasks requested
-  #SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
-  #SBATCH --reservation Containers_training   # a reservation only active during the training
-
-  module load tacc-apptainer
-
-  echo "running the lolcow container:"
-  apptainer run docker://godlovedc/lolcow:latest
-
-  echo "estimating the value of Pi:"
-  apptainer exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
+.. include:: ../site_snippets/apptainer_pi_job_script.txt
 
 * Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wjallen" as the username to pull Joe Allen's container.
 
-* If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
+Once you are done, try submitting this file as a job to |scheduler|.
 
-Once you are done, try submitting this file as a job to Slurm.
+.. include:: ../site_snippets/apptainer_pi_job_sub.txt
 
-.. code-block:: console
-
-  $ sbatch pi.slurm
-
-You can check the status of your job with the command ``showq -u``.
+You can check the status of your job with the command |jobstatuscmd|.
 
 Once your job has finished, take a look at the output:
 
-.. code-block:: console
-
-  $ cat output*
-
+.. include:: ../site_snippets/apptainer_pi_job_output.txt
 
 If your containers ran successfully, then congratulations! While this was just a toy example, you have now gone through all the motions of a development lifecycle:
 

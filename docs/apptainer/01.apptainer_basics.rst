@@ -4,10 +4,7 @@
 Introduction to Apptainer
 *************************************
 
-.. Note::
-
-    Prerequisites
-	This section uses the |machine| compute cluster to run Apptainer. An active allocation on |machine| is required, though most content will apply to any system that supports Apptainer.
+.. include:: ../site_snippets/apptainer_prereqs.txt
 
 At face value, Apptainer is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Apptainer is commonly available on shared clusters, such as |site|'s HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Apptainer runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Apptainer simply as a runtime to execute containers on HPC systems.
 
