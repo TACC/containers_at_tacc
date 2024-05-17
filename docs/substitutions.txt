@@ -12,3 +12,6 @@
 .. _pipyurl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/pi.py
 .. |appgourl| replace:: https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go
 .. _appgourl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go
+.. _logininstructionslink : Please follow these instructions to log in.
+.. logininstructions : https://www.rc.ucl.ac.uk/docs/howto/#how-do-i-log-in
+.. |interactivecmd| replace:: ``qrsh``

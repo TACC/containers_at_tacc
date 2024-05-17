@@ -1,3 +1,5 @@
+.. include:: ../substitutions.txt
+
 Containers on High Performance Compute Clusters
 ===============================================
 
@@ -8,7 +10,7 @@ High performance computing (HPC) systems serve a large role in academic computin
   * Use Apptainer to execute Docker containers on a HPC system
   * Create a container that can use the Message Passing Interface (MPI) to use multiple nodes in parallel
   * Understand how to run containers that use GPUs for computation
-  * Discover community curated software containers available at TACC
+  * Discover community curated software containers available at |site|
 
 
 .. toctree::
