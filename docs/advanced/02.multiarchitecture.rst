@@ -231,7 +231,7 @@ Finally, let's run the container to make sure it works.
 Docker Hub Integration with GitHub Actions
 ------------------------------------------
 
-**GitHub Actions** is a relatively new CI service used to automate, customize,
+**GitHub Actions** is a CI service used to automate, customize,
 and execute software development workflows right in your GitHub repository.
 
 * One interface for both your source code repositories and your CI/CD pipelines
@@ -240,8 +240,6 @@ and execute software development workflows right in your GitHub repository.
   `fairly generous <https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration>`_
   (for now)
 * Simple YAML descriptions of workflows, many templates and examples available
-* It is a newer platform, so not as many features as some of the others, but it
-  is quickly gaining steam
 
 .. note::
     Rather than clone the calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
