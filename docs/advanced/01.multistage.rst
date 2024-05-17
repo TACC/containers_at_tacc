@@ -65,7 +65,9 @@ Now, grab a copy of the Go source code that we want to containerize:
   }
 
 You can cut and paste the code block above into a new file called,
-``app.go``, or download it from the following link: `https://raw.githubusercontent.com/TACC/containers_at_tacc/main/docs/scripts/app.go <https://raw.githubusercontent.com/TACC/containers_at_tacc/main/docs/scripts/app.go>`_
+``app.go``, or download it from the following link: 
+
+|appgourl|_
 
 Now, you should have two files and nothing else in this folder:
 

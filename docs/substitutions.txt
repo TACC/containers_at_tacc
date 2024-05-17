@@ -10,3 +10,5 @@
 .. _pipy : https://raw.githubusercontent.com/cdkharris/containers-at-arc/master/docs/scripts/pi.py
 .. |pipyurl| replace:: https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/pi.py
 .. _pipyurl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/pi.py
+.. |appgourl| replace:: https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go
+.. _appgourl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go

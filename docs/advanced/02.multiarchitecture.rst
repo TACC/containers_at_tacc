@@ -244,7 +244,7 @@ and execute software development workflows right in your GitHub repository.
   is quickly gaining steam
 
 .. note::
-    Rather than clone my calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
+    Rather than clone the calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
     it's better to fork it and clone your own repository (`Fork a repo on GitHub <https://docs.github.com/en/get-started/quickstart/fork-a-repo>`_).
 
 To see the GitHub Actions workflow in an existing repository, clone your calculate-pi repository as follows:
