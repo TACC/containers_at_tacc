@@ -205,3 +205,4 @@ cython_debug/
 
 docs/_build
 local/
+readthedocs*
