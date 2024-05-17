@@ -1,5 +1,7 @@
 .. |workshop_name| replace:: Containers at UCL-ARC
 .. |site| replace:: UCL-ARC
+.. |readthedocslink| replace:: Read the Docs
+.. _readthedocslink : https://containers-at-arc.readthedocs.io/
 .. |siteaccountlink| replace:: UCL Research Computing account
 .. _siteaccountlink : https://www.rc.ucl.ac.uk/docs/Account_Services/
 .. |machine| replace:: Myriad
