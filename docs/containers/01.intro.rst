@@ -85,11 +85,7 @@ are other containerization platforms you may find in HPC environments).
 Apptainer
 ~~~~~~~~~
 
-Apptainer (a recent offshoot from Singularity) is a container solution designed to 
-execute applications at bare-metal performance while being secure, portable, and 
-100% reproducible. Apptainer's permissions model makes it a popular choice for
-shared HPC environments where Docker cannot be supported. It has its own syntax
-for building containers but also support pulling and running Docker containers.
+Apptainer is a container solution designed to execute applications at bare-metal performance while being secure, portable, and 100% reproducible. Apptainer's permissions model makes it a popular choice for shared HPC environments where Docker cannot be supported. It has its own syntax for building containers but also support pulling and running Docker containers.
 
 In general we use **Docker** to develop new containers and run them on our laptops.
 We use **Apptainer** as a runtime on our HPC systems.

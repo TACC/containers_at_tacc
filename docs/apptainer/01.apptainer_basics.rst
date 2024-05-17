@@ -1,3 +1,5 @@
+.. include:: ../substitutions.txt
+
 *************************************
 Introduction to Apptainer
 *************************************
@@ -5,36 +7,17 @@ Introduction to Apptainer
 .. Note::
 
     Prerequisites
-	This section uses the Frontera compute cluster to run Apptainer. An active allocation on Frontera is required, though most content will apply to any system that supports Apptainer.
+	This section uses the |machine| compute cluster to run Apptainer. An active allocation on |machine| is required, though most content will apply to any system that supports Apptainer.
 
-At face value, Apptainer is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Apptainer is commonly available on shared clusters, such as TACC's HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Apptainer runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Apptainer simply as a runtime to execute containers on HPC systems.
+At face value, Apptainer is an alternative container implementation to Docker that has an overlapping set of features but some key differences as well.  Apptainer is commonly available on shared clusters, such as |site|'s HPC systems, because the Docker runtime is not secure on systems where users are not allowed to have "escalated privileges".  Importantly, the Apptainer runtime is compatible with Docker containers!  So in general, we follow the practice of using Docker to develop containers and using Apptainer simply as a runtime to execute containers on HPC systems.
 
 If you are familiar with Docker, Apptainer will feel familiar.
 
 
-Login to Frontera
-=================
+Login to |machine|
+==================
 
-For today's training, we will use the Frontera supercomputer, the 29th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
-
-Mac / Linux:
-
-|   Open the application 'Terminal'
-|   ssh username@frontera.tacc.utexas.edu
-|   (enter password)
-|   (enter 6-digit token)
-
-
-Windows:
-
-|   If using Windows Subsystem for Linux, use the Mac / Linux instructions.
-|   If using an application like 'PuTTY'
-|   enter Host Name: frontera.tacc.utexas.edu
-|   (click 'Open')
-|   (enter username)
-|   (enter password)
-|   (enter 6-digit token)
-
+For today's training, we will use the |machine| supercomputer.  To login, you need to establish a SSH connection from your laptop to the |machine| system.  |logininstructionslink|_
 
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
@@ -42,7 +25,7 @@ When you have successfully logged in, you should be greeted with some welcome te
 Start an Interactive Session
 ================================
 
-The Apptainer module is currently only available on compute nodes at TACC. To use Apptainer interactively, start an interactive session on a compute node using the ``idev`` command.
+The Apptainer module is currently only available on compute nodes at |site|. To use Apptainer interactively, start an interactive session on a compute node using the |interactivecmd| command.
 
 .. code-block:: console
 
