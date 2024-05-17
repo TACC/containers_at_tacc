@@ -8,8 +8,8 @@ steps into a Dockerfile using the directives described below.
 
 .. note::
 
-   Prerequisites: You should have access to a terminal with Docker installed
-   You should also have a copy of |pipy|_
+   Prerequisites: You should have access to a terminal with Docker installed.
+   You should also have a copy of |pipy|_.
 
 
 The FROM Instruction
