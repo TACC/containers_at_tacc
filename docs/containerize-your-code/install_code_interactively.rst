@@ -1,3 +1,5 @@
+.. include:: ../substitutions.txt
+
 .. _install_code_interactively:
 
 Install Code Interactively
@@ -63,7 +65,7 @@ Next, grab a copy of the source code we want to containerize:
 You can cut and paste the code block above into a new file called, e.g.,
 ``pi.py``, or download it from the following link:
 
-`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
+|pipyurl|_
 
 
 Now, you should have two files and nothing else in this folder:

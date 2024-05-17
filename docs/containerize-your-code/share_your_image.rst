@@ -1,3 +1,5 @@
+.. include:: ../substitutions.txt
+
 Share Your Docker Image
 =======================
 
@@ -5,7 +7,7 @@ Share Your Docker Image
 
    Prerequisites: You should have access to a terminal with Docker installed,
    a Docker Hub account, and a GitHub account. You should also have a copy of
-   `pi.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi.py>`_
+   |pipy|_.
 
 Now that you have containerized, tested, and tagged your code in a Docker image,
 the next step is to disseminate it so others can use it.
@@ -121,7 +123,7 @@ to better handle the command line arguments. Outside of the container, modify
 '``pi.py -h``' to get usage information. You can also download this code from
 here:
 
-`https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pi-updated.py>`_
+|pipyurl|_
 
 
 Next, update the Dockerfile to include a new kind of instruction at the very end
