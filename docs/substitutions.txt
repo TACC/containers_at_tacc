@@ -8,10 +8,10 @@
 .. |uname-a| replace:: Darwin varun.local 23.4.0 Darwin Kernel Version 23.4.0: Fri Mar 15 00:19:22 PDT 2024; root:xnu-10063.101.17~1/RELEASE_ARM64_T8112 arm64
 .. |pipy| replace:: pi.py
 .. _pipy : https://raw.githubusercontent.com/cdkharris/containers-at-arc/master/docs/scripts/pi.py
-.. |pipyurl| replace:: https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/pi.py
-.. _pipyurl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/pi.py
-.. |appgourl| replace:: https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go
-.. _appgourl : https://github.com/cdkharris/containers-at-arc/blob/make-it-site-agnostic/docs/scripts/app.go
+.. |pipyurl| replace:: https://github.com/cdkharris/containers-at-arc/blob/master/docs/scripts/pi.py
+.. _pipyurl : https://github.com/cdkharris/containers-at-arc/blob/master/docs/scripts/pi.py
+.. |appgourl| replace:: https://github.com/cdkharris/containers-at-arc/blob/master/docs/scripts/app.go
+.. _appgourl : https://github.com/cdkharris/containers-at-arc/blob/master/docs/scripts/app.go
 .. |logininstructionslink| replace:: Please follow these instructions to log in.
 .. _logininstructionslink : https://www.rc.ucl.ac.uk/docs/howto/#how-do-i-log-in
 .. |interactivecmd| replace:: ``qrsh``
