@@ -363,7 +363,7 @@ if the workflow is run based on a tag. This uses the ``docker/build-push-action`
 
 
 Trigger the Integration
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To trigger the build in a real-world scenario, make some changes to your source
 code, push your modified code to GitHub and tag the release as ``X.Y.Z`` (whatever
