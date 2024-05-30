@@ -5,7 +5,6 @@
 .. |siteaccountlink| replace:: UCL Research Computing account
 .. _siteaccountlink : https://www.rc.ucl.ac.uk/docs/Account_Services/
 .. |machine| replace:: Myriad
-.. |uname-a| replace:: Darwin varun.local 23.4.0 Darwin Kernel Version 23.4.0: Fri Mar 15 00:19:22 PDT 2024; root:xnu-10063.101.17~1/RELEASE_ARM64_T8112 arm64
 .. |pipy| replace:: pi.py
 .. _pipy : https://raw.githubusercontent.com/cdkharris/containers-at-arc/master/docs/scripts/pi.py
 .. |pipyurl| replace:: https://github.com/cdkharris/containers-at-arc/blob/master/docs/scripts/pi.py
