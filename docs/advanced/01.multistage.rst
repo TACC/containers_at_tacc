@@ -224,7 +224,7 @@ project from GitHub.
 
 .. note::
 
-  Rather than clone my calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
+  Rather than clone the calculate-pi repository at `https://github.com/eriksf/calculate-pi <https://github.com/eriksf/calculate-pi>`_,
   it's better to fork it and clone your own repository.
 
 .. code-block:: console
@@ -287,7 +287,7 @@ The important file that controls the package and dependencies is ``pyproject.tom
    requires = ["poetry-core"]
    build-backend = "poetry.core.masonry.api"
 
-We show this file only to give some insight into how the Dockerfile will used to build the project. In this
+We show this file only to give some insight into how the Dockerfile will be used to build the project. In this
 new poetry-based calculate-pi Python package, we'll discuss each of the important Dockerfile sections in detail.
 
 In the first part of stage 1 (build stage), we're going to base our image on a tagged version (3.9.17) of the official Python image
@@ -426,7 +426,7 @@ For reference, here's what the Dockerfile looks like in total:
 
   CMD [ "calculate-pi", "--help" ]
 
-In review, what we've done with this build in stage one is to set up Python and poetry to produce the only
+In review, what we've done in the first stage is to set up Python and poetry to produce the only
 build artifacts necessary to install our **calculate-pi** package. Then, in the final stage, we copy in the build
 artifacts from the build stage and install them in our fresh Python image (getting rid of all the tools necessary
 for the build). Let's go ahead and build the image.
