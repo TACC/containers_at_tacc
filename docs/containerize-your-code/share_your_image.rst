@@ -123,7 +123,7 @@ to better handle the command line arguments. Outside of the container, modify
 '``pi.py -h``' to get usage information. You can also download this code from
 here:
 
-|pipyurl|_
+|pipyupdatedurl|_
 
 
 Next, update the Dockerfile to include a new kind of instruction at the very end
