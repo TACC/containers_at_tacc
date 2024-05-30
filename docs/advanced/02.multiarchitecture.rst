@@ -69,7 +69,7 @@ Now, edit the Dockerfile and enter the following:
 Target a single platform
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-For targeting a single platform (other than the one your on), it is simple enough to use the ``--platform`` option
+For targeting a single platform (other than the one you're on), it is simple enough to use the ``--platform`` option
 of the standard ``docker build`` command.
 
 .. code-block:: console
@@ -87,7 +87,7 @@ And, finally, lets run the image and print out the platform to make sure it work
 
 .. code-block:: console
 
-  $ docker run --rm -t --platform linux/amd64 eriksf/curl-example:0.0.1 uname -m
+  $ docker run --rm -t --platform linux/amd64 <username>/curl-example:0.0.1 uname -m
   x86_64
 
 .. note::
