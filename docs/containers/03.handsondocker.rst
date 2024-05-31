@@ -74,7 +74,7 @@ commands on your local device (we will see why in a minute):
    $ pwd
    /Users/username
 
-.. include:: ../site_snippets/local_uname.txt
+.. include:: ../site_snippets/docker_local_uname.txt
 
 Now start the interactive shell inside a Python container:
 
