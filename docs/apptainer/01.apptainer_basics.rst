@@ -39,13 +39,11 @@ Containers in the Docker registry may be downloaded and used, assuming the under
 Create a new directory, then pull a container.
 
 .. code-block:: console
+
     $ cd
-
     $ mkdir apptainer
-
     $ cd apptainer
-
-	$ apptainer pull docker://godlovedc/lolcow
+    $ apptainer pull docker://godlovedc/lolcow
     INFO:    Converting OCI blobs to SIF format
     WARNING: 'nodev' mount option set on /run/user/441890, it could be a source of failure during build process
     INFO:    Starting build...
@@ -54,8 +52,7 @@ Create a new directory, then pull a container.
     Copying blob d010c8cf75d7 done
     ... # output ommitted
     INFO:    Creating SIF file...
-
-	$ ls
+    $ ls
     lolcow_latest.sif
 
 There may be some warning messages, but this command should download the latest version of the "lolcow" container and save it in your current working directory as ``lolcow_latest.sif``.
