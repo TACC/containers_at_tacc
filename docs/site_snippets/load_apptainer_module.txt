@@ -4,11 +4,9 @@ By default, the ``apptainer`` command is not visible, but it can be added to the
 
 	$ module list
 
-	$ module spider apptainer
+	$ module show apptainer
 
-	$ module load tacc-apptainer
-
-	$ module list
+	$ module load apptainer
 
 Now the apptainer command is available.
 
