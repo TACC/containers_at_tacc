@@ -22,13 +22,13 @@ When you have successfully logged in, you should be greeted with some welcome te
 Start an Interactive Session
 ================================
 
-.. include:: ../site_snippets/start_interactive_session.txt
+.. include:: ../site_snippets/apptainer_start_interactive_session.txt
 
 
 Load the Apptainer Module
 ===============================
 
-.. include:: ../site_snippets/load_apptainer_module.txt
+.. include:: ../site_snippets/apptainer_load_module.txt
 
 Core Apptainer Commands
 =============================
