@@ -19,9 +19,6 @@ For today's training, we will use the |machine| supercomputer.  To login, you ne
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
 
-Start an Interactive Session
-================================
-
 .. include:: ../site_snippets/apptainer_start_interactive_session.txt
 
 

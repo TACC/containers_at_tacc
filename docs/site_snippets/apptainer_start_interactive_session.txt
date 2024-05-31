@@ -1,3 +1,6 @@
+Start an Interactive Session
+================================
+
 The Apptainer module is currently only available on compute nodes at |site|. To use Apptainer interactively, start an interactive session on a compute node using the |interactivecmd| command.
 
 .. code-block:: console
