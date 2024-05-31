@@ -1,3 +1,3 @@
 When you log in to the |machine| cluster, you enter onto a login node. The login node provides computing resources that are shared among everyone who is logged in to |machine|; therefore we cannot run any containers which are computationally demanding.
 
-For now, we can familliarize ourselves with Apptainer on the login node. Later, we will use the compute nodes so that we can request sufficient resources for our container. In general, if you use Apptainer for research tasks you must run your containers on the compute node.
+For now, we can familliarize ourselves with Apptainer on the login node. Later, we will use the compute nodes so that we can request sufficient resources for our container. In general, if you use Apptainer for research tasks you must run your containers on a compute node.
