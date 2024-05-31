@@ -1,4 +1,4 @@
 .. Note::
 
     Prerequisites
-	This section uses the |machine| compute cluster to run Apptainer. An active account on |machine| is required, though most content will apply to any system that supports Apptainer.
+	This section uses the |machine| compute cluster to run Apptainer. An active account on |machine| is required.  Before using Apptainer on another HPC system, consult the user guide for that system; but most of this content will apply to any system that supports Apptainer.
