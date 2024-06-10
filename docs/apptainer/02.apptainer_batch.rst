@@ -75,8 +75,6 @@ Those commands should open a new file in the nano editor.  Either type in (or co
 
 .. include:: ../site_snippets/apptainer_pi_job_script.txt
 
-* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wjallen" as the username to pull Joe Allen's container.
-
 Once you are done, try submitting this file as a job to |scheduler|.
 
 .. include:: ../site_snippets/apptainer_pi_job_sub.txt

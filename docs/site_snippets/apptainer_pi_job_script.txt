@@ -1,19 +1,29 @@
 .. code-block:: bash
 
-  #!/bin/bash
+  #!/bin/bash -l
 
-  #SBATCH -J calculate-pi                     # Job name
-  #SBATCH -o output.%j                        # Name of stdout output file (%j expands to jobId)
-  #SBATCH -p rtx                              # Queue name
-  #SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
-  #SBATCH -n 1                                # Total number of mpi tasks requested
-  #SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
-  #SBATCH --reservation Containers_training   # a reservation only active during the training
+  # Batch script to run a serial job under SGE.
 
-  module load tacc-apptainer
+  # Request ten minutes of wallclock time (format hours:minutes:seconds).
+  #$ -l h_rt=0:10:0
+
+  # Request 1 gigabyte of RAM (must be an integer followed by M, G, or T)
+  #$ -l mem=1G
+
+  # Set the name of the job.
+  #$ -N calculate-pi
+
+  # Set the working directory to somewhere in your scratch space.
+  # This is a necessary step as compute nodes cannot write to $HOME.
+  # Replace "<your_UCL_id>" with your UCL user ID.
+  #$ -wd /home/<your_UCL_id>/Scratch/containers-at-arc
+
+  module load apptainer
 
   echo "running the lolcow container:"
   apptainer run docker://godlovedc/lolcow:latest
 
   echo "estimating the value of Pi:"
-  apptainer exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
+  apptainer exec docker://<your_DockerHub_username>/pi-estimator:0.1 pi.py 10000000
+
+Don't forget to replace ``<your_DockerHub_Username>`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "cdkharris" as the username to pull Camilla Harris's container.
