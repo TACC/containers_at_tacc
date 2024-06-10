@@ -1,6 +1,7 @@
 .. code-block:: console
 
   $ cd
+  $ cd Scratch
   $ mkdir containers-at-arc
   $ cd containers-at-arc
   $ nano pi.slurm
