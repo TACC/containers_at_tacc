@@ -63,18 +63,13 @@ Image Format
 Running a Batch Job on |machine|
 ================================
 
-If you are not already, please login to the |machine| system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
+Please login to the |machine| system, just like we did at the start of the previous section.  You should be on one of the login nodes of the system.
 
 We will not be editing much text directly on |machine|, but we need to do a little.  If you have a text editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most accessible for those new to Linux.
 
-Create a file called "|pijobscript|" on the work filesystem:
+Create a file called "|pijobscript|":
 
-.. code-block:: console
-
-  $ cd $WORK
-  $ mkdir containers-at-tacc
-  $ cd containers-at-tacc
-  $ nano pi.slurm
+.. include:: ../site_snippets/apptainer_mkdir.txt
 
 Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the following job script.
 

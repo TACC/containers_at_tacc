@@ -1,0 +1,6 @@
+.. code-block:: console
+
+  $ cd
+  $ mkdir containers-at-arc
+  $ cd containers-at-arc
+  $ nano pi.slurm
