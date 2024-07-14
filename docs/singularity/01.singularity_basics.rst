@@ -15,7 +15,7 @@ If you are familiar with Docker, Apptainer will feel familiar.
 Login to Frontera
 =================
 
-For today's training, we will use the Frontera supercomputer, the 29th most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
+For today's training, we will use the Frontera supercomputer, the 33rd most powerful system in the world at the time of the course.  To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
 
 Mac / Linux:
 

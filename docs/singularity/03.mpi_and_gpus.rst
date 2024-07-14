@@ -20,21 +20,17 @@ Base Docker images
 
 When running at TACC, we have a set of curated Docker images for use in the FROM line of your own containers.  You can see a list of available images at `https://github.com/TACC/tacc-containers <https://github.com/TACC/tacc-containers>`_.
 
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| Image                                 | Frontera             | Stampede2            | Lonestar6            | Local Dev            |
-+=======================================+======================+======================+======================+======================+
-| tacc/tacc-centos7-mvapich2.3-ib       | |:heavy_check_mark:| |                      | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| tacc/tacc-centos7-mvapich2.3-psm2     |                      | |:heavy_check_mark:| |                      |                      |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| tacc/tacc-centos7-impi19.0.7-common   | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| tacc/tacc-ubuntu18-mvapich2.3-ib      | |:heavy_check_mark:| |                      | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| tacc/tacc-ubuntu18-mvapich2.3-psm2    |                      | |:heavy_check_mark:| |                      |                      |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
-| tacc/tacc-ubuntu18-impi19.0.7-common  | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+---------------------------------------+----------------------+----------------------+----------------------+----------------------+
++---------------------------------------+----------------------+----------------------+----------------------+
+| Image                                 | Frontera             | Lonestar6            | Local Dev            |
++=======================================+======================+======================+======================+
+| tacc/tacc-centos7-mvapich2.3-ib       | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
++---------------------------------------+----------------------+----------------------+----------------------+
+| tacc/tacc-centos7-impi19.0.7-common   | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
++---------------------------------------+----------------------+----------------------+----------------------+
+| tacc/tacc-ubuntu18-mvapich2.3-ib      | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
++---------------------------------------+----------------------+----------------------+----------------------+
+| tacc/tacc-ubuntu18-impi19.0.7-common  | |:heavy_check_mark:| | |:heavy_check_mark:| | |:heavy_check_mark:| |
++---------------------------------------+----------------------+----------------------+----------------------+
 
 .. Note::
 
@@ -176,7 +172,7 @@ After pulling the container, the image file can be referred to in an sbatch scri
 	#SBATCH -N 1                                # Total number of nodes requested (56 cores/node)
 	#SBATCH -n 8                                # Total number of mpi tasks requested
 	#SBATCH -t 00:10:00                         # Run time (hh:mm:ss)
-	#SBATCH --reservation Containers_training   # a reservation only active during the training
+	#SBATCH --reservation ML_Institute_Mon      # a reservation only active during the training
 
 	module load tacc-apptainer
 	cd $SCRATCH
