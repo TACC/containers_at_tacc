@@ -4,4 +4,4 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y python3-pip
 RUN pip3 install mpi4py
 
 COPY pi-mpi.py /usr/local/bin/
-RUN chmod +x /usr/local/bin/pi-mpi.py
+RUN chmod +rx /usr/local/bin/pi-mpi.py
