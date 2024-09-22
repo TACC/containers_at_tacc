@@ -247,7 +247,9 @@ For instance, the latest version of caffe can be used on TACC systems as follows
 
 As previously mentioned, the main requirement for GPU-enabled containers to work is that the version of the NVIDIA host driver on the system supports the version of the CUDA library inside the container.
 
-For a more exciting test, the latest version of Tensorflow can be tested as follows:
+For some more exciting examples, lets look at two of the most popular Deep Learning frameworks for Python, `Tensorflow <https://www.tensorflow.org/>`_ and `PyTorch <https://pytorch.org/>`_.
+
+First, we'll run a simple script (`tf_test.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/tf_test.py>`_) that uses Tensorflow to show the GPUs and then creates two tensors and multiplies them together. It can be tested as follows:
 
 .. code-block:: console
 
@@ -261,17 +263,103 @@ For a more exciting test, the latest version of Tensorflow can be tested as foll
   $ apptainer pull docker://tensorflow/tensorflow:latest-gpu
 
   Run the code
-  $ apptainer exec --nv tensorflow_latest-gpu.sif python tf_test.py
+  $ apptainer exec --nv tensorflow_latest-gpu.sif python tf_test.py 2>warnings.txt
+  Tensorflow version: 2.17.0
+  GPU available: True
+
+  GPUs:
+  Name: /physical_device:GPU:0   Type: GPU
+  Name: /physical_device:GPU:1   Type: GPU
+  Name: /physical_device:GPU:2   Type: GPU
+  Name: /physical_device:GPU:3   Type: GPU
+
+  TNA= tf.Tensor(
+  [[1. 2. 3.]
+  [4. 5. 6.]], shape=(2, 3), dtype=float32)
+  TNB= tf.Tensor(
+  [[1. 2.]
+  [3. 4.]
+  [5. 6.]], shape=(3, 2), dtype=float32)
+  TNAxTNB= tf.Tensor(
+  [[22. 28.]
+  [49. 64.]], shape=(2, 2), dtype=float32)
 
 .. Note::
 
 	If you would like avoid the wordy tensorflow warning messages, run the above command and
 	redirect STDERR to a file (i.e. ``2>warnings.txt``).
 
+Next, we'll look at another example of matrix multiplication using PyTorch (`pytorch_matmul_scaling_test.py <https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pytorch_matmul_scaling_test.py>`_) where we'll show how long it takes to multiply increasingly bigger matrices using both the CPU and GPU.
+It can be tested as follows:
+
+.. code-block:: console
+
+  Change to your $SCRATCH directory
+  $ cd $SCRATCH
+
+  Download the test code
+  $ wget https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/pytorch_matmul_scaling_test.py
+
+  Pull the image
+  $ apptainer pull docker://eriksf/pytorch:2.4.1-cuda12.1-cudnn9-runtime
+
+  Run the code against the CPU
+  $ apptainer exec --nv pytorch_2.4.1-cuda12.1-cudnn9-runtime.sif python pytorch_matmul_scaling_test.py --no-gpu
+  INFO:    gocryptfs not found, will not be able to use gocryptfs
+  PyTorch Matrix Multiplication Test for Large Matrices
+  PyTorch version: 2.4.1+cu121
+  Using device: cpu
+
+  Running test for matrix size: 2048x2048
+  Estimated memory requirement: 0.03 GB
+
+  Running test for matrix size: 4096x4096
+  Estimated memory requirement: 0.12 GB
+
+  Running test for matrix size: 8192x8192
+  Estimated memory requirement: 0.50 GB
+                   Matrix Multiplication Test Results
+  ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+  ┃ Matrix Size ┃ Memory Size (GB) ┃ Computation Time (s) ┃ Performance  ┃
+  ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+  │ 2048x2048   │ 0.03             │ 0.1995               │ 86.13 GFLOPS │
+  │ 4096x4096   │ 0.12             │ 1.5595               │ 88.13 GFLOPS │
+  │ 8192x8192   │ 0.50             │ 12.4375              │ 88.40 GFLOPS │
+  └─────────────┴──────────────────┴──────────────────────┴──────────────┘
+  Scaling plot saved as 'scaling_plot.png'
+
+  Run the code against the GPU
+  $ apptainer exec --nv pytorch_2.4.1-cuda12.1-cudnn9-runtime.sif python pytorch_matmul_scaling_test.py
+  INFO:    gocryptfs not found, will not be able to use gocryptfs
+  PyTorch Matrix Multiplication Test for Large Matrices
+  PyTorch version: 2.4.1+cu121
+  Using device: cuda
+  CUDA version: 12.1
+  GPU: Quadro RTX 5000
+  GPU Memory: 15.74 GB
+
+  Running test for matrix size: 2048x2048
+  Estimated memory requirement: 0.03 GB
+
+  Running test for matrix size: 4096x4096
+  Estimated memory requirement: 0.12 GB
+
+  Running test for matrix size: 8192x8192
+  Estimated memory requirement: 0.50 GB
+                  Matrix Multiplication Test Results
+  ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+  ┃ Matrix Size ┃ Memory Size (GB) ┃ Computation Time (s) ┃ Performance ┃
+  ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+  │ 2048x2048   │ 0.03             │ 0.0037               │ 4.67 TFLOPS │
+  │ 4096x4096   │ 0.12             │ 0.0288               │ 4.78 TFLOPS │
+  │ 8192x8192   │ 0.50             │ 0.2252               │ 4.88 TFLOPS │
+  └─────────────┴──────────────────┴──────────────────────┴─────────────┘
+  Scaling plot saved as 'scaling_plot.png'
+
 Building a GPU aware container
 ------------------------------
 
-In the previous two examples, we have used pre-built containers to test GPU capability. Here we are going to build a GPU aware container
+In the previous couple of examples, we have used pre-built containers to test GPU capability. Here we are going to build a GPU aware container
 to do some NLP/Text classification with the `BERT <https://arxiv.org/abs/1810.04805>`_ transformer model using PyTorch. We are going to
 use one of the TACC base images (tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7) as a starting point.
 
