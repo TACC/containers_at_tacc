@@ -436,14 +436,72 @@ Once you have your node, pull the container and run it as follows:
 
 .. code-block:: console
 
-	Load apptainer module
-	$ module load tacc-apptainer
+  Load apptainer module
+  $ module load tacc-apptainer
 
-	Change to $SCRATCH directory
-	$ cd $SCRATCH
+  Change to $SCRATCH directory
+  $ cd $SCRATCH
 
-	Pull container
-	$ apptainer pull docker://USERNAME/bert-classifier:0.0.1
+  Pull container
+  $ apptainer pull docker://USERNAME/bert-classifier:0.0.1
 
-	Run container
-	$ apptainer exec --nv bert-classifier_0.0.1.sif bert_classifier.py
+  Run container
+  $ apptainer exec --nv bert-classifier_0.0.1.sif bert_classifier.py
+  Building tokenizer from 'bert-base-uncased'
+  Creating tabular datasets
+  Building iterators
+  Creating BERT model
+  Start Training...
+  Epoch [1/5], Step [16/160], Train Loss: 0.7057, Valid Loss: 0.6338
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [1/5], Step [32/160], Train Loss: 0.5145, Valid Loss: 0.5349
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [2/5], Step [48/160], Train Loss: 0.3584, Valid Loss: 0.3270
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [2/5], Step [64/160], Train Loss: 0.2293, Valid Loss: 0.2806
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [3/5], Step [80/160], Train Loss: 0.1833, Valid Loss: 0.2833
+  Epoch [3/5], Step [96/160], Train Loss: 0.1146, Valid Loss: 0.2951
+  Epoch [4/5], Step [112/160], Train Loss: 0.1379, Valid Loss: 0.2406
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [4/5], Step [128/160], Train Loss: 0.0681, Valid Loss: 0.2019
+  Model saved to ==> ./model.pt
+  Model saved to ==> ./metrics.pt
+  Epoch [5/5], Step [144/160], Train Loss: 0.0378, Valid Loss: 0.3387
+  Epoch [5/5], Step [160/160], Train Loss: 0.0180, Valid Loss: 0.2925
+  Model saved to ==> ./metrics.pt
+  Finished Training!
+  Model loaded from <== ./metrics.pt
+  Plot of loss vs. global steps saved as loss_v_global_steps.png
+  Evaluating the model
+  Model loaded from <== ./model.pt
+  Classification Report:
+                precision    recall  f1-score   support
+
+             1     0.9590    0.8810    0.9184      2816
+             0     0.8913    0.9629    0.9257      2854
+
+      accuracy                         0.9222      5670
+     macro avg     0.9252    0.9219    0.9220      5670
+  weighted avg     0.9250    0.9222    0.9221      5670
+
+  Confusion matrix saved as confusion_matrix.png
+
+The classifier script also produces a plot of the loss vs. global steps
+
+.. figure:: ../images/loss_v_global_steps.png
+  :align: center
+
+  Loss vs. Global Steps
+
+and a confusion matrix
+
+.. figure:: ../images/confusion_matrix.png
+  :align: center
+
+  Confusion Matrix
