@@ -37,7 +37,7 @@ a new GitHub repository for this project and commit our files. The steps are:
 .. note::
 
    This assumes you have previously added an
-   `SSH key to your GitHub account <https://docs.github.com/en/enterprise-server@3.0/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account>`_
+   `SSH key to your GitHub account <https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account>`_
    for the machine you are working on.
 
 Make sure to use the GitHub URI which matches your username and repo name.
@@ -137,9 +137,9 @@ of the file - CMD:
 
    COPY pi.py /code/pi.py
 
-   RUN chmod +x /code/pi.py
+   RUN chmod +rx /code/pi.py
 
-   ENV PATH "/code:$PATH"
+   ENV PATH="/code:$PATH"
 
    CMD ["pi.py", "-h"]
 

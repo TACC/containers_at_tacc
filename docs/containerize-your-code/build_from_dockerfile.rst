@@ -98,7 +98,7 @@ with an ENV instruction as follows:
 
 .. code-block:: dockerfile
 
-   ENV PATH "/code:$PATH"
+   ENV PATH="/code:$PATH"
 
 
 Putting It All Together
@@ -117,7 +117,7 @@ The contents of the final Dockerfile should look like:
 
    RUN chmod +rx /code/pi.py
 
-   ENV PATH "/code:$PATH"
+   ENV PATH="/code:$PATH"
 
 
 Build the Image
