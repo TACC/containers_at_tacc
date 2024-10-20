@@ -1,7 +1,9 @@
 FROM tacc/tacc-ubuntu18-impi19.0.7-common:latest
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y python3-pip
-RUN pip3 install mpi4py
+RUN apt-get -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowDowngradeToInsecureRepositories=true update \
+    && apt-get --allow-unauthenticated upgrade -y \
+    && apt-get install -y python3-pip
+RUN pip3 install mpi4py==3.1.4
 
 COPY pi-mpi.py /usr/local/bin/
 RUN chmod +rx /usr/local/bin/pi-mpi.py

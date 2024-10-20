@@ -82,12 +82,10 @@ Lets try computing Pi with 10,000,000 samples using 1 and 2 processors.
 .. code-block:: console
 
 	Run using 1 processor
-	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
-		mpirun -n 1 pi-mpi.py 10000000
+	$ docker run --rm USERNAME/pi-estimator:0.1-mpi mpirun -n 1 pi-mpi.py 10000000
 
 	Run using 2 processors
-	$ docker run --rm -it USERNAME/pi-estimator:0.1-mpi \
-		mpirun -n 2 pi-mpi.py 10000000
+	$ docker run --rm USERNAME/pi-estimator:0.1-mpi mpirun -n 2 pi-mpi.py 10000000
 
 You should notice that while the estimate stayed roughly the same, the execution time halved as the program scaled from one to two processors.
 
@@ -328,6 +326,15 @@ It can be tested as follows:
   └─────────────┴──────────────────┴──────────────────────┴──────────────┘
   Scaling plot saved as 'scaling_plot.png'
 
+The script also produces a scaling plot:
+
+.. figure:: ../images/scaling_plot_cpu.png
+  :align: center
+
+  Scaling plot for CPU
+
+.. code-block:: console
+
   Run the code against the GPU
   $ apptainer exec --nv pytorch_2.4.1-cuda12.1-cudnn9-runtime.sif python pytorch_matmul_scaling_test.py
   INFO:    gocryptfs not found, will not be able to use gocryptfs
@@ -355,6 +362,14 @@ It can be tested as follows:
   │ 8192x8192   │ 0.50             │ 0.2252               │ 4.88 TFLOPS │
   └─────────────┴──────────────────┴──────────────────────┴─────────────┘
   Scaling plot saved as 'scaling_plot.png'
+
+The script also produces a scaling plot:
+
+.. figure:: ../images/scaling_plot.png
+  :align: center
+
+  Scaling plot for GPU
+
 
 Building a GPU aware container
 ------------------------------
@@ -404,7 +419,7 @@ test that the program help works.
 
 .. code-block:: console
 
-   $ docker run --rm -it eriksf/bert-classifier:0.0.1 bert_classifier.py -h
+   $ docker run --rm eriksf/bert-classifier:0.0.1 bert_classifier.py -h
    usage: bert_classifier.py [-h] [-d DEVICE] [-o OUTPUT] [-s SOURCE]
 
    optional arguments:
