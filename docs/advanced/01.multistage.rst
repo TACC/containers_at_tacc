@@ -25,7 +25,7 @@ Prerequisites
   - `Docker Desktop for Windows <https://docs.docker.com/desktop/install/windows-install/>`_
 - Linux
 
-  - `Docker Engine <https://docs.docker.com/engine/install/>`_
+  - `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or `Engine (CLI) <https://docs.docker.com/engine/install/>`_
 
 
 A simple example
@@ -139,7 +139,7 @@ Edit ``Dockerfile.ms`` and enter the following:
 
 .. code-block:: dockerfile
 
-  FROM golang:1.21 as build
+  FROM golang:1.21 AS build
   WORKDIR /src
 
   COPY app.go .
@@ -230,10 +230,12 @@ project from GitHub.
   $ tree .
   .
   ├── Dockerfile
+  ├── LICENSE.txt
   ├── README.md
   ├── calculate_pi
   │   ├── __init__.py
-  │   └── pi.py
+  │   ├── pi.py
+  │   └── version.py
   ├── poetry.lock
   ├── pyproject.toml
   └── tests
@@ -242,7 +244,7 @@ project from GitHub.
       │   └── help.txt
       └── test_calculate_pi.py
 
-  4 directories, 9 files
+  4 directories, 11 files
 
 In the :ref:`Containerize Your Code <install_code_interactively>` section, we introduced some Python
 code to calculate Pi. This is basically the same code but built using
@@ -255,33 +257,44 @@ The important file that controls the package and dependencies is ``pyproject.tom
 
 .. code-block:: console
 
-   $ cat pyproject.toml
-   [tool.poetry]
-   name = "calculate-pi"
-   version = "0.1.0"
-   description = ""
-   authors = ["Erik Ferlanti <eferlanti@tacc.utexas.edu>"]
-   readme = "README.md"
-   packages = [{include = "calculate_pi"}]
+  $ cat pyproject.toml
+  [tool.poetry]
+  name = "calculate-pi"
+  version = "0.4.0"
+  description = "Calculate Pi python poetry project demo"
+  authors = ["Erik Ferlanti <eferlanti@tacc.utexas.edu>"]
+  license = "BSD 3-Clause"
+  readme = "README.md"
+  repository = "https://github.com/eriksf/calculate-pi"
+  packages = [{include = "calculate_pi"}]
 
-   [tool.poetry.dependencies]
-   python = "^3.9"
-   click = "^8.1.3"
+  [tool.poetry.dependencies]
+  python = "^3.11"
+  click = "^8.1.7"
+  click-loglevel = "^0.5.0"
 
-   [tool.poetry.scripts]
-   calculate-pi = "calculate_pi.pi:main"
+  [tool.poetry.scripts]
+  calculate-pi = "calculate_pi.pi:main"
 
-   [tool.poetry.group.dev.dependencies]
-   flake8 = "^6.0.0"
-   pytest = "^7.4.0"
-   pytest-cov = "^4.1.0"
+  [tool.poetry.group.dev.dependencies]
+  pytest = "^8.3.2"
+  pytest-cov = "^5.0.0"
+  ruff = "^0.6.3"
 
-   [tool.pytest.ini_options]
-   addopts = "--verbose"
+  [tool.ruff]
+  select = ["E", "F", "I"]
+  fixable = ["ALL"]
+  exclude = [".git", ".ruff_cache", ".vscode"]
+  line-length = 300
 
-   [build-system]
-   requires = ["poetry-core"]
-   build-backend = "poetry.core.masonry.api"
+  [tool.pytest.ini_options]
+  addopts = "--verbose --cov=calculate_pi"
+
+  [tool.poetry_bumpversion.file."calculate_pi/version.py"]
+
+  [build-system]
+  requires = ["poetry-core"]
+  build-backend = "poetry.core.masonry.api"
 
 We show this file only to give some insight into how the Dockerfile will used to build the project. In this
 new poetry-based calculate-pi Python package, we'll discuss each of the important Dockerfile sections in detail.
@@ -293,8 +306,8 @@ and then install a version (1.5.1) of poetry using `pip <https://pip.pypa.io/en/
 
 .. code-block:: dockerfile
 
-  FROM python:3.9.17-bookworm as poetry
-  ENV POETRY_VERSION = "1.5.1"
+  FROM python:3.11.9-bookworm AS poetry
+  ENV POETRY_VERSION="1.8.3"
 
   RUN pip install "poetry==${POETRY_VERSION}"
 
@@ -310,14 +323,13 @@ dependencies.
 
   RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-Next, we'll copy in the README and source code and then run ``poetry build`` to build a
+Next, we'll copy in the README, LICENSE, and source code and then run ``poetry build`` to build a
 `Python wheel <https://realpython.com/python-wheels/>`_, a built distribution file for the Python package
 compatible with your system.
 
 .. code-block:: dockerfile
 
-  COPY README.md \
-       /calculate_pi/
+  COPY README.md LICENSE.txt /calculate_pi/
   COPY calculate_pi /calculate_pi/calculate_pi/
 
   RUN poetry build
@@ -328,7 +340,7 @@ update the OS in the image, and set up the Python environment.
 
 .. code-block:: dockerfile
 
-  FROM python:3.9.17-bookworm
+  FROM python:3.11.9-bookworm
   LABEL maintainer="Erik Ferlanti <eferlanti@tacc.utexas.edu>"
 
   # Update OS
@@ -364,8 +376,7 @@ package from the wheel, copy in the README file, and set the default command to 
 
   RUN pip install *.whl
 
-  COPY README.md \
-       /calculate_pi/
+  COPY README.md LICENSE.txt /calculate_pi/
 
   CMD [ "calculate-pi", "--help" ]
 
@@ -373,8 +384,8 @@ For reference, here's what the Dockerfile looks like in total:
 
 .. code-block:: dockerfile
 
-  FROM python:3.9.17-bookworm as poetry
-  ENV POETRY_VERSION = "1.5.1"
+  FROM python:3.11.9-bookworm AS poetry
+  ENV POETRY_VERSION = "1.8.3"
 
   RUN pip install "poetry==${POETRY_VERSION}"
 
@@ -384,14 +395,13 @@ For reference, here's what the Dockerfile looks like in total:
 
   RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
-  COPY README.md \
-       /calculate_pi/
+  COPY README.md LICENSE.txt /calculate_pi/
   COPY calculate_pi /calculate_pi/calculate_pi/
 
   RUN poetry build
 
 
-  FROM python:3.9.17-bookworm
+  FROM python:3.11.9-bookworm
   LABEL maintainer="Erik Ferlanti <eferlanti@tacc.utexas.edu>"
 
   # Update OS
@@ -417,8 +427,7 @@ For reference, here's what the Dockerfile looks like in total:
 
   RUN pip install *.whl
 
-  COPY README.md \
-       /calculate_pi/
+  COPY README.md LICENSE.txt /calculate_pi/
 
   CMD [ "calculate-pi", "--help" ]
 
@@ -429,72 +438,76 @@ for the build). Let's go ahead and build the image.
 
 .. code-block:: console
 
-  $ docker build -t <username>/calculate_pi:0.1.0 .
-  [+] Building 56.5s (21/21) FINISHED                                                                               docker:desktop-linux
-   => [internal] load build definition from Dockerfile                                                                              0.1s
-   => => transferring dockerfile: 1.07kB                                                                                            0.0s
+  $ docker build -t <username>/calculate_pi:0.4.0 .
+  [+] Building 67.0s (21/21) FINISHED                                                                               docker:desktop-linux
+   => [internal] load build definition from Dockerfile                                                                              0.2s
+   => => transferring dockerfile: 1.08kB                                                                                            0.0s
+   => [internal] load metadata for docker.io/library/python:3.11.9-bookworm                                                         1.4s
+   => [auth] library/python:pull token for registry-1.docker.io                                                                     0.0s
    => [internal] load .dockerignore                                                                                                 0.1s
    => => transferring context: 2B                                                                                                   0.0s
-   => [internal] load metadata for docker.io/library/python:3.9.17-bookworm                                                         1.7s
-   => [auth] library/python:pull token for registry-1.docker.io                                                                     0.0s
-   => [poetry 1/8] FROM docker.io/library/python:3.9.17-bookworm@sha256:9bae2a5ce72f326c8136d517ade0e9b18080625fb3ba7ec10002e0dc9  32.6s
-   => => resolve docker.io/library/python:3.9.17-bookworm@sha256:9bae2a5ce72f326c8136d517ade0e9b18080625fb3ba7ec10002e0dc99bc4a70   0.1s
-   => => sha256:a014e5e7d08c37cf1703b97e701ccdc850e4a18d0ee679f03aa875dcd520aa85 49.59MB / 49.59MB                                  3.1s
-   => => sha256:9bae2a5ce72f326c8136d517ade0e9b18080625fb3ba7ec10002e0dc99bc4a70 1.86kB / 1.86kB                                    0.0s
-   => => sha256:410d9e1733ef264765018796fa91b608d02369f2ef091de028282906ce9c5615 2.01kB / 2.01kB                                    0.0s
-   => => sha256:003f1109a21287fa17dc866e87e8c6685113960cbb0379fee8f42b83de63c647 63.99MB / 63.99MB                                  3.5s
-   => => sha256:842c264d565cc5947f4cc7cf58786c73f28e1f15477ae37a337fdf022c5df174 7.53kB / 7.53kB                                    0.0s
-   => => sha256:715cea74ecbb15cb82efef1e77dd60c31d90b01d1286d6f39b4562afaebe75f3 23.57MB / 23.57MB                                  1.0s
-   => => sha256:a56ae3b61eb9574588be7e73e31c31798e2cbf75f53f1f824d855afdf2be6437 202.42MB / 202.42MB                                9.1s
-   => => extracting sha256:a014e5e7d08c37cf1703b97e701ccdc850e4a18d0ee679f03aa875dcd520aa85                                         3.4s
-   => => sha256:c3668095a3a2c9b08668f4fdc90dde552a6405ce8e99f4b1acd906744092ab4b 6.47MB / 6.47MB                                    6.7s
-   => => sha256:428b9797955de707ab375ce4057489b26e44daee7626986a0e515d4d8064a8df 15.54MB / 15.54MB                                  7.4s
-   => => sha256:5663bc5ed407b390a04544c48d3dcf45989ad6da6f010ae0780c0405a469d7c8 244B / 244B                                        9.4s
-   => => extracting sha256:715cea74ecbb15cb82efef1e77dd60c31d90b01d1286d6f39b4562afaebe75f3                                         0.5s
-   => => sha256:cd2bec7f42429de825b8b3d33e362a4af34eb3c11efd926bdd6863fa96d6d764 2.85MB / 2.85MB                                    9.7s
-   => => extracting sha256:003f1109a21287fa17dc866e87e8c6685113960cbb0379fee8f42b83de63c647                                         3.1s
-   => => extracting sha256:a56ae3b61eb9574588be7e73e31c31798e2cbf75f53f1f824d855afdf2be6437                                        12.5s
-   => => extracting sha256:c3668095a3a2c9b08668f4fdc90dde552a6405ce8e99f4b1acd906744092ab4b                                         0.4s
-   => => extracting sha256:428b9797955de707ab375ce4057489b26e44daee7626986a0e515d4d8064a8df                                         0.9s
-   => => extracting sha256:5663bc5ed407b390a04544c48d3dcf45989ad6da6f010ae0780c0405a469d7c8                                         0.0s
-   => => extracting sha256:cd2bec7f42429de825b8b3d33e362a4af34eb3c11efd926bdd6863fa96d6d764                                         0.2s
-   => [internal] load build context                                                                                                 0.0s
-   => => transferring context: 17.44kB                                                                                              0.0s
-   => [poetry 2/8] RUN pip install "poetry=== 1.5.1"                                                                               16.3s
-   => [stage-1 2/8] RUN apt-get update && apt-get install -y     vim-tiny     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*     10.9s
-   => [stage-1 3/8] WORKDIR /calculate_pi                                                                                           0.7s
-   => [poetry 3/8] WORKDIR /calculate_pi                                                                                            0.1s
+   => [internal] load build context                                                                                                 0.1s
+   => => transferring context: 25.67kB                                                                                              0.0s
+   => [poetry 1/8] FROM docker.io/library/python:3.11.9-bookworm@sha256:c95170ff7d59de63e9445d3d503644a635c1b8cb7f4fa99f19a1c76da  32.4s
+   => => resolve docker.io/library/python:3.11.9-bookworm@sha256:c95170ff7d59de63e9445d3d503644a635c1b8cb7f4fa99f19a1c76da92a849a   0.1s
+   => => sha256:56c9b9253ff98351db158cb6789848656b8d54f411c0037347bf2358efb18f39 49.59MB / 49.59MB                                  1.8s
+   => => sha256:5a3527f112aaefcc63f6f23dbf389ce03d034b49c1c5394707408644c07025cc 2.52kB / 2.52kB                                    0.0s
+   => => sha256:11e08854cc7eac324792eebc9d6cc104372d0046ea36d1478b50d29b4832ee33 7.28kB / 7.28kB                                    0.0s
+   => => sha256:843b1d8321825bc8302752ae003026f13bd15c6eef2efe032f3ca1520c5bbc07 64.00MB / 64.00MB                                  2.9s
+   => => sha256:c95170ff7d59de63e9445d3d503644a635c1b8cb7f4fa99f19a1c76da92a849a 9.07kB / 9.07kB                                    0.0s
+   => => sha256:364d19f59f69474a80c53fc78da91f85553e16e8ba6a28063cbebf259821119e 23.59MB / 23.59MB                                  2.2s
+   => => sha256:dd681ddda6db196eb0b6eb2fc4e090e214e39ebff8253dc945d3a1654e8faa32 6.24MB / 6.24MB                                    3.0s
+   => => extracting sha256:56c9b9253ff98351db158cb6789848656b8d54f411c0037347bf2358efb18f39                                         6.7s
+   => => sha256:a348c2a8d94613f34ce7d0ac4fd4e51800d8f4aa8a0bc9347fe5c8436b4c3bd5 202.65MB / 202.65MB                                8.6s
+   => => sha256:2fa7159a8e74832a04a5c62397b9b280fcf284a84c7ae4fd0487998cadbdba14 19.49MB / 19.49MB                                  7.3s
+   => => sha256:2d3256a435e2e2adde8f5481a0db50dd9cbdc1e8aa48deef0e903b061b520504 232B / 232B                                        3.1s
+   => => sha256:8d76c12bea0d1ba610f53eb3454a48928e3275783a38b309fca0887fdb705bda 3.13MB / 3.13MB                                    3.5s
+   => => extracting sha256:364d19f59f69474a80c53fc78da91f85553e16e8ba6a28063cbebf259821119e                                         0.5s
+   => => extracting sha256:843b1d8321825bc8302752ae003026f13bd15c6eef2efe032f3ca1520c5bbc07                                         3.9s
+   => => extracting sha256:a348c2a8d94613f34ce7d0ac4fd4e51800d8f4aa8a0bc9347fe5c8436b4c3bd5                                         9.8s
+   => => extracting sha256:dd681ddda6db196eb0b6eb2fc4e090e214e39ebff8253dc945d3a1654e8faa32                                         0.4s
+   => => extracting sha256:2fa7159a8e74832a04a5c62397b9b280fcf284a84c7ae4fd0487998cadbdba14                                         1.4s
+   => => extracting sha256:2d3256a435e2e2adde8f5481a0db50dd9cbdc1e8aa48deef0e903b061b520504                                         0.0s
+   => => extracting sha256:8d76c12bea0d1ba610f53eb3454a48928e3275783a38b309fca0887fdb705bda                                         0.3s
+   => [poetry 2/8] RUN pip install "poetry==1.8.3"                                                                                 23.6s
+   => [stage-1 2/8] RUN apt-get update && apt-get install -y     vim-tiny     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*     16.7s
+   => [stage-1 3/8] WORKDIR /calculate_pi                                                                                           0.3s
+   => [poetry 3/8] WORKDIR /calculate_pi                                                                                            0.3s
    => [poetry 4/8] COPY pyproject.toml poetry.lock ./                                                                               0.3s
    => [poetry 5/8] RUN poetry export -f requirements.txt --output requirements.txt --without-hashes                                 0.8s
-   => [poetry 6/8] COPY README.md      /calculate_pi/                                                                               0.1s
+   => [poetry 6/8] COPY README.md LICENSE.txt /calculate_pi/                                                                        0.2s
    => [poetry 7/8] COPY calculate_pi /calculate_pi/calculate_pi/                                                                    0.1s
-   => [poetry 8/8] RUN poetry build                                                                                                 1.0s
-   => [stage-1 4/8] COPY --from=poetry /calculate_pi/requirements.txt .                                                             0.1s
-   => [stage-1 5/8] RUN pip install -r requirements.txt                                                                             1.3s
-   => [stage-1 6/8] COPY --from=poetry /calculate_pi/dist/*.whl ./                                                                  0.1s
-   => [stage-1 7/8] RUN pip install *.whl                                                                                           1.0s
-   => [stage-1 8/8] COPY README.md      /calculate_pi/                                                                              0.1s
-   => exporting to image                                                                                                            0.3s
-   => => exporting layers                                                                                                           0.3s
-   => => writing image sha256:839d8d2da9dbed797dcfd9e3e56e0536859a6ff89ed37dae5494c9f468b7a8be                                      0.0s
-   => => naming to docker.io/eriksf/calculate_pi:0.1.0
+   => [poetry 8/8] RUN poetry build                                                                                                 1.8s
+   => [stage-1 4/8] COPY --from=poetry /calculate_pi/requirements.txt .                                                             0.2s
+   => [stage-1 5/8] RUN pip install -r requirements.txt                                                                             1.8s
+   => [stage-1 6/8] COPY --from=poetry /calculate_pi/dist/*.whl ./                                                                  0.3s
+   => [stage-1 7/8] RUN pip install *.whl                                                                                           1.3s
+   => [stage-1 8/8] COPY README.md LICENSE.txt /calculate_pi/                                                                       0.1s
+   => exporting to image                                                                                                            0.7s
+   => => exporting layers                                                                                                           0.6s
+   => => writing image sha256:1665e056dda0537e806ac524cb59bb6dc78e06e66b107c5b09ecacd7fcaa4df2                                      0.0s
+   => => naming to docker.io/eriksf/calculate_pi:0.4.0
 
 Now, let's run a container from that image:
 
 .. code-block:: console
 
-  $ docker run --rm <username>/calculate_pi:0.1.0
+  $ docker run --rm eriksf/calculate_pi:0.4.0
   Usage: calculate-pi [OPTIONS] NUMBER
 
-    Calculate pi using Monte Carlo estimation.
+    Calculate pi using a Monte Carlo estimation.
 
     NUMBER is the number of random points.
 
   Options:
-    --version  Show the version and exit.
-    --help     Show this message and exit.
-  $ docker run --rm <username>/calculate_pi:0.1.0 calculate-pi 10000
-  Final pi estimate from 10000 attempts = 3.1488
+    --version                       Show the version and exit.
+    --log-level [NOTSET|DEBUG|INFO|WARNING|ERROR|CRITICAL]
+                                    Set the log level  [default: 20]
+    --log-file PATH                 Set the log file
+    --help                          Show this message and exit.
+  $ docker run --rm eriksf/calculate_pi:0.4.0 calculate-pi 1000000
+  Final pi estimate from 1000000 attempts = 3.140668
+
 
 Additional Resources
 ^^^^^^^^^^^^^^^^^^^^
