@@ -201,29 +201,10 @@ Apptainer and GPU Computing
 
 Apptainer **fully** supports GPU utilization by exposing devices at runtime with the ``--nv`` flag. This is similar to ``nvidia-docker``, so all docker containers with libraries that are compatible with the drivers on our systems can work as expected.
 
-Base Docker images
-------------------
+As a base, we recommend starting with the official CUDA (`nvidia/cuda <https://hub.docker.com/r/nvidia/cuda>`_) images from NVIDIA on Docker Hub. If you specifically want to use `PyTorch <https://pytorch.org/>`_ or `Tensorflow <https://www.tensorflow.org/>`_ then the official repositories on Docker Hub, `pytorch/pytorch <https://hub.docker.com/r/pytorch/pytorch>`_ and `tensorflow/tensorflow <https://hub.docker.com/r/tensorflow/tensorflow>`_ respectively, are good starting points.
+Alternatively, the `NVIDIA GPU Cloud <https://ngc.nvidia.com/>`_ (NGC) has a large number of pre-built containers for deep learning and HPC applications including `PyTorch <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch>`_ and `Tensorflow <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow>`_ (full-featured, large, and include ARM64 versions). 
 
-When running at TACC, we have a set of curated Docker images that include `TensorFlow <https://www.tensorflow.org/>`_ and `PyTorch <https://pytorch.org/>`_ for use in the FROM line of your own containers.  You can see a list of available images at `Docker Hub <https://hub.docker.com/r/tacc/tacc-ml>`_ and the source at `https://github.com/TACC/tacc-ml <https://github.com/TACC/tacc-ml>`_.
-
-+------------------------------------------------------+----------------------+----------------------+
-| Image                                                | Frontera/rtx         | Lonestar6            |
-+======================================================+======================+======================+
-| tacc/tacc-ml:centos7-cuda10-tf1.15-pt1.3             | |:heavy_check_mark:| |                      |
-+------------------------------------------------------+----------------------+----------------------+
-| tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7              | |:heavy_check_mark:| |                      |
-+------------------------------------------------------+----------------------+----------------------+
-| tacc/tacc-ml:centos7-cuda11-tf2.6-pt1.10             | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+------------------------------------------------------+----------------------+----------------------+
-| tacc/tacc-ml:ubuntu16.04-cuda10-tf1.15-pt1.3         | |:heavy_check_mark:| |                      |
-+------------------------------------------------------+----------------------+----------------------+
-| tacc/tacc-ml:ubuntu16.04-cuda10-tf2.4-pt1.7          | |:heavy_check_mark:| |                      |
-+------------------------------------------------------+----------------------+----------------------+
-| tacc/tacc-ml:ubuntu20.04-cuda11-tf2.6-pt1.10         | |:heavy_check_mark:| | |:heavy_check_mark:| |
-+------------------------------------------------------+----------------------+----------------------+
-
-
-For instance, the latest version of caffe can be used on TACC systems as follows:
+For instance, the latest version of Caffe can be used on TACC systems as follows:
 
 .. code-block:: console
 
@@ -376,7 +357,7 @@ Building a GPU aware container
 
 In the previous couple of examples, we have used pre-built containers to test GPU capability. Here we are going to build a GPU aware container
 to do some NLP/Text classification with the `BERT <https://arxiv.org/abs/1810.04805>`_ transformer model using PyTorch. We are going to
-use one of the TACC base images (tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7) as a starting point.
+use one of the official PyTorch images from Docker Hub (pytorch/pytorch:1.7.1-cuda11.0-cudnn8-runtime) as a starting point.
 
 On your local laptop, create a directory to build the "bert-classifier" Docker image and download (or copy and paste) the following files:
 
@@ -391,7 +372,7 @@ On your local laptop, create a directory to build the "bert-classifier" Docker i
     For speed, you can also clone the repository from `https://github.com/eriksf/bert-classifier.git <https://github.com/eriksf/bert-classifier.git>`_.
 
 Take a look at the files. ``bert_classifier.py`` is a Python script that uses PyTorch to do the text classification. The ``Dockerfile`` is
-based on the **tacc/tacc-ml:centos7-cuda10-tf2.4-pt1.7** base image and installs a couple of needed python libraries in addition to moving the
+based on the **pytorch/pytorch:1.7.1-cuda11.0-cudnn8-runtime** image and installs a couple of needed python libraries in addition to moving the
 datasets into the image. ``train.csv``, ``test.csv``, and ``valid.csv`` are pre-processed CSV files containing the training, test, and
 validation datasets.
 
