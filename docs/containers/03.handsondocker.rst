@@ -126,8 +126,8 @@ Run a Command Inside a Container
 --------------------------------
 
 Back out on your local device, we now know we have a container image called
-``python`` that has a particular version of Python (3.12.x) that may 
-not otherwise be available on your local device. The 3.12.x Python interpreter,  
+``python`` that has a particular version of Python (3.13.x) that may 
+not otherwise be available on your local device. The 3.13.x Python interpreter,  
 its standard library, and all of the dependencies of those are included in the 
 container image and are *isolated* from everything else. This image (``python``)
 is portable and will run the exact same way on any OS that Docker supports, 
