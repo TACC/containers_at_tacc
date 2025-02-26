@@ -115,30 +115,34 @@ Once you have your node, pull the container and run it as follows:
 
 .. code-block:: console
 
-	Load apptainer module
-	$ module load tacc-apptainer
+  Load apptainer module
+  $ module load tacc-apptainer
 
-	Change to $SCRATCH directory so containers do not go over your $HOME quota
-	$ cd $SCRATCH
+  Change to $SCRATCH directory so containers do not go over your $HOME quota
+  $ cd $SCRATCH
 
-	Pull container
-	$ apptainer pull docker://USERNAME/pi-estimator:0.1-mpi
+  Pull container
+  $ apptainer pull docker://USERNAME/pi-estimator:0.1-mpi
 
-	Run container sequentially
-	$ ibrun -n 1 apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+  Set this temporarily to avoid an issue with this base MPI image and the older Mellanox
+  drivers on the RTX nodes
+  $ export FI_PROVIDER=tcp
 
-	Run container distributed
-	$ ibrun apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+  Run container sequentially
+  $ ibrun -n 1 apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
-	Run container with fewer tasks
-	$ ibrun -n 4 apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+  Run container distributed
+  $ ibrun apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+
+  Run container with fewer tasks
+  $ ibrun -n 4 apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
 In our local tests, the **container** ``mpirun`` program was used to launch multiple processes, but this does not scale to multiple nodes. When using multiple nodes at TACC, you should always use ``ibrun`` to call apptainer to launch a container per process across each **host**.
 
 .. Note::
 
 	The ``*impi*`` containers **must** be launched with ``apptainer run`` on HPC systems. Also, you
-	might need to set ``FI_PROVIDER=tcp`` temporarily when running on rtx nodes.
+	might need to set ``FI_PROVIDER=tcp`` temporarily when running on RTX nodes.
 
 	TACC uses a command called ``ibrun`` on all of its systems that configures MPI to use the high-speed, low-latency network, and binds processes to specific cores.  If you are familiar with MPI, this is the functional equivalent to ``mpirun``.
 
@@ -162,19 +166,20 @@ After pulling the container, the image file can be referred to in an sbatch scri
 
 .. code-block:: bash
 
-	#!/bin/bash
+  #!/bin/bash
 
-	#SBATCH -J calculate-pi-mpi                  # Job name
-	#SBATCH -o calculate-pi-mpi.%j               # Name of stdout output file (%j expands to jobId)
-	#SBATCH -p rtx                               # Queue name
-	#SBATCH -N 1                                 # Total number of nodes requested (56 cores/node)
-	#SBATCH -n 8                                 # Total number of mpi tasks requested
-	#SBATCH -t 00:10:00                          # Run time (hh:mm:ss)
-	#SBATCH --reservation Containers-Fall24      # a reservation only active during the training
+  #SBATCH -J calculate-pi-mpi                  # Job name
+  #SBATCH -o calculate-pi-mpi.%j               # Name of stdout output file (%j expands to jobId)
+  #SBATCH -p rtx                               # Queue name
+  #SBATCH -N 1                                 # Total number of nodes requested (56 cores/node)
+  #SBATCH -n 8                                 # Total number of mpi tasks requested
+  #SBATCH -t 00:10:00                          # Run time (hh:mm:ss)
+  #SBATCH --reservation AdvancedContainers     # a reservation only active during the training
 
-	module load tacc-apptainer
-	cd $SCRATCH
-	ibrun apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
+  module load tacc-apptainer
+  export FI_PROVIDER=tcp
+  cd $SCRATCH
+  ibrun apptainer run pi-estimator_0.1-mpi.sif pi-mpi.py 10000000
 
 Then, you can submit the job with ``sbatch``
 

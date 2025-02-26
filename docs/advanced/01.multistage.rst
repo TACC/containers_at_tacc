@@ -299,9 +299,9 @@ The important file that controls the package and dependencies is ``pyproject.tom
 We show this file only to give some insight into how the Dockerfile will used to build the project. In this
 new poetry-based calculate-pi Python package, we'll discuss each of the important Dockerfile sections in detail.
 
-In the first part of stage 1 (build stage), we're going to base our image on a tagged version (3.9.17) of the official Python image
+In the first part of stage 1 (build stage), we're going to base our image on a tagged version (3.11.9) of the official Python image
 (based on `Debian Bookworm <https://www.debian.org/releases/bookworm/>`_), label it ``poetry``,
-and then install a version (1.5.1) of poetry using `pip <https://pip.pypa.io/en/stable/>`_
+and then install a version (1.8.3) of poetry using `pip <https://pip.pypa.io/en/stable/>`_
 (the package installer for Python).
 
 .. code-block:: dockerfile
