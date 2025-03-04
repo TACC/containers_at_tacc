@@ -244,10 +244,10 @@ First, we'll run a simple script (`tf_test.py <https://raw.githubusercontent.com
   $ wget https://raw.githubusercontent.com/TACC/containers_at_tacc/master/docs/scripts/tf_test.py
 
   Pull the image
-  $ apptainer pull docker://tensorflow/tensorflow:latest-gpu
+  $ apptainer pull docker://tensorflow/tensorflow:2.17.0-gpu
 
   Run the code
-  $ apptainer exec --nv tensorflow_latest-gpu.sif python tf_test.py 2>warnings.txt
+  $ apptainer exec --nv tensorflow_2.17.0-gpu.sif python tf_test.py 2>warnings.txt
   Tensorflow version: 2.17.0
   GPU available: True
 
