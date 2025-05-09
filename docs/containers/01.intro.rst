@@ -97,8 +97,9 @@ We can find existing containers that are compatible with both Docker and Apptain
 platforms (among others) at:
 
 1. `Docker Hub <https://hub.docker.com/>`_
-2. `Quay.io <https://quay.io/>`_
-3. `BioContainers <https://biocontainers.pro/#/>`_
+2. `NVIDIA GPU Cloud (NGC) <https://catalog.ngc.nvidia.com/>`_
+3. `Quay.io <https://quay.io/>`_
+4. `BioContainers <https://biocontainers.pro/#/>`_
 
 
 
