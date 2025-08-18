@@ -286,17 +286,17 @@ Consider the following docker build workflow, located in ``.github/workflows/doc
 
       steps:
         - name: Checkout repository
-          uses: actions/checkout@v3
+          uses: actions/checkout@v5
 
         - name: Set up QEMU
-          uses: docker/setup-qemu-action@v2
+          uses: docker/setup-qemu-action@v3
 
         - name: Set up Docker Buildx
           id: buildx
-          uses: docker/setup-buildx-action@v2
+          uses: docker/setup-buildx-action@v3
 
         - name: Cache Docker layers
-          uses: actions/cache@v3
+          uses: actions/cache@v4
           with:
             path: /tmp/.buildx-cache
             key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -305,7 +305,7 @@ Consider the following docker build workflow, located in ``.github/workflows/doc
 
         - name: Docker metadata
           id: meta
-          uses: docker/metadata-action@v4
+          uses: docker/metadata-action@v5
           with:
             images: eriksf/calculate_pi
             flavor: latest=true
@@ -316,13 +316,13 @@ Consider the following docker build workflow, located in ``.github/workflows/doc
 
         - name: Login to DockerHub
           if: github.ref_type == 'tag'
-          uses: docker/login-action@v2
+          uses: docker/login-action@v3
           with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
         - name: Build and push image
-          uses: docker/build-push-action@v4
+          uses: docker/build-push-action@v6
           with:
             context: .
             platforms: linux/amd64,linux/arm64
@@ -363,7 +363,7 @@ if the workflow is run based on a tag. This uses the ``docker/build-push-action`
 
 
 Trigger the Integration
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To trigger the build in a real-world scenario, make some changes to your source
 code, push your modified code to GitHub and tag the release as ``X.Y.Z`` (whatever
@@ -374,11 +374,11 @@ new tag is appropriate) to trigger another automated build:
    $ git add *
    $ git commit -m "made some changes"
    $ git push
-   $ git tag -a 0.1.0 -m "release version 0.1.0"
-   $ git push origin 0.1.0
+   $ git tag -a 0.5.1 -m "release version 0.5.1"
+   $ git push origin 0.5.1
 
 By default, the git push command does not transfer tags, so we are explicitly
-telling git to push the tag we created (0.1.0) to the remote (origin).
+telling git to push the tag we created (0.5.1) to the remote (origin).
 
 Then navigate to the repo on GitHub and click the 'Actions' tab to watch the
 progress of the Action. You can click on your saved workflows to narrow the view,
