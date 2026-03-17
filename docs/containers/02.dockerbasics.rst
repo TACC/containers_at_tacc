@@ -53,7 +53,7 @@ and try running
    https://labs.play-with-docker.com/
 
 
-1) Create a `Docker Hub account <https://app.docker.com/signup/>`_
+2) Create a `Docker Hub account <https://app.docker.com/signup/>`_
 
 Having a Docker Hub account makes it easier to share your containers with other
 researchers. Use the Docker CLI to login to Docker Hub to be able to push images
