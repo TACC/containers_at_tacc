@@ -7,7 +7,7 @@ Prerequisites
 1) Install Docker on your laptop:
 
   - `Mac <https://docs.docker.com/desktop/install/mac-install/>`_
-  - `Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+  -  `Windows <https://docs.docker.com/desktop/install/windows-install/>`_ — WSL2 is required, see :doc:`windows-wsl2-docker` for setup instructions
   - Linux `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or `Engine (CLI) <https://docs.docker.com/engine/install/>`_
 
 To check if the installation was successful, open up your favorite Terminal (Mac,Linux) or the Docker Terminal (Windows)
@@ -53,7 +53,7 @@ and try running
    https://labs.play-with-docker.com/
 
 
-2) Create a `Docker Hub account <https://app.docker.com/signup/>`_
+1) Create a `Docker Hub account <https://app.docker.com/signup/>`_
 
 Having a Docker Hub account makes it easier to share your containers with other
 researchers. Use the Docker CLI to login to Docker Hub to be able to push images
