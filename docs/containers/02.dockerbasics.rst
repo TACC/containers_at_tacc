@@ -4,10 +4,15 @@ Getting Started With Docker
 Prerequisites
 -------------
 
+.. toctree::
+   :hidden:
+
+   windows-wsl2-docker
+
 1) Install Docker on your laptop:
 
   - `Mac <https://docs.docker.com/desktop/install/mac-install/>`_
-  - `Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+  -  `Windows <https://docs.docker.com/desktop/install/windows-install/>`_ — WSL2 is required, see :doc:`windows-wsl2-docker` for setup instructions
   - Linux `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or `Engine (CLI) <https://docs.docker.com/engine/install/>`_
 
 To check if the installation was successful, open up your favorite Terminal (Mac,Linux) or the Docker Terminal (Windows)
